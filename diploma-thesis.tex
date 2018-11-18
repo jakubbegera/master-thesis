@@ -1,0 +1,170 @@
+\documentclass[11pt,twoside,a4paper]{book}  
+% definice dokumentu
+\usepackage[czech, english]{babel}
+\usepackage[T1]{fontenc} 				% pouzije EC fonty 
+\usepackage[utf8]{inputenc} 			% utf8 kódování vstupu 
+\usepackage[square, numbers]{natbib}	% sazba pouzite literatury
+\usepackage{indentfirst} 				% 1. odstavec jako v~cestine, pro práci v~aj možno zakomentovat
+\usepackage{fancyhdr}					% tisk hlaviček a~patiček stránek
+\usepackage{nomencl} 					% umožňuje snadno definovat zkratky a~jejich seznam
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% informace o práci
+\newcommand\WorkTitle{Software pro distribuované řízení a vyčítání dat ze sítě částiových pixelových detektorů Timepix3} % název
+\newcommand\FirstandFamilyName{Bc. Jakub Begera} % autor
+\newcommand\Supervisor{Ing. Štěpán Polanský} % vedoucí
+
+\newcommand\TypeOfWork{Diplomová práce}	% typ práce [Diplomová práce | Bakalářská práce | Bachelor's Project | Master's Thesis ]	
+
+% Nastavte následují podle vašeho oboru a~programu (pomoc hledejte na http://www.fel.cvut.cz/cz/education/bk/prehled.html)								
+\newcommand\StudProgram{Otevřená informatika} % program
+\newcommand\StudBranch{Softwarové inženýrství} % obor
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% minimální importy
+\usepackage{graphicx}					% pro vkládání obrázků
+\usepackage{k336_thesis_macros} 		% specialni makra pro formatovani DP a~BP
+\usepackage[
+pdftitle={\WorkTitle},				% nastaví v~informacích o pdf název
+pdfauthor={\FirstandFamilyName},	% nastaví v~informacích o pdf autora
+colorlinks=true,					% před tiskem doporučujeme nastavit na false, aby odkazy a~url nebyly šedé při ČB tisku
+breaklinks=true,
+urlcolor=red,
+citecolor=blue,
+linkcolor=blue,
+unicode=true,
+]
+{hyperref}								% pro zobrazování "prokliknutelných" linků 
+
+% rozšiřující importy
+\usepackage{listings} 			%slouží pro tisk zdrojových kódů se syntax higlighting
+\usepackage{algorithmicx} 		%slouží pro zápis algoritmů
+\usepackage{algpseudocode} 		%slouží pro výpis pseudokódu
+\usepackage{inconsolata}		%monospace font
+\usepackage{soul}				%zvýrazňovač
+\usepackage[final]{pdfpages}    %PDF include
+\usepackage{subcaption}			%pro reference na subfigures 
+\usepackage{enumitem}
+\usepackage{bytefield}
+\usepackage{pgf-umlsd}			%sekvenční UML diagramy
+\usepackage{tikz}		        %TeX obrázky
+\usetikzlibrary{trees,calc,positioning,shapes.geometric,matrix,arrows,decorations.pathreplacing,arrows.meta,decorations.markings,math}
+
+\usepackage{minted}				% slouží k~Syntax Highlighting
+\usepackage{amsmath}
+
+\usepackage{forest}
+\definecolor{folderbg}{RGB}{124,166,198}
+\definecolor{folderborder}{RGB}{110,144,169}
+
+\def\Size{4pt}
+\tikzset{
+  folder/.pic={
+    \filldraw[draw=folderborder,top color=folderbg!50,bottom color=folderbg]
+      (-1.05*\Size,0.2\Size+5pt) rectangle ++(.75*\Size,-0.2\Size-5pt);  
+    \filldraw[draw=folderborder,top color=folderbg!50,bottom color=folderbg]
+      (-1.15*\Size,-\Size) rectangle (1.15*\Size,\Size);
+  }
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% příkazy šablony
+\makenomenclature								% při překladu zajistí vytvoření pracovního souboru se seznamem zkratek
+\include{nomenclature}
+
+\let\oldUrl\url									% url adresy budou zobrazeny: <url> 
+\renewcommand\url[1]{<\texttt{\oldUrl{#1}}>}
+%\renewcommand\lstlistingname{Výpis kódu} % předefinování nadpisu
+%\renewcommand\lstlistlistingname{Výpisy kódu} % předefinování nadpisu v~obsahu
+%\renewcommand{\lstlistingname}{Algorithm}% Listing -> Algorithm
+%\renewcommand{\lstlistlistingname}{Listdassad of \lstlistingname s}% List of Listings -> List
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% vaše vlastní příkazy
+\newcommand*{\nomExpl}[2]{#2 (#1)\nomenclature{#1}{#2}} % usnadňuje zápis zkratek : Slova ke Zkrácení (SZ)
+\newcommand*{\nom}[2]{#1\nomenclature{#1}{#2}} % usnadňuje zápis zkratek : SZ
+\newcommand*{\todo}{\hl{\textbf{TODO}}} % pro poznámky
+\newcommand{\addbibresource}[1]{}
+
+\usepackage{caption}
+\DeclareCaptionType{code}[Zdrojový kód][Seznam zdrojových kódů] 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% vlastní dokument
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%% 
+	% nastavení jazyka, kterým je práce psána
+	\selectlanguage{czech}	% podle jazyka práce nastavte na [czech | english]
+	\translate				% nastaví české nebo anglické popisy (např. katedra -> department); viz k336_thesis_macros
+
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%    
+	% Titulni stranka / Title page 
+	\coverpagestarts
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%    
+	% Zadani / Assignment
+	\newpage~
+	%\includepdf[pages=1]{zadani.pdf}
+	\newpage
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+	% Poděkovani / Acknowledgements 
+	\acknowledgements
+	\noindent
+	\todo
+
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+	% Prohlášení / Declaration 
+
+	\declaration{V~Praze dne 27.\,5.\,2016}
+
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+	% Abstrakt / Abstract 
+ 
+	\abstractpage
+
+	\todo abstrakt anglicky
+
+	
+	\vglue60mm
+	\noindent{\Huge \textbf{Abstrakt}}
+	\vskip 2.75\baselineskip
+
+	\todo abstrakt česky
+
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%    
+	% obsahy a~seznamy
+	\tableofcontents		% Obsah
+	\listoffigures			% Seznam obrázků
+	\listoftables			% Seznam tabulek
+	\listofcodes			% Seznam zdrojových kódů	
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%% 
+	% začátek textu  
+	\mainbodystarts
+
+\include{chapters/chap01}
+
+\bibliographystyle{csplainnat}
+
+{
+%JZ: 11.12.2008 Kdo chce mit v~techto ukazkovych odkazech take odkaz na CSTeX:
+\def\CS{$\cal C\kern-0.1667em\lower.5ex\hbox{$\cal S$}\kern-0.075em $}
+\bibliography{reference}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% Přílohy
+\appendix	
+
+\printnomenclature
+\label{apx:zkratky}
+
+\include{chapters/app_cd}
+
+\end{document}
