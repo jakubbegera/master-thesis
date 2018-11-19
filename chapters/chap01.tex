@@ -1,4 +1,18 @@
 \addbibresource{reference.bib}
 
-\chapter{Introduction}\label{chap01}
-Test
+\chapter{Úvod}\label{chap01} 
+\todo
+
+\section{Motivace}
+\todo
+
+\section{Timepix3 detektor}
+Hybridní částicový pixelový detektor Timepix3\cite{timepix3} je nástupcem detektoru Timepix\cite{timepix} a je vyvíjen v rámci Medipix\footnoteUrl{http://medipix.web.cern.ch/} kolaborace v CERN, mezi jejíž členy patří od roku 1999 i ÚTEF ČVUT v Praze.
+
+Detektor se skládá z matice $256\times256$ nezávislých pixelů, každý o hraně $55\mu$ pixelů. 
+Jednotlivé pixely se skládají z citlivého polovodičového senzoru (nejčastěji \textit{Si}, nebo \textit{GaAs}) a vyčítací CMOS elektroniky (čítače, komparátory apod.). Princip funkce detektoru lze přirovnat digitálnímu fotoaparátu. Podobně jako u digitálního fotoaparátu, začátek a konec akvizice dat je řízen uzávěrkou (tzv. \textit{shutter signál}). Po tuto dobu pak citlivý polovodičový objem detektoru zaznamenává interakce s nabitými částicemi a dále je zpracovává dle nastaveného modu. V kapitole \ref{chap:detectors} bude na příklad popsán \textit{Time-Over-Threshold} mód, kde hodnota čítače pixelu na konci akvizice odpovídá deponované energii interagovaných částic s daným pixelem (mezi energií a TOT je nelineární závislost, která je dána fyzikálními vlastnostmi každého pixelu a je předmětem energetické kalibrace detektoru \cite{Jakubek2011S262}). 
+
+Timepix3 detektor přináší oproti svému předchůdci několik výhod. Je schopný operovat i v kontinuálním módu, ve kterém je každý pixel detektoru schopný detekovanou událost ihned zpracovat, nezávisle na ostatních pixelech. Tím se téměř odstraňuje mrtvá doba detektoru, zvyšuje detekční účinnost, ale i zvyšuje datový tok z detektoru, jehož maximální teoretická hodnota je až $5.12 Gb/s$
+
+\section{Struktura práce}
+\todo

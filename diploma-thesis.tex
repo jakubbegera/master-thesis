@@ -84,6 +84,7 @@ unicode=true,
 \newcommand*{\nom}[2]{#1\nomenclature{#1}{#2}} % usnadňuje zápis zkratek : SZ
 \newcommand*{\todo}{\hl{\textbf{TODO}}} % pro poznámky
 \newcommand{\addbibresource}[1]{}
+\newcommand*{\footnoteUrl}[1]{\footnote{\url{#1}}}
 
 \usepackage{caption}
 \DeclareCaptionType{code}[Zdrojový kód][Seznam zdrojových kódů] 
@@ -105,7 +106,8 @@ unicode=true,
 	%%%%%%%%%%%%%%%%%%%%%%%%%%    
 	% Zadani / Assignment
 	\newpage~
-	%\includepdf[pages=1]{zadani.pdf}
+	\includepdf[pages=1,pagecommand={},offset=0cm -3cm]{zadani.pdf}
+	\includepdf[pages=2,pagecommand={},offset=0cm -3cm]{zadani.pdf}
 	\newpage
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%    
@@ -148,6 +150,7 @@ unicode=true,
 	\mainbodystarts
 
 \include{chapters/chap01}
+\include{chapters/chap02}
 
 \bibliographystyle{csplainnat}
 
