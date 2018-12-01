@@ -86,6 +86,10 @@ unicode=true,
 \newcommand{\addbibresource}[1]{}
 \newcommand*{\footnoteUrl}[1]{\footnote{\url{#1}}}
 
+% custom padding
+\def\changemargin#1#2{\list{}{\rightmargin#2\leftmargin#1}\item[]}
+\let\endchangemargin=\endlist 
+
 \usepackage{caption}
 \DeclareCaptionType{code}[Zdrojový kód][Seznam zdrojových kódů] 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

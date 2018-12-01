@@ -1,7 +1,7 @@
 \addbibresource{reference.bib}
 
 \chapter{Úvod do hybridních částicových pixelových detektorů}\label{chap:detectors}
-Ionizující záření je lidskými smysli nedetekovatelné, avšak jeho studie nám umožňuje pochopit podstatu hmoty, její vlastnosti a interakce. To lidstvu umožnilo mnohé aplikace, jako je na příklad protonová terapie, defektoskopie nebo zkoumání pravosti uměleckých děl. První pokusy o detekci ionizujícího záření sahají do počátku 20. století, kde pomocí mlžné komory se prvně podařilo zachytit trajektorii nabitých částic. Rozvoj polovodičové technologie dal vzniku novým detekčním technologiím až po v současné době nejpokrokovějším - pixelovým detektorům.
+Ionizující záření je lidskými smysli nedetekovatelné, avšak jeho studie nám umožňuje pochopit podstatu hmoty, její vlastnosti a interakce. To lidstvu umožnilo mnohé aplikace, jako je na příklad protonová terapie \cite{tpx_app_radiotherapy}, defektoskopie nebo zkoumání pravosti uměleckých děl. První pokusy o detekci ionizujícího záření sahají do počátku 20. století, kde pomocí mlžné komory se prvně podařilo zachytit trajektorii nabitých částic. Rozvoj polovodičové technologie dal vzniku novým detekčním technologiím až po v současné době nejpokrokovějším - pixelovým detektorům.
 
 Existuje celá řada částicových pixelových detektorů, ale v této kapitole budou popsány jen hybridní pixelové detektory, pro které je typické, že se skládají ze dvou nezávisle vyrobených částí - senzoru a vyčítacího čipu. To oproti monolitickým detektorů, kde vyčítací elektronika je součástí senzoru přináší řadu výhod, jako na příklad snížení výrobních nákladů nebo možnost kombinace vyčítacího čipu se senzory různých materiálů (\textit{Si}, \textit{GaAs}, \textit{CaTe} apod.) a tlouštěk (vetšinou $300\mu m$, nebo $500\mu m$).
 
@@ -63,9 +63,40 @@ Jak už bylo popsáno v předchozí kapitole, interagovaná částice vyvolá na
 Na obr. \ref{chap:detectors:operation_modes} je znázorněn příklad zpracování analýzy signálu následujícími módy:
 \begin{description}
     \item[Medipix mód (Counting mód)] V tomto módu je čítač inkrementován v každém cyklu měřící frekvence, pokud měřící napětí překročilo prahové napětí pixelu. Na konci akvizice pak hodnota čítače odpovídá počtu zaznamenaných částic.
-    \item[Time-Over-Threshold (ToT)] Pracuje-li pixel v tomto módu, pak jeho čítač je inkrementování v každém cyklu měřící frekvence, pokud měřící napětí je vyšší, než prahové napětí pixelu. Hodnota uložená v čítači odpovídá deponované energii interagovaných částic. Mezi energií a \texttt{ToT} je nelineární závislost a její zkoumání je předmětem energetické kalibrace detektoru, jak bude ukázáno v kapitole \ref{chap:detectors:calibration:tot}.
+    \item[Time-Over-Threshold (ToT)] Pracuje-li pixel v tomto módu, pak jeho čítač je inkrementování v každém cyklu měřící frekvence, pokud měřící napětí je vyšší, než prahové napětí pixelu. Hodnota uložená v čítači odpovídá deponované energii interagovaných částic. Mezi energií a \texttt{ToT} je nelineární závislost a její zkoumání je předmětem energetické kalibrace detektoru, jak bude ukázáno v kapitole \ref{chap:detectors:calibration:tot}. Tento mód má široké spektrum aplikací, na příklad \cite{tot_app_counting} nebo \cite{tpx_app_radiotherapy}.
     \item[Time-of-Arrival (ToA)] Tímto módem disponují pouze detektory \textit{Timepix} a \textit{Timepix3}, avšak nesdílí stejný princip. Zatímco \textit{Timepix} detektor začne inkrementovat čítač v každém cyklu měřící frekvence po první náběžné hraně z komparátoru, \textit{Timepix3} na náběžnou hranu uloží do 14-bitového registru aktuální časové razítko z hodin detektoru. V obou případech \texttt{ToA} udává čas první interakce částice v dané akvizici.
 \end{description}
+
+%********************************************************************************
+% Vyčítání naměřených dat
+%********************************************************************************
+\section{Vyčítání naměřených dat}\label{chap:detectors:readout}
+Jednotlivé detektory rodiny \textit{Medipix} mají různou hardwarovou podporu pro vyčítání naměřených dat. Detektory vždy podporují alespoň jeden z těchto módů:
+\begin{description}
+	\item[Frame-Based] Pracuje-li detektor v tomto módu, pak jsou všechny registry čítačů pixelů vyčítány najednou, po dokončení aktuálního snímku. Vždy je třeba vyčíst všechny pixely bez ohledu na naměřenou hodnotu.
+	\item[Data-Driven] Tento mód, také označovaný jako \textit{Event-Driven}, byl prvně použit v detektoru \textit{Timepix3}. Pracuje-li detektor v tomto módu, pak v průběhu akvizice dat (resp. když \textit{shutter} signál na nastaven na úroveň \texttt{HIGH}) každý pixel po zpracování události notifikuje readout interface o tom, že nová data jsou připravena k vyčtení a readout interface je pak bez prodlení vyčte a dále zpracuje.
+\end{description}
+
+Na obrázku \ref{fig:det:frame_vs_event_driven} je vidět hlavní motivace pro zavedení podpory \textit{Data-Driven} módu u detektoru \textit{Timepix3}. Ukázalo se, že \textit{Data-Driven} mód je efektivnější při takových měření, kde okupance snímků je menší než zhruba $50\%$. Po překročení této meze je efektivnější použití \textit{Frame-Based} módů, protože není třeba přenášet souřadnice zasažených pixelů. Podle \cite{timepix3} vyčítací čas může být definován následovně:
+\begin{equation}\label{eq:det:readout_time}
+	T_{readout} = N_{pixels}*bits_{pixel}/BW
+\end{equation}
+kde:
+\begin{changemargin}{1.5cm}{1cm} 
+	\begin{itemize}
+		\item[$N_{pixels}$] je počet pixelů které je potřeba vyčíst (pro \textit{Frame-Based} mód jsou to všechny pixely detektoru ($256\times256$) a pro \textit{Data-Driven} je to počet zasažených pixelů),
+		\item[$bits_{pixel}$] je počet bitů na pixel ($28 b$ v \textit{Frame-Based} módu a $28b + 16b$ v \textit{Data-Driven} módu kvůli nutnosti přenášení adresy pixelu) a
+		\item[$BW$] je počet bytů za vteřinu, které je možné vyčíst z detektoru (\textit{bandwidth}). 
+	\end{itemize}
+\end{changemargin}
+
+\begin{figure}[th]
+	\begin{center}
+		\includegraphics[width=14cm]{figures/det_frame_vs_event_driven.png}
+		\caption{Doba vyčítání detektoru za použití \textit{Frame-based} (non-sparse) a \textit{Data-driven} (sparse) módu (převzato z~\cite{timepix3}).}
+		\label{fig:det:frame_vs_event_driven}
+	\end{center}
+\end{figure}
 
 %********************************************************************************
 % Kalibrace
