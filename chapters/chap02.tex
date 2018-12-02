@@ -1,9 +1,9 @@
 \addbibresource{reference.bib}
 
 \chapter{Úvod do hybridních částicových pixelových detektorů}\label{chap:detectors}
-Ionizující záření je lidskými smysli nedetekovatelné, avšak jeho studie nám umožňuje pochopit podstatu hmoty, její vlastnosti a interakce. To lidstvu umožnilo mnohé aplikace, jako je na příklad protonová terapie \cite{tpx_app_radiotherapy}, defektoskopie nebo zkoumání pravosti uměleckých děl. První pokusy o detekci ionizujícího záření sahají do počátku 20. století, kde pomocí mlžné komory se prvně podařilo zachytit trajektorii nabitých částic. Rozvoj polovodičové technologie dal vzniku novým detekčním technologiím až po v současné době nejpokrokovějším - pixelovým detektorům.
+Ionizující záření je lidskými smysli nedetekovatelné, avšak jeho studie nám umožňuje pochopit podstatu hmoty, její vlastnosti a interakce. To lidstvu umožnilo mnohé aplikace, jako je například protonová terapie \cite{tpx_app_radiotherapy}, defektoskopie nebo zkoumání pravosti uměleckých děl. První pokusy o detekci ionizujícího záření sahají do počátku 20. století, kde pomocí mlžné komory se prvně podařilo zachytit trajektorii nabitých částic. Rozvoj polovodičové technologie dal vzniku novým detekčním technologiím až po v současné době nejpokrokovějším - pixelovým detektorům.
 
-Existuje celá řada částicových pixelových detektorů, ale v této kapitole budou popsány jen hybridní pixelové detektory, pro které je typické, že se skládají ze dvou nezávisle vyrobených částí - senzoru a vyčítacího čipu. To oproti monolitickým detektorů, kde vyčítací elektronika je součástí senzoru přináší řadu výhod, jako na příklad snížení výrobních nákladů nebo možnost kombinace vyčítacího čipu se senzory různých materiálů (\textit{Si}, \textit{GaAs}, \textit{CaTe} apod.) a tlouštěk (vetšinou $300\mu m$, nebo $500\mu m$).
+Existuje celá řada částicových pixelových detektorů, ale v této kapitole budou popsány jen hybridní pixelové detektory, pro které je typické, že se skládají ze dvou nezávisle vyrobených částí - senzoru a vyčítacího čipu. To oproti monolitickým detektorů, kde vyčítací elektronika je součástí senzoru přináší řadu výhod, jako například snížení výrobních nákladů nebo možnost kombinace vyčítacího čipu se senzory různých materiálů (\textit{Si}, \textit{GaAs}, \textit{CaTe} apod.) a tlouštěk (vetšinou $300\mu m$, nebo $500\mu m$).
 
 Na tomto místě je třeba zmínit, že existuje více druhů těchto detektorů (\textit{AGH Fermilab, Pilatus, Philips Chromaix} apod.)\cite{detectors_review}, v této práci budou použity použity pouze detektory z rodiny detektorů Medipix.
 
@@ -14,7 +14,7 @@ Na tomto místě je třeba zmínit, že existuje více druhů těchto detektorů
 \begin{figure}[th]
 	\begin{center}
 		\includegraphics[width=12cm]{figures/det_chip.png}
-		\caption{Struktura hybridního polovodičového pixelového detektoru Timepix3, skládající se z vyčítacího čipu a polovodičového senzoru (převzato z~\cite{PlatkevicDisertace}).}
+		\caption{Struktura hybridního polovodičového pixelového detektoru Timepix3, skládající se z vyčítacího čipu a polovodičového senzoru \cite{PlatkevicDisertace}.}
 		\label{fig:det:chip}
 	\end{center}
 \end{figure}
@@ -26,11 +26,11 @@ Na obrázku \ref{fig:det:chip} je znázorněna struktura detektoru Timepix3. Vrc
 %********************************************************************************
 % Princip detekce
 %********************************************************************************
-\section{Princip detekce}
+\section{Princip detekce}\label{chap:detectors:princip}
 \begin{figure}[th]
 	\begin{center}
 		\includegraphics[width=10cm]{figures/det_recombination.png}
-		\caption{Princip detekce ionizujícího záření detektorem Timepix3 (převzato z~\cite{PlatkevicDisertace}).}
+		\caption{Princip detekce ionizujícího záření detektorem Timepix3 \cite{PlatkevicDisertace}.}
 		\label{fig:det:recombination}
 	\end{center}
 \end{figure}
@@ -50,7 +50,7 @@ Na rozdíl od CCD technologii, CMOS readout \textit{Timepix}/\textit{Medipix} de
 \begin{figure}[th]
 	\begin{center}
 		\includegraphics[width=14cm]{figures/det_pix.png}
-		\caption{Zpracování signálu pixelem detektoru dle nastaveného módu (\textit{Medipix}, \textit{ToT} a \textit{ToA}) (převzato z~\cite{PlatkevicDisertace}).}
+		\caption{Zpracování signálu pixelem detektoru dle nastaveného módu (\textit{Medipix}, \textit{ToT} a \textit{ToA}) \cite{PlatkevicDisertace}.}
 		\label{fig:det:modes}
 	\end{center}
 \end{figure}
@@ -63,7 +63,7 @@ Jak už bylo popsáno v předchozí kapitole, interagovaná částice vyvolá na
 Na obr. \ref{chap:detectors:operation_modes} je znázorněn příklad zpracování analýzy signálu následujícími módy:
 \begin{description}
     \item[Medipix mód (Counting mód)] V tomto módu je čítač inkrementován v každém cyklu měřící frekvence, pokud měřící napětí překročilo prahové napětí pixelu. Na konci akvizice pak hodnota čítače odpovídá počtu zaznamenaných částic.
-    \item[Time-Over-Threshold (ToT)] Pracuje-li pixel v tomto módu, pak jeho čítač je inkrementování v každém cyklu měřící frekvence, pokud měřící napětí je vyšší, než prahové napětí pixelu. Hodnota uložená v čítači odpovídá deponované energii interagovaných částic. Mezi energií a \texttt{ToT} je nelineární závislost a její zkoumání je předmětem energetické kalibrace detektoru, jak bude ukázáno v kapitole \ref{chap:detectors:calibration:tot}. Tento mód má široké spektrum aplikací, na příklad \cite{tot_app_counting} nebo \cite{tpx_app_radiotherapy}.
+    \item[Time-Over-Threshold (ToT)] Pracuje-li pixel v tomto módu, pak jeho čítač je inkrementování v každém cyklu měřící frekvence, pokud měřící napětí je vyšší, než prahové napětí pixelu. Hodnota uložená v čítači odpovídá deponované energii interagovaných částic. Mezi energií a \texttt{ToT} je nelineární závislost a její zkoumání je předmětem energetické kalibrace detektoru, jak bude ukázáno v kapitole \ref{chap:detectors:calibration:energy}. Tento mód má široké spektrum aplikací, například \cite{tot_app_counting} nebo \cite{tpx_app_radiotherapy}.
     \item[Time-of-Arrival (ToA)] Tímto módem disponují pouze detektory \textit{Timepix} a \textit{Timepix3}, avšak nesdílí stejný princip. Zatímco \textit{Timepix} detektor začne inkrementovat čítač v každém cyklu měřící frekvence po první náběžné hraně z komparátoru, \textit{Timepix3} na náběžnou hranu uloží do 14-bitového registru aktuální časové razítko z hodin detektoru. V obou případech \texttt{ToA} udává čas první interakce částice v dané akvizici.
 \end{description}
 
@@ -93,7 +93,7 @@ kde:
 \begin{figure}[th]
 	\begin{center}
 		\includegraphics[width=14cm]{figures/det_frame_vs_event_driven.png}
-		\caption{Doba vyčítání detektoru za použití \textit{Frame-based} (non-sparse) a \textit{Data-driven} (sparse) módu (převzato z~\cite{timepix3}).}
+		\caption{Doba vyčítání detektoru za použití \textit{Frame-based} (non-sparse) a \textit{Data-driven} (sparse) módu \cite{timepix3}.}
 		\label{fig:det:frame_vs_event_driven}
 	\end{center}
 \end{figure}
@@ -102,5 +102,61 @@ kde:
 % Kalibrace
 %********************************************************************************
 \section{Kalibrace}\label{chap:detectors:calibration}
+Každý detektor má své specifické vlastnosti, které jsou dány nejenom výrobním procesem, ale i závislostí na opotřebení a únavě materiálu v čase, okolní teplotě nebo na nastavených měřících parametrech (například \textit{bias}). Hlavní motivací pro kalibraci detektorů je minimalizace systematické chyby měření. Z pohledu aplikace získaných kalibračních dat je možné kalibrační metody rozdělit do dvou kategorií:
+\begin{enumerate}[label=(\roman*)]
+	\item Použití v průběhu akvizice dat - jedná se o data, která jsou použita pro nastavení akvizice dat v detektoru a mají přímý vliv na naměřená data, která danou metodou není možné dodatečně kalibrovat. Do této kategorie spadá například \textit{treshold equalizace} (viz \ref{chap:detectors:calibration:equalization}).
+	\item Transformace naměřených dat - v tomto případě jsou kalibrační data aplikovaná dodatečně na naměřená data. Tento přístup má výhodu v možnosti dodatečné kalibrace již naměřených dat. To této kategorie spadá například \textit{Energetická kalibrace} (viz \ref{chap:detectors:calibration:energy}) nebo \textit{Time-Walk korekce} (viz \ref{chap:detectors:calibration:timeWalk}).
+\end{enumerate}
 
-\subsection{Energetická kalibrace}\label{chap:detectors:calibration:tot}
+\subsection{Treshold equalizace}\label{chap:detectors:calibration:equalization}
+V podkapitole \ref{chap:detectors:princip} a \ref{chap:detectors:operation_modes} již bylo vysvětleno použití prahového napětí (\textit{treshold}) v průběhu akvizice dat detektorem. Každý pixel detektoru má ale rozdílné fyzikální vlastnosti dané výrobním procesem, s čímž souvisí i citlivost (resp. oddělení užitečného signálu od šumu) jednotlivých pixelů. Kromě globální hodnoty tresholdu je možné pro každý pixel upravit citlivost pomocí lokální $4b$ hodnoty tresholdu (viz obr. \todo přidat ref na schéma). 
+
+Vlastní proces equalizace probíhá tak, že se udělá treshold scan přes všechny hodnoty, přičemž je třeba minimalizovat interakce detektoru z částicemi. V běžné praxi stačí detektor dostatečně odstínit. Výstupem tohoto procesu je pak globální treshold a jeho 4-bitové korekce pro jednotlivé pixely.
+
+Jako vedlejší produkt tohoto procesu je rovněž maskovací matice detektoru, které obsahuje šumějící, nebo jinak poškozené pixely. To jsou například takové pixely, které bez přítomnosti interagujících částic hlásí překročení tresholdu.
+
+\subsection{Energetická kalibrace}\label{chap:detectors:calibration:energy}
+\begin{figure}[th]
+	\begin{center}
+		\includegraphics[width=13cm]{figures/calib_function.png}
+		\caption{Kalibrační funkce, udávající závislost mezi energií v \texttt{keV} a \texttt{ToT} \cite{Jakubek2011S262}, vzniklá proložením získaných kalibračních bodů funkcí \ref{eq:det:energyCalib} a sestávající se ze dvou částí - (i) nelineární částí pro oblast nižších energií (hyperbola) a (ii) lineární částí pro vyšší energie (přijímka).}
+		\label{fig:det:calib:calib_function}
+	\end{center}
+\end{figure}
+
+V předchozí části práce byl již představen \textit{Time-Over-Treshold} mód (viz \ref{chap:detectors:operation_modes}), ve kterém je detektor schopný měřit deponovanou energii interagovaných v částic, která je udávána v \texttt{ToT}. Jak již bylo ukázáno, vztah mezi energií v \textit{keV} a \texttt{ToT} je nelineární závislost a závisí na fyzikální vlastnostech daného pixelu, což je předmětem energetické kalibrace, která bude v této podkapitole popsána.
+
+Tato metoda \cite{Jakubek2011S262} spočívá v provedení několika sad měření se zdroji ionizujícího záření, jejichž energie jsou předem známy, a v jejich analytickém zpracování a vytvoření kalibrační funkce \ref{eq:det:energyCalib} pro každý pixel detektoru. V předchozí (bakalářské) práci \cite{BegeraBcThesis2016} byly tyto metody podrobně popsány a byl vytvořen software, který uživateli umožňuje vytvoření energetické kalibrace detektoru z naměřených dat.
+
+\begin{equation}\label{eq:det:energyCalib}
+	f_{calib}(x) = ax + b - \frac{c}{x-t}
+\end{equation}
+
+Pro měření kalibračních dat se jako efektivní řešení v praxi ukázalo použití rentgenové fluorescence\footnote{Děj ke kterému dochází při ozařování materiálu (nejčastěji \textit{Cu}, \textit{Fe}, \text{In} apod.) rentgenovým zářením, při kterém jsou z něj vyráženy excitované elektrony. Při vyražení elektronu na nižší energetické úrovni, elektron z vyšší energetické úrovně obsadí jeho místo a přebytečnou energii emituje formou vyzářeného fotonu - fluorescenčního záření, jehož charakteristické monoenergetické spektrum je pro většinu prvků dobře známé.} \cite{Jakubek-radiography_and_charge_sharing}. Pro zajištění dobré kvality kalibrace je třeba naměřit takový počet událostí, aby spektra ve snímcích byla dobře rozeznatelná. Z naměřeních dat jsou vyfiltrovány pouze tzv. \textit{Single-hit} události\footnote{Události, ve kterých částice interagovala pouze s jedním pixelem detektoru}, aby se minimalizovaly negativní vlastnosti \textit{Charge-sharing} efektu (díky společné elektrodě senzoru jsou díky interagující částici vzniklé elektrony zpracovány více pixely najednou a část deponované energie nemusí být ASIC čipem zpracována, protože vzniklý signál může být nižší než treshold daného pixelu).
+
+Z jednotlivých měření jsou pro každý pixel detektoru vytvořena spektra \texttt{ToT} hodnot. Na obrázku \ref{fig:det:calib:gerf} je znázorněn příklad takového spektra, získaného z fluorescence mědi. Požadovaný kalibrační bod se získá střední hodnoty \texttt{ToT} a tabulkové hodnoty energie fluorescenčního záření mědi. Střední hodnota je získána proložením spektra funkcí \ref{eq:det:gerf} - jedná se o součet Gaussovy funkce a Gaussovy chybové funkce (kvůli levé nesymetrii vzniklé \textit{Charge-sharing} efektem).
+
+\begin{equation}\label{eq:det:gerf}
+	f_{GERF}(x) = \underbrace{Ae^{ -\frac{(x-\mu)^2}{2\sigma^2} }}_{\text{Gaussova funkce}} +
+	\underbrace{ \frac{avg_{right} - avg_{left}}{\sigma\sqrt{2\pi}} \int_{-\infty}^t e^{ -\frac{(t-\mu)^2}{2\sigma^2} } + avg_{left}}_{\text{Gaussova chybová funkce}}
+\end{equation}
+kde:
+\begin{changemargin}{1.5cm}{1cm} 
+	\begin{itemize}
+		\item $\mathbf{A}$ je amplituda.
+		\item $\mathbf{\mu}$ je stření hodnota hledané energie.
+		\item $\mathbf{\sigma}$ udává rozptyl střední hodnoty energie $\mu$, kterou je možné ji vypočítat ze vzorce 
+			$\sigma = \frac{2\sqrt{2ln_2}}{FWHM}$, kde $FWHM$\footnote{z angl. Full Width at Half Maximum} udává šířku gausiánu v~polovině jeho výšky.
+		\item $\mathbf{avg_{right}}$ (resp. $\mathbf{avg_{left}}$) je průměrná hodnota spektra na pravém (resp. levém) úpatí gausiánu.
+	\end{itemize}
+\end{changemargin}
+
+\begin{figure}[th]
+	\begin{center}
+		\includegraphics[width=12cm]{figures/calib_gerf.png}
+		\caption{Příklad energetického spektra jednoho pixelu Timepix detektoru s proloženou funkcí \ref{eq:det:gerf} \cite{BegeraBcThesis2016}.}
+		\label{fig:det:calib:gerf}
+	\end{center}
+\end{figure}
+
+\subsection{Time-Walk korekce}\label{chap:detectors:calibration:timeWalk}
