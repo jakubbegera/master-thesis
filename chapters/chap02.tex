@@ -134,6 +134,14 @@ Tato metoda \cite{Jakubek2011S262} spočívá v provedení několika sad měřen
 
 Pro měření kalibračních dat se jako efektivní řešení v praxi ukázalo použití rentgenové fluorescence\footnote{Děj ke kterému dochází při ozařování materiálu (nejčastěji \textit{Cu}, \textit{Fe}, \text{In} apod.) rentgenovým zářením, při kterém jsou z něj vyráženy excitované elektrony. Při vyražení elektronu na nižší energetické úrovni, elektron z vyšší energetické úrovně obsadí jeho místo a přebytečnou energii emituje formou vyzářeného fotonu - fluorescenčního záření, jehož charakteristické monoenergetické spektrum je pro většinu prvků dobře známé.} \cite{Jakubek-radiography_and_charge_sharing}. Pro zajištění dobré kvality kalibrace je třeba naměřit takový počet událostí, aby spektra ve snímcích byla dobře rozeznatelná. Z naměřeních dat jsou vyfiltrovány pouze tzv. \textit{Single-hit} události\footnote{Události, ve kterých částice interagovala pouze s jedním pixelem detektoru}, aby se minimalizovaly negativní vlastnosti \textit{Charge-sharing} efektu (díky společné elektrodě senzoru jsou díky interagující částici vzniklé elektrony zpracovány více pixely najednou a část deponované energie nemusí být ASIC čipem zpracována, protože vzniklý signál může být nižší než treshold daného pixelu).
 
+\begin{figure}[th]
+	\begin{center}
+		\includegraphics[width=15cm]{figures/calib_gerf.png}
+		\caption{Příklad energetického spektra jednoho pixelu Timepix detektoru s proloženou funkcí \ref{eq:det:gerf} \cite{BegeraBcThesis2016}.}
+		\label{fig:det:calib:gerf}
+	\end{center}
+\end{figure}
+
 Z jednotlivých měření jsou pro každý pixel detektoru vytvořena spektra \texttt{ToT} hodnot. Na obrázku \ref{fig:det:calib:gerf} je znázorněn příklad takového spektra, získaného z fluorescence mědi. Požadovaný kalibrační bod se získá střední hodnoty \texttt{ToT} a tabulkové hodnoty energie fluorescenčního záření mědi. Střední hodnota je získána proložením spektra funkcí \ref{eq:det:gerf} - jedná se o součet Gaussovy funkce a Gaussovy chybové funkce (kvůli levé nesymetrii vzniklé \textit{Charge-sharing} efektem).
 
 \begin{equation}\label{eq:det:gerf}
@@ -143,20 +151,43 @@ Z jednotlivých měření jsou pro každý pixel detektoru vytvořena spektra \t
 kde:
 \begin{changemargin}{1.5cm}{1cm} 
 	\begin{itemize}
-		\item $\mathbf{A}$ je amplituda.
-		\item $\mathbf{\mu}$ je stření hodnota hledané energie.
-		\item $\mathbf{\sigma}$ udává rozptyl střední hodnoty energie $\mu$, kterou je možné ji vypočítat ze vzorce 
-			$\sigma = \frac{2\sqrt{2ln_2}}{FWHM}$, kde $FWHM$\footnote{z angl. Full Width at Half Maximum} udává šířku gausiánu v~polovině jeho výšky.
-		\item $\mathbf{avg_{right}}$ (resp. $\mathbf{avg_{left}}$) je průměrná hodnota spektra na pravém (resp. levém) úpatí gausiánu.
+		\item [$A$] je amplituda,
+		\item [$\mu$] je stření hodnota hledané energie,
+		\item [$\sigma$] je rozptyl střední hodnoty energie $\mu$, který je možné vypočítat ze vzorce 
+			\ref{eq:det:gerf_sigma}, kde \texttt{FWHM}\footnote{z angl. Full Width at Half Maximum} udává šířku gausiánu v~polovině jeho výšky a
+		\item [$avg_{right}$, $avg_{left}$] je průměrná hodnota spektra na pravém (resp. levém) úpatí gausiánu.
 	\end{itemize}
 \end{changemargin}
 
-\begin{figure}[th]
+\begin{equation}\label{eq:det:gerf_sigma}
+	\sigma = \frac{2\sqrt{2ln_2}}{FWHM}
+\end{equation}
+
+\subsection{Time-Walk korekce}\label{chap:detectors:calibration:timeWalk}
+
+\textit{Time-Walk} efekt je nežádoucí jev, který vzniká při interakci ionizujícího záření o různé energii. Velikost deponované energie má vliv na amplitudu a sklon napěťového pulzu na zesilovači pixelu. Při interakci ionizující částice s více pixely je pak díky tomuto jevu interagovanými pixely zaznamenána jiná hodnota \textit{Time-of-Arrival} (ToA), i přes to že událost byla způsobena stejnou částicí a ToA by měl být stejný. Viz obrázek \ref{fig:det:calib:timeWalk}, kde jsou pro interakci stejné částice čtyřmi sousedními pixely zaznamenány různé hodnoty ToA. 
+
+\begin{figure}
 	\begin{center}
-		\includegraphics[width=12cm]{figures/calib_gerf.png}
-		\caption{Příklad energetického spektra jednoho pixelu Timepix detektoru s proloženou funkcí \ref{eq:det:gerf} \cite{BegeraBcThesis2016}.}
-		\label{fig:det:calib:gerf}
+		\includegraphics[width=12cm]{figures/calib_timeWalk.png}
+		\caption{\textit{Time-walk} efekt: příklad interakce jedné částice se čtyřmi pixely detektoru, kde v každém pixelu byla deponována jiná energie, což na výstupů zesilovačů pixelů způsobilo jiné hodnoty napětí. Díky rozdílné charakteristice náběžné hrany pulzů byl treshold překročen v různých časech ($t_{1-4}$) \cite{Turecek2016TimeWakl}.}
+		\label{fig:det:calib:timeWalk}
 	\end{center}
 \end{figure}
 
-\subsection{Time-Walk korekce}\label{chap:detectors:calibration:timeWalk}
+S použitím detektoru \textit{Timepix3}\cite{timepix3} je možné tuto energeticky závislou chybu eliminovat za použití kalibrační metody \cite{Turecek2016TimeWakl}, protože tento detektor umožňuje měřit v ToA a ToT módu současně. Tato kalibrační metoda spočívá v analytickém zpracování dat získaných z měření se zdrojem alfa částic (v \cite{Turecek2016TimeWakl} použito $^{241}$\texttt{Am}), které generuje clustery o velikosti maximálně čtyři pixely. Nejprve je však třeba potřeba energeticky zkalibrovat \ref{chap:detectors:calibration:energy}. 
+
+O vybraných clusterech o velikosti 3 a 4 pixely pro $^{241}$\texttt{Am} víme, že součet jejich energií je $59.5keV$. Z clusteru je vybraný pixel s energií $30keV$, který je použit jako referenční (na \ref{chap:detectors:calibration:timeWalk} jako $t_1$), zbylá energie je náhodně rozdělena mezi ostatní pixely (na \ref{chap:detectors:calibration:timeWalk} jako $t_{2-4}$). Jednotlivé rozdíly $t_i+t_1$ jsou analytickými metodami, popsanými v \cite{Turecek2016TimeWakl}, zpracovány a výsledkem tohoto procesu jsou konstanty $c,d$ pro každý pixel detektoru, kterými lze vypočítat jeho \textit{Time-Walk offset} $\Delta T$:
+
+\begin{equation}\label{eq:det:timeWalk}
+	\Delta T = \frac{c}{(E - E_0)^d}
+\end{equation}
+kde:
+\begin{changemargin}{1.5cm}{1cm} 
+	\begin{itemize}
+		\item [$\Delta T$] je \textit{Time-Walk} korekce pixelu [$ns$] (výsledná hodnota ToA je pak rovna $ToA-\Delta T$),
+		\item [$E$] je energie pixelu [keV],
+		\item [$E_0$] je treshold pixelu [keV] a
+		\item [$c,d$] jsou konstanty.
+	\end{itemize}
+\end{changemargin}
