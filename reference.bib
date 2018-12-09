@@ -226,6 +226,31 @@ author = "R. Ballabriga and M. Campbell and E. Heijne and X. Llopart and L. Tlus
 keywords = "Charge sharing, Charge summing, CMOS, Medipix, Photon counting, Pixel, X-rays",
 abstract = "Medipix3 is a 256×256 channel hybrid pixel detector readout chip working in a single photon counting mode with a new inter-pixel architecture, which aims to improve the energy resolution in pixelated detectors by mitigating the effects of charge sharing between channels. Charges are summed in all 2×2 pixel clusters on the chip and a given hit is allocated locally to the pixel summing circuit with the biggest total charge on an event-by-event basis. Each pixel contains also two 12-bit binary counters with programmable depth and overflow control. The chip is configurable such that either the dimensions of each detector pixel match those of one readout pixel or detector pixels are four times greater in area than the readout pixels. In the latter case, event-by-event summing is still possible between the larger pixels. Each pixel has around 1600 transistors and the analog static power consumption is below 15μW in the charge summing mode and 9μW in the single pixel mode. The chip has been built in an 8-metal 0.13μm CMOS technology. This paper describes the chip from the pixel to the periphery and first electrical results are summarized."
 }
+
+@article{Katherine,
+  author={P. Burian and P. Broulím and M. Jára and V. Georgiev and B. Bergmann},
+  title={Katherine: Ethernet Embedded Readout Interface for Timepix3},
+  journal={Journal of Instrumentation},
+  volume={12},
+  number={11},
+  pages={C11001},
+  url={http://stacks.iop.org/1748-0221/12/i=11/a=C11001},
+  year={2017},
+  abstract={The Timepix3—the latest generation of hybrid particle pixel detectors of Medipix family—yields a lot of new possibilities, i.e. a high hit-rate, a time resolution of 1.56 ns, event data-driven readout mode, and the capability of measuring the Time-over-Threshold (ToT - energy) and the Time-of-Arrival (ToA) simultaneously. This paper introduces a newly developed readout device for the Timepix3, called "Katherine", featuring a Gigabit Ethernet interface. The primary benefit of the Katherine is the operation of Timepix3 at long distance (up to 100 m) from computer or server, which is advantageous for the installation at beam lines, where the access is difficult or where radiation levels are too high for human interventions. The maximal hit-rate is limited by the bandwidth of the Ethernet connection (peer-to-peer connection; up to 16 Mhit/s). Since the Katherine interface is equipped with a processor of high computational power (ARM Cortex-A9 dual-core processor), it permits the use as a stand-alone (autonomous) radiation detector. The key features of the device are described in detail. These are the implemented high voltage power supply offering both polarities of bias voltage (up to ± 300 V), the automatic data sending to a sever via SSH, the automatic compensation of ToA values from columns with shifted matrix clock, etc. A dedicated control software was developed, which can be used for the detector preparation (sensor equalization, the DACs dependency scan, and the THL scan) and measurement control. Measured energy spectra from photon fields are shown.}
+}
+	
+  @article{fitpix,
+  author={V Kraus and M Holik and J Jakubek and M Kroupa and P Soukup and Z Vykydal},
+  title={FITPix — fast interface for Timepix pixel detectors},
+  journal={Journal of Instrumentation},
+  volume={6},
+  number={01},
+  pages={C01079},
+  url={http://stacks.iop.org/1748-0221/6/i=01/a=C01079},
+  year={2011},
+  abstract={The semiconductor pixel detector Timepix contains an array of 256 × 256 square pixels with pitch 55 μm. In addition to high spatial granularity the single quantum counting detector Timepix can provide also energy or time information in each pixel. This device is a powerful tool for radiation and particle detection, imaging and tracking. A new readout interface for silicon pixel detectors of the Medipix family has been developed in our group in order to provide a higher frame rate and enhanced flexibility of operation. The interface consists of a field programmable gate array, a USB 2.0 interface chip, DAC, ADC and a circuit which generates bias voltage for the sensor. The main control system is placed in the FPGA circuit which fully controls the Timepix device. This approach offers an easy way how to include new functionality and extended operation. The interface for Timepix supports all operation modes of the detector (counting, TOT, timing). The FITPix is a successor of the USB 1.22 Interface and the electronic readout is built with the latest available components, which allows achieving up to 90 frames per second with a single detector. The frame rate is about 20 times faster compared to the previous system while it maintains all same capabilities supported. In addition FITPix newly enables an adjustable clock frequency and hardware triggering which is a useful tool when there is the need for synchronized operation of multiple devices. Three modes of hardware trigger have been implemented: hardware trigger which starts the measurement, hardware trigger which terminates the measurement and hardware trigger which controls measurement fully. The entire system is fully powered through the USB bus. FITPix supports also readout from several detectors in chain in which case just an external power source is required. FITPix is a fully flexible device and the user needs no other equipment. FITPix combines high performance and mobility and it opens new fields of applications. The current version of the FITPix interface has dimension 45 mm × 60 mm.}
+}
+  	
     
 @article{atlasmpx,
   author={J Bouchami and F Dallaire and A Gutiérrez and J Idarraga and V Král and C Leroy and S Picard and S Pospíšil and O Scallon and J Solc and M
@@ -281,20 +306,6 @@ Suk and D Turecek and Z Vykydal and J Žemlièka},
   year =         2016,
   url = "https://medipix.web.cern.ch"
   }
-
-
-    
-@article{fitpix,
-  author={V Kraus and M Holik and J Jakubek and M Kroupa and P Soukup and Z Vykydal},
-  title={FITPix — fast interface for Timepix pixel detectors},
-  journal={Journal of Instrumentation},
-  volume={6},
-  number={01},
-  pages={C01079},
-  url={http://stacks.iop.org/1748-0221/6/i=01/a=C01079},
-  year={2011},
-  abstract={The semiconductor pixel detector Timepix contains an array of 256 × 256 square pixels with pitch 55 μm. In addition to high spatial granularity the single quantum counting detector Timepix can provide also energy or time information in each pixel. This device is a powerful tool for radiation and particle detection, imaging and tracking. A new readout interface for silicon pixel detectors of the Medipix family has been developed in our group in order to provide a higher frame rate and enhanced flexibility of operation. The interface consists of a field programmable gate array, a USB 2.0 interface chip, DAC, ADC and a circuit which generates bias voltage for the sensor. The main control system is placed in the FPGA circuit which fully controls the Timepix device. This approach offers an easy way how to include new functionality and extended operation. The interface for Timepix supports all operation modes of the detector (counting, TOT, timing). The FITPix is a successor of the USB 1.22 Interface and the electronic readout is built with the latest available components, which allows achieving up to 90 frames per second with a single detector. The frame rate is about 20 times faster compared to the previous system while it maintains all same capabilities supported. In addition FITPix newly enables an adjustable clock frequency and hardware triggering which is a useful tool when there is the need for synchronized operation of multiple devices. Three modes of hardware trigger have been implemented: hardware trigger which starts the measurement, hardware trigger which terminates the measurement and hardware trigger which controls measurement fully. The entire system is fully powered through the USB bus. FITPix supports also readout from several detectors in chain in which case just an external power source is required. FITPix is a fully flexible device and the user needs no other equipment. FITPix combines high performance and mobility and it opens new fields of applications. The current version of the FITPix interface has dimension 45 mm × 60 mm.}
-}
   
 @article{Jakubek-radiography_and_charge_sharing,
 title = "Energy-sensitive X-ray radiography and charge sharing effect in pixelated detector ",
@@ -348,5 +359,43 @@ keywords = "Dosimetry ",
 abstract = "Medipix2 is a semiconductor pixel detector (256Ã256 pixels, 55Ã55 ÎŒm2 each) which can count individual quanta of radiation. The detector will respond differently for different types of radiation. If the acquisition time is short enough with respect to radiation intensity, one can see characteristic tracks of individual quanta in an image taken (e.g., curved lines for electrons, round shaped clusters for alpha particles, heavy ions and slow neutrons, cone shapes for fast neutrons, simple dots for low energy X-rays, etc.). For effective visualization of neutrons, the device has to be equipped by corresponding neutron converter, which converts neutrons to heavy charged particles. By analyzing these patterns, in this so-called âtracking modeâ of operation, it is possible to distinguish individual tracks and classify them into predefined categories. For each âclusterâ detected, the features (such as parameters describing the shape and energy deposition estimation) can be extracted and used to distinguish radiation type. The energy deposited can be estimated by using calibration measurements with different types of radiation and variation of the discrimination threshold. "
 }
 
+@INPROCEEDINGS{atlastpx_sw, 
+author={P. Manek and J. Begera and B. Bergmann and P. Burian and J. Janecek and S. Polansky and S. Pospisil and M. Suk}, 
+booktitle={2017 International Conference on Applied Electronics (AE)}, 
+title={Software system for data acquisition and analysis operating the ATLAS-TPX network}, 
+year={2017}, 
+volume={}, 
+number={}, 
+pages={1-4}, 
+abstract={A network of 15 Timepix pixel detectors was installed within the ATLAS experiment at CERN, Geneva. The network is capable of measuring the composition and spectral characteristics of the radiation fields in real-time. Its operation is managed by a dedicated software system. The presented article describes primary software components of this system responsible for communication with detector hardware, online operation monitoring, remote acquisition control, automated data verification and analysis. The processed data can be accessed through an interactive web-based Data Visualization Application, which is available to the scientific community.}, 
+keywords={computerised instrumentation;data acquisition;data analysis;data visualisation;Internet;sensors;interactive Web-based data visualization application;data analysis;automated data verification;remote acquisition control;online operation monitoring;primary software component;composition characteristics;spectral characteristics;radiation field measurement;Geneva;CERN;ATLAS experiment;15 Timepix pixel detector;ATLAS-TPX Network;data acquisition;Detectors;Data visualization;Earth Observing System;Software;Physics;Data analysis;Control systems}, 
+doi={10.23919/AE.2017.8053593}, 
+ISSN={}, 
+month={Sept},}
 
-  
+@ARTICLE{atlastpx_luminosity, 
+author={A. Sopczak and B. Ali and T. Asawatavonvanich and J. Begera and B. Bergmann and T. Billoud and P. Burian and I. Caicedo and D. Caforio and E. Heijne and J. Janeček and C. Leroy and P. Mánek and K. Mochizuki and Y. Mora and J. Pacík and C. Papadatos and M. Platkevič and Š. Polanský and S. Pospíšil and M. Suk and Z. Svoboda}, 
+journal={IEEE Transactions on Nuclear Science}, 
+title={Precision Luminosity of LHC Proton–Proton Collisions at 13 TeV Using Hit Counting With TPX Pixel Devices}, 
+year={2017}, 
+volume={64}, 
+number={3}, 
+pages={915-924}, 
+abstract={A network of Timepix (TPX) devices installed in the ATLAS cavern measures the LHC luminosity as a function of time as a stand-alone system. The data were recorded from 13-TeV proton-proton collisions in 2015. Using two TPX devices, the number of hits created by particles passing the pixel matrices was counted. A van der Meer scan of the LHC beams was analyzed using bunch-integrated luminosity averages over the different bunch profiles for an approximate absolute luminosity normalization. It is demonstrated that the TPX network has the capability to measure the reduction of LHC luminosity with precision. Comparative studies were performed among four sensors (two sensors in each TPX device) and the relative short-term precision of the luminosity measurement was determined to be 0.1% for 10-s time intervals. The internal long-term time stability of the measurements was below 0.5% for the data-taking period.}, 
+keywords={semiconductor counters;precision luminosity;LHC proton+proton collisions;hit counting;TPX pixel device network;ATLAS cavern;LHC luminosity;pixel matrices;bunch-integrated luminosity;LHC beams;van der Meer scan;absolute luminosity normalization;short-term precision;luminosity measurement;time intervals;internal long-term time stability measurements;Large Hadron Collider;Sensors;Atmospheric measurements;Particle measurements;Uncertainty;Particle beams;Time measurement;Colliding beam accelerators;LHC;luminosity;Timepix}, 
+doi={10.1109/TNS.2017.2664664}, 
+ISSN={0018-9499}, 
+month={March},}
+  	
+@article{katherine_telescope,
+  author={P. Burian and P. Broulím and V. Georgiev and B. Bergmann and S. Pospíšil},
+  title={Particle telescope with Timepix3 pixel detectors},
+  journal={Journal of Instrumentation},
+  volume={13},
+  number={01},
+  pages={C01002},
+  url={http://stacks.iop.org/1748-0221/13/i=01/a=C01002},
+  year={2018},
+  abstract={In the presented work, we demonstrate how Timepix3 detectors, featuring the Katherine (Gigabit Ethernet interface) readout, can be used in a particle telescope. For the highly precise timestamp synchronization, a special timing unit (with time resolution ~ 13 ps) based on a Time-to-Digital-Converter (TDC) is used and interconnected with the readouts. The designed concept of the measurement chain was tested at the SPS facilities at CERN in a 40 GeV/c pion beam using a telescope of 3 synchronized Timepix3 detectors. Evaluating spatially and temporally coincident events, an overall time resolution below 2 ns was determined, whereby a systematic error of <1 ns was present.}
+}
+	

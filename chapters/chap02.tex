@@ -132,7 +132,7 @@ Tato metoda \cite{Jakubek2011S262} spočívá v provedení několika sad měřen
 	f_{calib}(x) = ax + b - \frac{c}{x-t}
 \end{equation}
 
-Pro měření kalibračních dat se jako efektivní řešení v praxi ukázalo použití rentgenové fluorescence\footnote{Děj ke kterému dochází při ozařování materiálu (nejčastěji \textit{Cu}, \textit{Fe}, \text{In} apod.) rentgenovým zářením, při kterém jsou z něj vyráženy excitované elektrony. Při vyražení elektronu na nižší energetické úrovni, elektron z vyšší energetické úrovně obsadí jeho místo a přebytečnou energii emituje formou vyzářeného fotonu - fluorescenčního záření, jehož charakteristické monoenergetické spektrum je pro většinu prvků dobře známé.} \cite{Jakubek-radiography_and_charge_sharing}. Pro zajištění dobré kvality kalibrace je třeba naměřit takový počet událostí, aby spektra ve snímcích byla dobře rozeznatelná. Z naměřeních dat jsou vyfiltrovány pouze tzv. \textit{Single-hit} události\footnote{Události, ve kterých částice interagovala pouze s jedním pixelem detektoru}, aby se minimalizovaly negativní vlastnosti \textit{Charge-sharing} efektu (díky společné elektrodě senzoru jsou díky interagující částici vzniklé elektrony zpracovány více pixely najednou a část deponované energie nemusí být ASIC čipem zpracována, protože vzniklý signál může být nižší než treshold daného pixelu).
+Pro měření kalibračních dat se jako efektivní řešení v praxi ukázalo použití rentgenové fluorescence\footnote{Děj ke kterému dochází při ozařování materiálu (nejčastěji \textit{Cu}, \textit{Fe}, \text{In} apod.) rentgenovým zářením, při kterém jsou z něj vyráženy excitované elektrony. Při vyražení elektronu na nižší energetické úrovni, elektron z vyšší energetické úrovně obsadí jeho místo a přebytečnou energii emituje formou vyzářeného fotonu - fluorescenčního záření, jehož charakteristické monoenergetické spektrum je pro většinu prvků dobře známé.} \cite{Jakubek-radiography_and_charge_sharing}. Pro zajištění dobré kvality kalibrace je třeba naměřit takový počet událostí, aby spektra ve snímcích byla dobře rozeznatelná. Z naměřených dat jsou vyfiltrovány pouze tzv. \textit{Single-hit} události\footnote{Události, ve kterých částice interagovala pouze s jedním pixelem detektoru}, aby se minimalizovaly negativní vlastnosti \textit{Charge-sharing} efektu (díky společné elektrodě senzoru jsou díky interagující částici vzniklé elektrony zpracovány více pixely najednou a část deponované energie nemusí být ASIC čipem zpracována, protože vzniklý signál může být nižší než treshold daného pixelu).
 
 \begin{figure}[th]
 	\begin{center}
@@ -192,11 +192,24 @@ kde:
 	\end{itemize}
 \end{changemargin}
 
+\subsection{ToA offset korekce}\label{chap:detectors:calibration:toa_correction}
+Jedná se o jev, ke kterému dochází u \textit{Timepix3} detektorů z důvodu chyby hardware, který způsobuje špatnou synchronizaci časového razítka napříč sloupci detektoru \cite{Katherine}. Tato chyba vzniká jen při zapnutí detektoru a poté je \texttt{ToA} offset již stabilní, takže je možné vytvořit korekci.
+
+Odstranění tohoto jevu spočívá ve vytvoření kompenzační tabulku pomocí středních hodnot interních testovacích pulzů \cite{timepix3}. Pro získání správných hodnot \texttt{ToA} z naměřených dat stačí jen odečíst příslušnou hodnotu z korekční tabulky.
+
 %********************************************************************************
 % Přehled detektorů rodiny Medipix
 %********************************************************************************
 \section{Přehled detektorů rodiny Medipix}\label{chap:detectors:medipix_overview}
 V této podkapitole budou stručně představeny jednotlivé detektory, které byly vyvinuty v rámci Medipix kolaborace \cite{medipix-www}.
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=15cm]{figures/det_timepix3_schema.png}
+		\caption{Schéma pixelu detektoru \textit{Timepix3} se společnou elektronikou pro 8 pixelů (tzv.\textit{Super-pixel}) \cite{timepix3}.}
+		\label{fig:det:medipix_overview:timepix3_schema}
+	\end{center}
+\end{figure}
 
 \begin{description}
 
@@ -219,18 +232,111 @@ V této podkapitole budou stručně představeny jednotlivé detektory, které b
 	Také je možné zapojit tento readout čip (s pixelem o hraně $55~\mu m$) na senzor s pixely o hraně $110~\mu m$, takže výsledný super-pixel má k dispozici 8 čítačů a pomocí různých úrovní tresholdů jej lze použít jako 8-kanálový spektrometr.
 
 	Stejně jako svůj předchůdce je schopný operovat pouze v Medipix módu (viz \ref{fig:det:modes}) a podporuje pouze vyčítání po snímcích (viz \ref{chap:detectors:readout}).
-	
-	\begin{figure}
-		\begin{center}
-			\includegraphics[width=15cm]{figures/det_timepix3_schema.png}
-			\caption{Schéma pixelu detektoru \textit{Timepix3} s možností zapojení do \textit{Super-pixelu} \cite{timepix3}.}
-			\label{fig:det:medipix_overview:timepix3_schema}
-		\end{center}
-	\end{figure}
 
 	\item[Timepix3] V roce 2014 byl vyvinut detektor \textit{Timepix3} \cite{timepix3}, jako nástupce \textit{Timepix} detektoru. Rozměry byly zachovány, ale bylo použita $130~\mu m$ výrobní technologie, jako u \textit{Medipix3}. Detektor nově umožňuje měřit v \texttt{ToA} a \texttt{ToT} současně a jeho časové rozlišení bylo vylepšeno více než na šestinásobek.
 
 	Detektor nově umožňuje kromě vyčítání po snímcích i \textit{Data-Driven} mód, kde jsou data v rámci akvizice kontinuálně z detektoru vyčítána (viz \ref{chap:detectors:readout}). Takto navržená architektura umožňuje vyčítat data až do $40M_{hits}*cm^{-2}*s^{-1}$ bez globální mrtvé doby detektoru (pouze s lokální mrtvou dobou - pro jednotlivé pixely, ze kterých jsou vyčítána naměřená data).
 
+	Na obrázku \ref{fig:det:medipix_overview:timepix3_schema} je znázorněno blokové schéma jednoho pixelu \textit{Timepix3} detektoru, který se skládá z analogové a digitální části (pro popis funkcionality viz \ref{chap:detectors:princip}). Na obrázku vpravo je pak společná elektronika, sdílená vždy 8 sousedními pixely (tzv.\textit{Super-pixel}).
+
 \end{description}
 
+%********************************************************************************
+% Vyčítací rozhraní
+%********************************************************************************
+\section{Vyčítací rozhraní}\label{chap:detectors:readouts}
+V této podkapitole bude popsáno několik vyčítacích rozhraní, které byly vyvinuty (v rámci \textit{Medipix kolaborace}\footnoteUrl{https://medipix.web.cern.ch}) ÚTEF ČVUT v Praze a jeho spinoff společností ADVACAM s.r.o. Pro komunikaci s \textit{Timepix3} detektorem bude v rámci této práce bude použito nově vyvinuté vyčítací rozhraní \textbf{Katherine} \cite{Katherine} \ref{chap:detectors:readouts:katherine}.
+
+\subsection{FITPix}
+FITPix \cite{fitpix} vyčítací rozhraní bylo vyvinuto v roce 2010 a skládá ze z programovatelného hradlového pole (\texttt{FPGA})\footnote{Z angl. Field Programmable Gate Array}, USB 2.0 rozhraní, DAC\footnote{Převodník digitálního signálu na analogový.} a ADC\footnote{Převodník analogového signálu na digitální.} převodníků a obvodů pro generování měřícího napětí (\textit{bias}).
+
+Zařízení je s detektorem propojeno pomocí \textit{LVDS}\footnote{Z angl. Low-voltage differential signaling} a je schopné jeho plnohodnotného řízení, vč. nastavování hodnot (měřící frekvence, treshold, bias apod.), řízení akvizice a vyčítání naměřených dat rychlostí až $90$ snímků za sekundu. Zařízení rovněž umožňuje připojení externího trigger signálů pro synchronizované měření s více detektory současně.
+
+FITPix je možné použít pouze jako nízkoúrovňové vyčítací rozhraní a veškerá business logika musí být implementována v připojeném počítači (na př. deserializace a derandomizace naměřených dat apod.). Jako řídící software je použit \textit{Pixelman}\cite{pixelman}. Zařízení je kompatibilní se všemi detektory uvedenými v \ref{chap:detectors:medipix_overview}, kromě \textit{Timepix3}.
+
+\subsection{AdvaDAQ}
+AdvaDAQ \cite{Turecek2016TimeWakl} je nástupcem vyčítacího rozhraní FITPix a kompatibilní se všemi detektory uvedenými v \ref{chap:detectors:medipix_overview}. Principem funkce vychází ze svého předchůdce, ale díky použitému rozhraní USB 3.0 je schopné dosahovat maximálního datového toku $2,9~Gb/s$. Deserializace naměřených dat byla implementována do firmware \textit{FPGA}. Pro řízení tohoto rozhraní, vizualizaci a analýzu naměřených dat byl vyvinut software Pixet.
+
+\subsection{ATLAS Pix}
+ATLAS Pix \cite{atlastpx_sw, BegeraBcThesis2016} je zařízení vyvinuté v rámci experimentu \textit{ATLAS-TPX}, síti 16 hybridních částicových detektorů \textit{Timepix}, instalované v rámci experimentu \textit{ATLAS} na \textit{LHC} v \textit{CERN}, operující od roku 2014.
+
+Zařízení vzniklo modifikací vyčítacího rozhraní \textit{FITPix} a disponuje \texttt{FPGA}, \texttt{LVDS} zesilovačem a počítače \textit{Raspberry Pi}, ve kterém je implementován software, poskytující API pro své vzdálené řízení přes \texttt{TPC} protokol. Komunikace mezi \texttt{FPGA} a počítačem je realizována pomocí \texttt{SPI}\footnote{Z angl. Serial Peripheral Interface.} protokolu.
+
+\subsection{Katherine}\label{chap:detectors:readouts:katherine}
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=15cm]{figures/det_katherine.png}
+		\caption{Vyčítací rozhraní \textit{Katherine} s přípojeným detektorem \textit{Timepix3} vlevo a popisem vstupných a výstupních portů vpravo\cite{Katherine}.}
+		\label{fig:det:readout:katherine}
+	\end{center}
+\end{figure}
+
+Katherine \cite{Katherine} je pokročilé vyčítací rozhraní dedikované pro řízení jednoho \textit{Timepix3} detektoru, které v sobě obsahuje embedovaný počítač, čímž se vymezuje od ostatních vyčítacích rozhraní bez procesoru, kde business logika musí být implementována v připojeném počítači, což má negativní dopad na vytížení jeho procesoru. 
+
+Hlavním benefitem zařízení je možnost jeho použití na experimentech, kde je nutná větší vzdálenost mezi detektorem a vyčítacím rozhraním (u \textit{Katherine až $100~m$}). Toto omezení je dáno především nedostatečnou radiační a elektromagnetickou odolností použité elektroniky. To umožňuje aplikace v blízkosti jaderných reaktorů nebo na částicových urychlovačích (na příklad měření luminosity v rámci experimentu ATLAS na LHC v CERN \cite{atlastpx_luminosity}). 
+
+Zařízení je kompatibilní s \textit{Timepix3} detektory, které jsou osazeny na CERN chipboard, nebo na kompatibilní \texttt{PCB}\footnote{Z angl. Printed Circuit Board.} s \texttt{VHDCI}\footnote{Z angl. Very-High-Density-Cable-Interconnect.} 68-pinovým konektorem. S detektorem může být propojeno na přímo (viz obr. \ref{fig:det:readout:katherine} vlevo), prodlužovacím \texttt{VHDCI} kabelem o maximální délce až $10~m$, nebo speciálním extenderem na bázi ethernetu pro vzdálenosti až $120~m$. S rostoucí vzdáleností ale klesá maximální datový tok (viz tabulka \ref{tab:det:katherine:data_flow}).
+
+\begin{table}[th]
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			\textbf{Vzdálenost} & \textbf{Typ propojení} & \textbf{Počet kanálů - datový tok} & \textbf{Hit Rate} \\
+			\hline
+			$3~m$ & VHDCI & $2 \times 640~Mb/s$ & $16~M_{hits}/s$\\
+			$10~m$ & VHDCI & $4 \times 160~Mb/s$ & $10~M_{hits}/s$\\
+			$20~m$ & Ethernet & $2 \times 640~Mb/s$ & $16~M_{hits}/s$\\
+			$100~m$ & Ethernet & $4 \times 80~Mb/s$ & $5~M_{hits}/s$\\
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption{Katherine: závislost maximálního datového toku na typu propojení mezi detektorem a vyčítacím rozhraním \cite{Katherine}.}
+	\label{tab:det:katherine:data_flow}
+\end{table}
+
+Jeho maximální výstupní datový tok je daný použitým gigabitovým ethernetem, které odpovídá ekvivalentu datového toku $16M_{hits}*cm^{-2}*s^{-1}$ v \textit{Data-Driven} módu (viz \ref{chap:detectors:readout}). \textit{Timepix3} detektor je schopný generovat až $80M_{hits}*cm^{-2}*s^{-1}$, takže při vyšší zátěži není zařízení schopné přenést všechny zaznamenané události. Nicméně, \textit{Katherine} disponuje vestavěnou \texttt{DDR3} pamětí o velikosti $1~GB$, která funguje jako buffer - když je aktuální počet zpracovávaných událostí vyšší, než je maximální datový tok spojení s nadřazeným počítačem, tak se data hromadí v bufferu, aby později při nižší intenzitě zpracovávaných událostí mohly být přeneseny.
+
+Pro úplnost výčtu vstupních a výstupných portů je třeba doplnit, že \textit{Katherine} také disponuje \texttt{GPIO}\footnote{Z angl. General Purpose Input/Output.} konektorem (viz obr. \ref{fig:det:readout:katherine} vpravo), zahrnující 4 obecné signály pro integraci s dalšími zařízeními a další rozšíření, jako na příklad pro trigger synchronizaci (pro možnost zapojení na příklad do detektorového teleskopu \cite{katherine_telescope}). Zařízení dále disponuje \texttt{LEMO} konektorem (viz \ref{fig:det:readout:katherine}), poskytujícím vysokonapěťový zdroj ($\pm300~V$) pro \textit{bias} (měřící napětí) detektoru.
+
+Vyčítací rozhraní má implementovanou podporu pro \texttt{ToA} korekci (viz \ref{chap:detectors:calibration:toa_correction}), které je automaticky vykonána v rámci startovací sekvence, kde jsou poškozené sloupce identifikovány pomocí středních hodnot testovacích pulzů a je sestavena kompenzační tabulka. V průběhu akvizice dat jsou \texttt{ToA} hodnoty automaticky opraveny odečtením příslušných hodnot z výše zmíněné tabulky.
+
+\subsubsection{Komunikace s nadřazeným PC a řízení akvizice dat}
+Vyčítací rozhraní \textit{Katherine} je dle dané konfigurace schopné operovat ve dvou módech:
+
+\begin{description}
+	\item [SFTP klient (autonomní mód)] V tomto módu zařízení operuje z pohledu řízení a akvizice dat zcela nezávisle. Po spuštění zařízení, resp. dokončení startovací sekvence, jsou z dodané konfigurace automaticky nastaveny měřící a akviziční parametry detektoru a je spuštěna akvizice dat. Získaná data jsou pak nepřetržitě posílána pomocí \textit{SFTP}\footnote{Z angl. Secure File Transfer Protocol (protokol pro zabezpečený přenos souborů mezi počítači pomocí \texttt{TPC} protokolu).} na server, kde jsou data ukládána do definovaného adresáře v \texttt{ASCII} souborech. Výhoda tohoto módu spočívá v jednoduchosti obsluhy a hodí se především pro takové aplikace, kde není očekáván vysoký datový tok a kde není potřeba měnit nastavení detektoru, protože každé jeho změna vyžaduje restart zařízení.
+	
+	\item [Manuální mód] Pracuje-li zařízení v tomto módu, pak k jeho funkci je třeba řízení z nadřazeného počítače pomocí proprietárního \texttt{UDP}\footnote{Z angl. User Datagram Protocol.} protokolu. Protokol využívá dvou \texttt{UDP} portů - \textbf{řídícího} a \textbf{datového}.
+
+	\begin{description}
+		\item [Komunikační] port je vyhrazen pro pro přenos řídících a konfiguračních paketů. Komunikace je implementována pomocí $36$ příkazů, kde každý z nich se skládá 64-bitového datagramu pro request a 64-bitového datagramu pro response, takže se jedná o synchronní potvrzovanou komunikaci\footnote{Potvrzování je realizováno na aplikační úrovni \texttt{ISO/OSI} modelu.}. Pro příklad viz obrázek \ref{tab:det:katherine:comm:packet_example}, kde je zobrazen request datagramu pro vyčtení biasu a jeho response.
+		
+		\item [Datový] port je určen pro jednosměrnou komunikaci z \textit{katherine} do nadřazeného počítače a slouží k přenosu naměřených dat. každý datagram se skládá z 3-bitové hlavičky 43-bitových dat.
+	\end{description}
+	
+\end{description}
+
+\begin{figure}[]
+	\begin{center}
+		\begin{bytefield}[endianness=big,bitwidth=0.52em]{64}
+			\begin{rightwordgroup}{Odchozí\\datagram}
+				\bitheader{63,56,48,40,32,24,16,8,0} \\
+				\bitbox{16}{\textbf{Command ID}} & \bitbox{48}{\textbf{Command data}} \\
+				\bitbox{16}{0x0C} & \bitbox{8}{-} & \bitbox{8}{bias id} & \bitbox{32}{-}
+			\end{rightwordgroup}
+		\end{bytefield}
+		
+		\begin{bytefield}[endianness=big,bitwidth=0.52em]{64}
+			\\ \\ \\
+			\begin{rightwordgroup}{Příchozí\\datagram}
+				\bitheader{63,56,48,40,32,24,16,8,0} \\
+				\bitbox{16}{\textbf{Command ID}} & \bitbox{48}{\textbf{Command data}} \\
+				\bitbox{16}{0x0C} & \bitbox{16}{-} & \bitbox{32}{bias (float)}
+			\end{rightwordgroup}
+		\end{bytefield}
+	\end{center}
+	\caption{Katherine: příklad requestu a response řídícího datagramu pro vyčtení biasu.}
+	\label{tab:det:katherine:comm:packet_example}
+\end{figure}
+
+V rámci této práce bude použit druhý zmíněný - manuální mód, protože je méně náročný na šířku pásma a umožňuje vzdálené řízení detektoru. V dalších kapitolách (viz \todo ref) bude komunikační rozhraní vyčítacího rozhraní \textit{Katherine} popsáno podrobněji.
