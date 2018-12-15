@@ -1,0 +1,21 @@
+\addbibresource{reference.bib}
+
+\chapter{Návrh architektury}\label{chap:arch}
+V této kapitole bude čtenář seznámen s návrhem a koncepcí softwarového systému \textbf{Pixnet} - software pro distribuované řízení sítě částicových pixelových detektorů, který byl navržen a implementován v rámci této práce. V této kapitole bude popsána motivace pro vznik tohoto systému a budou představeny jednotlivé komponenty systému a jejich vzájemné interakce. Pro detailnější popis návrhu a implementace komponent viz kapitoly \todo (přidat ref na handler až master).
+
+%********************************************************************************
+% Motivace
+%********************************************************************************
+\section{Motivace}
+Hlavní motivací pro vznik tohoto systému je fakt, že moderní částicové pixelové detektory jsou schopné generovat vysoký datový tok, na příklad \textit{Timepix3} má teoretické maximum \unit{5,12}{Gb/s} (viz \ref{chap:detectors:medipix_overview:timepix3}), takže nedistribuovaný systém, který by operoval na jedné instanci, by nebyl schopný zpracovat datový tok, který síť o vice detektorech je schopná generovat. 
+
+Zde je možné namítnout, že každý systém je možné škálovat vertikálně\footnote{Škálováním v kontextu počítačových systému rozumíme změnu vlastností daného systému za účelem zvýšení, nebo snížení jeho výpočetního výkonu (ev. jiného sledovaného parametru). Zatímco u vertikálního škálování měníme vlastnosti jednoho uzlu systému (na příklad přidáváním procesorů, pamětí, kapacity úložiště apod.), u horizontálního škálování přidáváme jednotlivé uzly - samostatné  jednotky (na př. počítače). Pro úplnost je třeba doplnit že vertikální škálování má své omezení z hlediska použitého hardware, u horizontálního škálování žádná taková omezení nejsou.}. Zatímco cena škálování horizontálně škálovatelného systému je lineární závislost výpočetního výkonu na ceně, u vertikálně škálovatelného systému tato závislost roste exponenciálně. Jelikož vertikální škálování takového systému je  vysoce neefektivní, nebude dále uvažováno a tato práce se bude věnovat jenom návrhu a implementaci horizontálně škálovatelného řešení.
+
+ Další motivací pro vytvoření tohoto systému je možnost řízení heterogenní sítě detektorů homogenním způsobem. Heterogenní sítí detektorů rozumíme takovou síť, ve které jsou detektory různých typů (na příklad \textit{Timepix}, \textit{Timepix3} apod, viz \ref{chap:detectors:medipix_overview}), komunikující různými komunikačními protokoly prostřednictvím různých vyčítacích rozhraních (na příklad \textit{Katherine}, \textit{ATLAS Pix} apod, viz \ref{chap:detectors:readouts}). V další části textu bude detailně popsána navržená a implementovaná modulová architektura, která výše zmíněné umožňuje.
+
+ Pro potřeby experimentu \textit{ATLAS TPX} byl již vyvinut software \cite{atlastpx_sw,BegeraBcThesis2016} pro řízení sítě detektorů \textit{Timepix} \ref{chap:detectors:medipix_overview:timepix}, prostřednictvím vyčítacího rozhraní \textit{ATLAS Pix} \ref{chap:detectors:readouts:atlaspix}. Software však nevyhovuje požadavkům zmíněných výše:
+ \begin{enumerate}[label=(\roman*)]
+     \item \textbf{Škálovatelnost} - systém je navržen bez možnosti horizontálního škálování. Všechny detektory sítě jsou řízeny z jednoho uzlu a všechna vygenerovaná data jsou jím zpracovávány. Možnost použití pouze jednoho uzlu představuje nejslabší článek systému, který nemůže být použit pro řízení a vyčítání dat z větší sítě detektorů.
+     \item \textbf{Modularita} - systém implementuje pouze komunikační protokol vyčítacího rozhraní \textit{ATLAS Pix} \ref{chap:detectors:readouts:atlaspix}. Přidání podpory nového vyčítacího rozhraní představuje významnou modifikaci architektury systému a pro nasazení nové verze je nutná odstávka celého systému.
+ \end{enumerate}
+Pro potřeby modernizace sítě \textit{ATLAS TPX} (za použití detektorů \textit{Timepix3}) bylo rozhodnuto o vývoji software, který bude navržen a implementován tak, aby požadavky na škálovatelnost a modularitu byly zajištěny.
