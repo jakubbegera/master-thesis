@@ -144,7 +144,26 @@ Po dokončení inicializační sekvence je uživatel notifikován a v případě
 Jako datové úložiště pro konfigurace detektorů, informace o jejich stavu a o stavu jednotlivých handlerů bude navržena relační \texttt{SQL}\footnote{Z angl. \textit{Structured Query Language} (strukturovaný dotazovací jazyk).} databáze, ke které bude přistupovat pouze backend mastera.
 
 \section{Hardwarová architektura}
+V předchozí podkapitole byla popsána softwarová architektura. Fyzická instalace sítě přináší další omezení, především z pohledu síťové infrastruktury, které budou popsány v této podkapitole.
 
+Na obrázku \ref{fig:arch:hw_architecture} je příklad sítě sestávající se ze dvou podsítí (tzv \textit{subnetwork}). Podsítí rozumíme takovou podmnožinu detektorů a handlerů, ve které libovolný detektor může být přiřazen libovolnému handleru. Pro úplnost je třeba doplnit, že nutnou podmínkou je, aby všechny handlery měly spojení s masterem a s distribuovaným úložištěm naměřených dat.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=15cm]{figures/arch_hw.pdf}
+		\caption{Pixnet: hardwarová architektura s příkladem realizace sítě o dvou podsítích, kde v každé jsou dva handlery a pět detektorů, mastera (s \textit{SQL} databází pro persistenci konfigurace a frontend server poskytující webovou aplikaci) a centrálního datového úložiště naměřených dat.}
+		\label{fig:arch:hw_architecture}
+	\end{center}
+\end{figure}
+
+Master se skládá ze tří komponent:
+\begin{description}
+    \item[Backend serveru] implementujícího business logiku pro komunikaci s handlery (jako na příklad přiřazování detektorů, řízení akvizice dat apod.). Server zároveň poskytuje \textit{API} pro možnou integraci s webovým frontend serverem se systémy třetích stran\footnote{Na příklad pro experiment \textit{ATLAS TPX} v CERN je plánována integrace s \texttt{DAC} \cite{cern_dcs} (\textit{Detector control system}), který umožňuje centrální řízení detektorových systému, včetně integrace do bezpečnostního systému \texttt{DSS} (\textit{Detector safety system}), datového akvizičního systému \texttt{DAQ} (\textit{Data Acquisition System}) apod.}, kterými muže být plnohodnotně řízen.
+    \item[Databázového serveru] poskytující relační \texttt{SQL} databázi pro persistenci konfigurace systému, včetně implementace potřebných rozhraní, stavových informací sítě apod.
+    \item[Frontend serveru] poskytujícího webovou aplikaci s uživatelským rozhraním pro řízení mastera pomocí jeho \texttt{API}, resp. pro řízení celé sítě.
+\end{description}
+
+Na příkladu zmíněném výše je sít využívající jedno centrální datové úložiště. Realizace této komponenty je závislá na poskytnuté implementaci datových rozhraní jednotlivých detektorů. Může být implementovaná pomocí centralizovaného, nebo distribuovaného systému. Umístění úložiště také není omezeno - může být umístěno v sítě mastera, v jednotlivých podsítích, v síti mastera i v jednotlivých podsítích (buffer pro malou šířku pásma spojení podsíť - master síť), nebo třeba v internetu (cloudové úložiště, jako například \textit{Firebase Firestore}, \textit{Amazon 3S}, \textit{Microsoft Azure} apod.).
 
 \section{Škálovatelnost}
 \section{Použité technologie}
