@@ -145,6 +145,8 @@ valueCommands.add(ValueCommand(
 \label{src:handler:value_command}
 \end{code}
 
+Pro vykonání \texttt{ValueCommand} je třeba implementovat metody \texttt{executeSetValueCommand()} a \texttt{executeGetValueCommand()}, viz řádky 19 a 20 komunikačního interface (zdrojový kód \ref{src:handler:comm_intf}). První metoda slouží pro nastavení hodnot a akceptuje ID příkazu a \texttt{valuePayload}, který obsahuje hodnotu jednoho ze šesti podporovaných datových typů, a je možné jej vykonat pouze pro příkazy, které mají \texttt{accessType}, umožňující zápis hodnot. Druhá metoda slouží pro čtení hodnot, jako vstupní parametr má ID příkazu a její návratový typ je \texttt{ValuePayload}, obsahující hodnotu čteného parametru.
+
 Dalším typem příkazů je získání seznamu podporovaných \texttt{ExecutionCommands} (viz 11. řádek komunikačního interface \ref{src:handler:comm_intf}). Od \texttt{ValueCommands} se liší tím, že vstup a výstup není omezen stejnou veličinou (resp. jejím modelem hodnot) a ani jejich množstvím. Tento přístup tedy umožňuje definovat příkazy, které mají 0 až m vstupních hodnot a 0 až n výstupních hodnot. Obdobně jako \texttt{AbstractValueCommand}, i \texttt{AbstractExecutionCommands} má v poskytované knihovně dvě implementace:
 \begin{enumerate}[label=(\roman*)]
 	\item \texttt{ExecutionCommand} je definován obdobně jako \texttt{ValueCommand} - má své ID, jméno, ale také obsahuje seznamy rozšířených modelů hodnot - jeden vstupní a jeden výstupní. Rozšířený model hodnot obsahuje již zmíněný \texttt{valueModel}, dále pak jméno hodnoty, její ID (textový řetězec) a \texttt{valueUnit}.
@@ -193,6 +195,24 @@ executionCommands.add(ExecutionCommand(
 \label{src:handler:execution_command}
 \end{code}
 
+Pro vykonání \texttt{ExecutionCommand} slouží metoda \texttt{executeExecutionCommand()}, viz řádek 21 komunikačního interface (zdrojový kód \ref{src:handler:comm_intf}). Metoda akceptuje ID příkazu a mapu (tzn. seznam párů klíč - hodnota) jednotlivých hodnot. Klíčem v mapě je ID parametru a hodnota je již výše zmíněný \texttt{ValuePayload}, obsahující hodnotu parametru. Výstupem volání metody je pak mapa výstupních parametrů příkazu.
+
+Pro přípojení detektoru, odpojení detektoru a zjišťování stavu připojení slouží metody \texttt{connect()}, \texttt{disconnect()} a \texttt{isConnected()} (viz řádky 15 až 17 zdrojového kódu \ref{src:handler:comm_intf}). Aby bylo možné provést jakoukoliv operaci interagující s detektorem (tj. vykonávání příkazů a nahrávání souborů) je nutné, aby byl detektor připojen, resp. metoda \texttt{isConnected()} musí vracet \texttt{true}.
+
+Do detektorů rodiny \textit{Medipix} je třeba před jejich použitím nahrát konfiguraci jednotlivých pixelů detektoru. Konfigurace je pole bytů, kde nastavení jednoho pixelu je serializováno do jednoho bytu. Z tohoto důvodu je třeba přidat podporu pro nahrávání velkých binárních objektů (tzv. \texttt{LOB}\footnote{Z angl. Large Object.}).
+Pro nahrávání souborů do detektoru slouží příkaz \texttt{uploadFile()} (viz řádek 22 zdrojového kódu \ref{src:handler:comm_intf}), který akceptuje ID souboru a jeho binární reprezentaci. Pro poskytnutí seznamu podporovaných souborů, resp. jejich ID, je třeba implementovat metodu \texttt{getAcceptedFilesKeys()} (viz řádek 12 zdrojového kódu \ref{src:handler:comm_intf}).
+
+V kapitole \ref{chap:arch:sw:detector} již byl popsán tok měřených dat v handleru, resp. od komunikačního k datovému modulu. Přenos dat je realizován asynchronní blokující frontou (viz obr. \ref{fig:handler:data_queue}), tj. frontou ke které může asynchronně přistupovat více vláken současně a zároveň čtení z fonty je implementováno jako blokující operace (tzn. že zablokuje čtecí vlákno, než bude ve frontě nějaký element v vyčtení). Jelikož komunikační modul je zodpovědný za vytvoření instance fronty, tak její implementace je zcela v kompetenci poskytovatele komunikačního modulu. Jedinou podmínkou je, aby fronta implementovala interface \texttt{BlockingQueue}\footnote{Z \textit{Java Collections Framework}.}. V další části textu (viz \ref{chap:katherine}) bude čtenář seznámen s implementací komunikačního modulu s implementací fronty pomocí \texttt{LinkedBlockingQueue}\footnote{Implementace \texttt{BlockingQueue} pomocí spojového seznamu. V této frontě jsou elementy řazení pomocí FIFO (first-in-first-out). Fronty založené na spojové struktuře umožňují (ve srovnání s frontami založenými na dynamickém poly) vyšší datový tok, zejména pro vícevláknové aplikace.}.
+\begin{figure}[h]
+	\begin{center}
+		\vspace*{0.5cm}
+		\includegraphics[width=14.5cm]{figures/handler_data_queue.pdf}
+		\caption{Asynchronní blokující fronta naměřených dat s příkladem produkujících vláken v komunikačním modulu a přijímacím vláknu v datovém modulu.}
+		\label{fig:handler:data_queue}
+	\end{center}
+\end{figure}
+
+Poslední metodou komunikačního interface je metoda \texttt{setCallback()} (viz 23. řádek komunikačního interface (zdrojový kód \ref{src:handler:comm_intf})). Tato metoda je handlerem zavolána bezprostředně po inicializaci modulu a modul si může uložit referenci na předaný \texttt{callback} (instanci interface \texttt{Callback} z komunikačního interface). \texttt{Callback} slouží například k získání Java \texttt{ClassLoader}, kterým byl modul načten (používá se například pro parsing konfigurace).
 
 \subsubsection{Datové rozhraní}
 
