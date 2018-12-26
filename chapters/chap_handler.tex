@@ -34,6 +34,9 @@ Tato podkapitola je věnována softwarové architektuře handleru. Budou zde př
 	\end{center}
 \end{figure}
 
+%********************************************************************************
+% Vrstvy softwarové architektury - Detektorová vrstva
+%********************************************************************************
 \subsection{Detektorová vrstva}\label{chap:handler:detector_layer}
 Detektorová vrstva se skládá ze dvou částí - externě poskytnuté implementace komunikačního a datového interface. Tyto tzv. moduly jsou zavedené až za běhu programu pomocí vyšších vrstev systému.
 
@@ -60,9 +63,9 @@ Každý modul, obsahující implementaci komunikačního, nebo datového interfa
 \end{code}
 
 %********************************************************************************
-% Vrstvy softwarové architektury - Komunikační rozhraní
+% Vrstvy softwarové architektury - Detektorová vrstva - Komunikační rozhraní
 %********************************************************************************
-\subsubsection{Komunikační rozhraní}
+\subsubsection{Komunikační rozhraní}\label{chap:handler:detector_layer:commIntf}
 Zdrojový kód \ref{src:handler:comm_intf} obsahuje interface, který komunikační modul detektoru musí implementovat.
 
 Prvních pět metod (tj. řádek 3 až 7) má čistě informativní charakter a jejich implementace má čistě informativní charakter pro operátora systému.
@@ -217,9 +220,9 @@ V kapitole \ref{chap:arch:sw:detector} již byl popsán tok měřených dat v ha
 Poslední metodou komunikačního interface je metoda \texttt{setCallback()} (viz 23. řádek komunikačního interface (zdrojový kód \ref{src:handler:comm_intf})). Tato metoda je handlerem zavolána bezprostředně po inicializaci modulu a modul si může uložit referenci na předaný \texttt{callback} (instanci interface \texttt{Callback} z komunikačního interface). \texttt{Callback} slouží například k získání Java \texttt{ClassLoader}, kterým byl modul načten (používá se například pro parsing konfigurace).
 
 %********************************************************************************
-% Vrstvy softwarové architektury - Datové rozhraní
+% Vrstvy softwarové architektury - Detektorová vrstva - Datové rozhraní
 %********************************************************************************
-\subsubsection{Datové rozhraní}
+\subsubsection{Datové rozhraní}\label{chap:handler:detector_layer:dataIntf}
 Zdrojový kód \ref{src:handler:data_intf} obsahuje interface, které musí být implementováno datovým modulem detektoru.
 
 \begin{minted}[
@@ -254,8 +257,37 @@ Na 4. řádku je metoda pro předání konfigurace, které probíhá stejně, ja
 
 Na řádcích 6 a 7 jsou metody \texttt{start()} a \texttt{stop()}, kterými se spouští a zastavuje vlákno zpracovávající frontu měřených dat.
 
-
+%********************************************************************************
+% Vrstvy softwarové architektury - Vrstva managementu detektorů
+%********************************************************************************
 \subsection{Vrstva managementu detektorů}\label{chap:handler:detectors_layer}
+Vrstva pro management detektorů slouží jako úložiště detektorů a jako služba pro jejich řízení. Tato vrstva se skládá ze dvou komponent, které budou popsány v této podkapitole.
 
+\begin{description}
+  \item[\texttt{DetectorManager}] je komponenta, sloužící pro uložení detektorů přiřazených handleru do jeho paměti. Její instance je poskytována pomocí Java Bean Spring frameworkem jako \textit{singleton}, tzn. že v programu existuje pouze jedna instance této komponenty. Komponenta poskytuje úložiště detektorů, včetně \textit{CRUD}\footnote{Z angl. \textit{Create, read, update and delete} (vytváření, čtení, editaci a mazání).} operací nad jeho obsahem. Díky Spring frameworku, resp. jeho \texttt{Dependency-Injection} modulu lze tuto komponentu jednoduše použít z jiné komponenty systému.
+  
+  Detektor je reprezentován instancí třídy \texttt{Detector}, které má následující parametry:
+  \begin{itemize}
+    \item \texttt{}{detectorID} - unikátní textový identifikátor detektoru v systému,
+    \item \texttt{name} - vlastní pojmenování detektoru (např. s označením fyzického umístění detektoru apod., nemusí být unikátní),
+    \item \texttt{detectorComm} - instance komunikačního interface detektoru (viz \ref{chap:handler:detector_layer:commIntf}),
+    \item \texttt{dataPersistence} - instance datového interface detektoru (viz \ref{chap:handler:detector_layer:dataIntf}),
+    \item \texttt{pluginsClassLoader} - Java \texttt{ClassLoader}, kterým byly načteny výše zmíněné moduly a
+    \item \texttt{status} - instance třídy \texttt{DetectorStatus}, ve které jsou uloženy stavové informace o detektoru (např. stav připojení, měření apod.).
+  \end{itemize}
+  
+  \item[\texttt{DetectorService}] je komponenta poskytující operace nad detektorem, vč. navazování spojení, nahrávání souborů, vykonávání \textit{ValueCommands} a \textit{ExecutionCommands} apod. Komponenta je implementována jako \texttt{Service}\footnote{Dle \cite{Evans-domain-driven-design} \textit{Service} je množina operací, která není součástí modelu a zároveň není nositelem stavu.}.
+\end{description}
 
+%********************************************************************************
+% Vrstvy softwarové architektury - Spring vrstva
+%********************************************************************************
 \subsection{Spring vrstva}\label{chap:handler:spring}
+Tato vrstva se skládá z několika komponent, Spring Boot jádra a dalších knihoven Spring frameworku (viz obr. \ref{fig:handler:arch}). V této podkapitole bude čtenář seznámen s implementací jednotlivých komponent, tj. \textit{Detectors REST API controller} (viz \ref{chap:handler:spring:detectors_api}) pro správu a řízení detektorů masterem (ev. jinými systému), \textit{Handler status REST API controller} (viz \ref{chap:handler:spring:status_api}) pro zjišťování stavu handleru masterem, \textit{Swagger API doc REST controller} (viz \ref{chap:handler:spring:swagger}) pro webovou dokumentaci REST API poskytovaného handlerem a jednoduchého webového rozhraní handleru (viz \ref{chap:handler:spring:web}).
+
+\subsubsection{Detectors REST API controller}\label{chap:handler:spring:detectors_api}
+Tato
+
+\subsubsection{Handler status REST API controller}\label{chap:handler:spring:status_api}
+\subsubsection{Swagger API doc REST controller}\label{chap:handler:spring:swagger}
+\subsubsection{Webové rozhraní handleru}\label{chap:handler:spring:web}
