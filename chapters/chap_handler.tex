@@ -59,7 +59,9 @@ Každý modul, obsahující implementaci komunikačního, nebo datového interfa
 \label{src:handler:manifest}
 \end{code}
 
-
+%********************************************************************************
+% Vrstvy softwarové architektury - Komunikační rozhraní
+%********************************************************************************
 \subsubsection{Komunikační rozhraní}
 Zdrojový kód \ref{src:handler:comm_intf} obsahuje interface, který komunikační modul detektoru musí implementovat.
 
@@ -214,7 +216,43 @@ V kapitole \ref{chap:arch:sw:detector} již byl popsán tok měřených dat v ha
 
 Poslední metodou komunikačního interface je metoda \texttt{setCallback()} (viz 23. řádek komunikačního interface (zdrojový kód \ref{src:handler:comm_intf})). Tato metoda je handlerem zavolána bezprostředně po inicializaci modulu a modul si může uložit referenci na předaný \texttt{callback} (instanci interface \texttt{Callback} z komunikačního interface). \texttt{Callback} slouží například k získání Java \texttt{ClassLoader}, kterým byl modul načten (používá se například pro parsing konfigurace).
 
+%********************************************************************************
+% Vrstvy softwarové architektury - Datové rozhraní
+%********************************************************************************
 \subsubsection{Datové rozhraní}
+Zdrojový kód \ref{src:handler:data_intf} obsahuje interface, které musí být implementováno datovým modulem detektoru.
+
+\begin{minted}[
+  frame=single,
+linenos,
+breaklines
+]{kotlin}
+interface DataPersistence {
+
+  fun setDataFrameQueue(queue: BlockingQueue<AbstractDataFrame>)
+  fun setDetectorConfig(config: String)
+
+  fun start()
+  fun stop()
+
+  fun setCallback(callback: Callback)
+
+  interface Callback {
+    val classLoader: ClassLoader?
+  }
+
+}
+\end{minted}
+\begin{code}[h!]
+\caption{Datový interface detektoru, napsané v jazyce Kotlin (viz \ref{chap:arch:technologie:kotlin})).}
+\label{src:handler:data_intf}
+\end{code}
+
+Metoda \texttt{setDataFrameQueue()} (viz řádek 3) je zavolána po inicializaci modulu a jejím prostřednictvím handler předá datovému modulu frontu měřených dat, která byla vytvořena komunikačním modulem (viz předchozí komponenta).
+
+Na 4. řádku je metoda pro předání konfigurace, které probíhá stejně, jako u komunikačního interface. Za tímto účelem je v datovém interface také \texttt{Callback} interface a metoda pro předání jeho instance, vytvořené handlerem. \texttt{Callback} obsahuje metodu pro předání \texttt{ClassLoader}, kterým byl modul zaveden.
+
+Na řádcích 6 a 7 jsou metody \texttt{start()} a \texttt{stop()}, kterými se spouští a zastavuje vlákno zpracovávající frontu měřených dat.
 
 
 \subsection{Vrstva managementu detektorů}\label{chap:handler:detectors_layer}

@@ -6,6 +6,7 @@
 \contentsline {code}{\numberline {4.2}{\ignorespaces Komunika\IeC {\v c}n\IeC {\'\i } interface detektoru, napsan\IeC {\'e} v jazyce Kotlin (viz \ref {chap:arch:technologie:kotlin})).\relax }}{32}{code.caption.23}
 \contentsline {code}{\numberline {4.3}{\ignorespaces P\IeC {\v r}\IeC {\'\i }klad definice \textit {ValueCommand} detektoru pro p\IeC {\v r}\IeC {\'\i }kaz s n\IeC {\'a}zvem \textit {"Bias"}, id 42, jednotkou Volt, modifik\IeC {\'a}torem p\IeC {\v r}\IeC {\'\i }stupu \textit {Setter \& Getter} a re\IeC {\'a}ln\IeC {\'y}m modelem hodnot, omezen\IeC {\'y}m intervalem $<-300,300>$.\relax }}{33}{code.caption.24}
 \contentsline {code}{\numberline {4.4}{\ignorespaces P\IeC {\v r}\IeC {\'\i }klad definice \textit {ExecutionCommand} pro nastavov\IeC {\'a}n\IeC {\'\i } akvizi\IeC {\v c}n\IeC {\'\i }ho m\IeC {\'o}du detektoru s vy\IeC {\v c}\IeC {\'\i }tac\IeC {\'\i }m rozhran\IeC {\'\i }m \textit {Katherine} (viz \ref {chap:detectors:readouts:katherine}). Z p\IeC {\v r}\IeC {\'\i }kladu je patrn\IeC {\'e}, \IeC {\v z}e vstupn\IeC {\'\i } model je tvo\IeC {\v r}en dv\IeC {\v e}ma hodnotami a v\IeC {\'y}stupn\IeC {\'\i } model je pr\IeC {\'a}zdn\IeC {\'y}.\relax }}{34}{code.caption.25}
+\contentsline {code}{\numberline {4.5}{\ignorespaces Datov\IeC {\'y} interface detektoru, napsan\IeC {\'e} v jazyce Kotlin (viz \ref {chap:arch:technologie:kotlin})).\relax }}{36}{code.caption.27}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
