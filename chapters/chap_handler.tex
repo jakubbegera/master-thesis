@@ -345,10 +345,103 @@ breaklines
 Dokumentace k jednotlivým endpointům je poskytování jinou komponentou systému, viz kapitola \ref{chap:handler:spring:swagger}.
 
 \subsubsection{Handler status REST API controller}\label{chap:handler:spring:status_api}
+Tato komponenta je určena pro poskytování stavu handlerům dalším částem systému (např. master), ev. systémům třetích stran. Komponenta poskytuje jediný endpoint - \texttt{/status} (HTTP metoda \texttt{GET})). Ve zdrojovém kódu \ref{src:handler:status_api_example} je příklad volání tohoto endpointu, resp. JSON těla odpovědi. Z příkladu je patrné, že handler je online, má verzi software \texttt{0.0.0.1} a spravuje dva detektory.
+
+\begin{code}[h!]
+  \begin{minted}[
+  frame=single,
+  linenos,
+  breaklines
+  ]{JavaScript}
+{
+  "data": {
+    "version": "0.0.0.1",
+    "status": "ONLINE",
+    "detectors": [
+      {
+        "id": "emulator_katherine",
+        "name": "katherine emulator",
+        "status": {
+          "connection": "ONLINE",
+          "measurement": "UNKNOWN"
+        }
+      },
+      {
+        "id": "katherine",
+        "name": "katherine",
+        "status": {
+          "connection": "UNKNOWN",
+          "measurement": "UNKNOWN"
+        }
+      }
+    ]
+  },
+  "success": true
+}
+\end{minted}
+\caption{Příklad volání API komponenty pro poskytování stavu handleru, resp. těla odpovědi endpointu \texttt{/status}.}
+\label{src:handler:status_api_example}
+\end{code}
 
 
 \subsubsection{Swagger API doc REST controller}\label{chap:handler:spring:swagger}
-screenshot
+Ke každému API je třeba poskytovat dokumentaci pro umožnění jeho implementace. Navíc, každá změna API by se měla současně projevit i v dokumentaci. Manuální udržování API dokumentace je pracné a náchylné na možné odchylky dokumentace od aktuálního stavu API. Proto bylo rozhodnuto použít automatizovaný nástroj na generování dokumentace.
+
+Za tímto účelem byla implementována knihovna \textit{Springfox} \cite{springfox} - nástroj pro generování strojově i lidsky čitelné dokumentace. \textit{Springfox} je založen na \textit{OpenAPI}\footnote{\textit{OpenAPI Specification} (dřive \textit{Swagger Specification}) je formát pro popis REST API.} specifikaci a \textit{Swagger}\footnote{Nadstavba nad \textit{OpenAPI} umožňující návrh, vytváření (resp. generování serverového i klientského kódu), dokumentaci a testování REST API.} frameworku. \textit{Springfox} po spuštění aplikace automaticky analyzuje její komponenty a jednotlivé její třídy pomocí Java reflexe. Na základě analýzy potom vytvoří sémantický model jednotlivých endpointů.
+
+Výstupem je pak online webová dokumentace, dostupná pomocí \texttt{swagger-ui.html} endpointu (tzn. url dokumentace je například \url{http://localhost:8082/swagger-ui.html}, dle konfigurace - viz \ref{chap:handler:config}) - viz obrázek \ref{fig:handler:swagger}. Webové rozhraní poskytuje nejen přehled všech endpointů včetně jejich parametrů, ale i definici datového modelu a nástroj pro manuální volání jednotlivých endpointů.
+Endpoint pro stažení JSON OpenAPI specifikace je \texttt{/v2/api-docs}.
+
+\begin{figure}[h]
+	\begin{center}
+    \begin{subfigure}{7.0cm}
+			\includegraphics[width=7.0cm]{figures/handler_swagger_a.png}	
+			\caption{Přehled endpointů.}
+			\label{fig:handler:swagger_b}
+		\end{subfigure}
+		\hspace{0.1cm}
+		\begin{subfigure}{7.0cm}
+			\includegraphics[width=7.0cm]{figures/handler_swagger_b.png}
+			\caption{Detail endpointu.}
+			\label{fig:handler:swagger_a}
+		\end{subfigure}
+		\caption{Springfox online dokumentace handleru.}
+		\label{fig:handler:swagger}
+	\end{center}
+\end{figure}
 
 \subsubsection{Webové rozhraní handleru}\label{chap:handler:spring:web}
-screenshot
+Handler poskytuje jednoduché webové rozhraní, umožňující uživateli přehled přiřazených detektorů, viz obrázek \ref{fig:handler:web}. Rozhraní je implementováno pomocí \textit{Spring Web MVC} frameworku a \textit{Thymeleaf} (Java template engine pro vytváření HTML stránek na straně serveru). Jedná se tedy o statickou stránku a pro její obnovení je potřeba její opětovné načtení (pro vygenerování nové HTML stránky na straně serveru).
+
+Webové rozhraní je dostupné z endpointu \texttt{/detectors}. Pro jednoduchost bylo na tento endpoint přidáno přesměrování z výchozí URL adresy (např. \url{http://localhost:8082}).
+
+\begin{figure}[h]
+	\begin{center}
+		\vspace*{1cm}
+		\includegraphics[width=14cm]{figures/handler_web.png}
+		\caption{Screenshot webového rozhraní handleru.}
+		\label{fig:handler:web}
+	\end{center}
+\end{figure}
+
+%********************************************************************************
+% Konfigurace a nasazení
+%********************************************************************************
+\section{Konfigurace a nasazení}\label{chap:handler:config}
+Pro spuštění handleru je třeba mít nainstalované \texttt{JRE 8}\footnote{\textit{Java SE Runtime Environment, dostupné z\\\url{https://www.oracle.com/technetwork/java/javase/downloads}}.}, nebo vyšší.
+Zkompilovanou java aplikaci je třeba spustit s argumentem \texttt{handlerConfig} obsahující cestu ke konfiguračnímu souboru (pro příklad viz zdrojový kód \ref{src:handler:config}), obsahujícího port na kterém bude aplikace naslouchat a pojmenování handleru.
+
+Aplikaci je tedy možné spustit například takto: \mint{bash}{java -jar handlerConfig=config.yaml}
+
+\begin{code}[h]
+  \begin{minted}[
+  frame=single,
+  linenos,
+  breaklines
+  ]{yaml}
+portToListen: 8082
+handlerName: Handler1
+\end{minted}
+\caption{\texttt{YAML} konfigurační soubor handleru.}
+\label{src:handler:config}
+\end{code}
