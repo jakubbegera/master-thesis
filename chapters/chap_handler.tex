@@ -49,15 +49,15 @@ Každý modul, obsahující implementaci komunikačního, nebo datového interfa
 	\item Modul musí obsahovat implementaci jednoho z již zmíněních rozhraní. Navíc, celý název implementující třídy (vč. tzv. \texttt{package}) musí být uveden jako atribut s názvem \texttt{PluginImplClass} v manifestu \texttt{jar} archívu, viz zdrojový kód \ref{src:handler:manifest}.
 \end{itemize}
 
+\begin{code}[h!]
 \begin{minted}[
-    frame=single,
+  frame=single,
 	linenos,
 	breaklines
   ]{html}
   Manifest-Version: 1.0
   PluginImplClass: cz.ctu.ieap.pixnet.handler.detector_communication_katherine.CommImpl  
 \end{minted}
-\begin{code}[h!]
 \caption{Příklad obsahu souboru \texttt{MANIFEST.MF}, obsaženého v \texttt{jar} archívu modulu.}
 \label{src:handler:manifest}
 \end{code}
@@ -72,6 +72,7 @@ Prvních pět metod (tj. řádek 3 až 7) má čistě informativní charakter a 
 
 Na řádcích 8 a 9 je setter a getter pro konfiguraci detektoru. Konfigurace je detektoru předána jako \texttt{String}\footnote{Datový typ obsahující textový řetězec} (setter) a musí být do něj serializovatelná (getter). Systém ale s konfigurací detektoru neumí pracovat (kromě komunikačního modulu detektoru, resp. implementace komunikačního interface), tudíž jejíž syntax není vynucována a její podoba je čistě v kompetenci poskytovatele komunikačního modulu. Avšak je doporučeno, aby zvolený formát byl strojově i lidsky čitelný, z důvodu jeho snazší editace\footnote{V dalších fázích implementace systému je plánováno přidání podpory editace konfigurace v rámci webového uživatelského rozhraní mastera.}. Takový formát může být na příklad \texttt{JSON}\footnote{Z angl. \textit{JavaScript Object Notation} (JavaScriptový objektový zápis).}, nebo \texttt{YAML}\footnoteUrl{http://yaml.org/}, který je použit pro serializace konfigurace komunikačního modulu Katherine (viz \todo přidat ref.).
 
+\begin{code}[h!]
 \begin{minted}[
     frame=single,
 	linenos,
@@ -107,7 +108,6 @@ interface DetectorComm {
 
 }
 \end{minted}
-\begin{code}[h!]
 \caption{Komunikační interface detektoru, napsané v jazyce Kotlin (viz \ref{chap:arch:technologie:kotlin})).}
 \label{src:handler:comm_intf}
 \end{code}
@@ -132,6 +132,7 @@ Pro získání seznamu podporovaných \textit{value commands} (tj. příkazů pr
 	\item \texttt{ValueCommandGroup} je třída pro seskupování příkazů podobného významu (např. \texttt{DAC} hodnoty detektoru) a obsahuje název skupiny příkazů a seznam jednotlivých\\\texttt{ValueCommands}.
 \end{enumerate}
 
+\begin{code}[h!]
 \begin{minted}[
     frame=single,
 	linenos,
@@ -145,7 +146,6 @@ valueCommands.add(ValueCommand(
     FloatValueModel(-300f, 300f) // valueModel
 ))
 \end{minted}
-\begin{code}[h!]
 \caption{Příklad definice \textit{ValueCommand} detektoru pro příkaz s názvem \textit{"Bias"}, id 42, jednotkou Volt, modifikátorem přístupu \textit{Setter \& Getter} a reálným modelem hodnot, omezeným intervalem $<-300,300>$.}
 \label{src:handler:value_command}
 \end{code}
@@ -161,6 +161,7 @@ Dalším typem příkazů je získání seznamu podporovaných \texttt{Execution
 	\item \texttt{ExecutionCommandGroup} je obdobou třídy \texttt{ValueCommandGroup} pro \texttt{ExecutionCommand}. Obsahuje název skupiny příkazů a jejich seznam.
 \end{enumerate}
 
+\begin{code}[h!]
 \begin{minted}[
     frame=single,
 	linenos,
@@ -195,7 +196,6 @@ executionCommands.add(ExecutionCommand(
   null // model výstupních hodnot
 ))
 \end{minted}
-\begin{code}[h!]
 \caption{Příklad definice \textit{ExecutionCommand} pro nastavování akvizičního módu detektoru s vyčítacím rozhraním \textit{Katherine} (viz \ref{chap:detectors:readouts:katherine}). Z příkladu je patrné, že vstupní model je tvořen dvěma hodnotami a výstupní model je prázdný.}
 \label{src:handler:execution_command}
 \end{code}
@@ -225,6 +225,7 @@ Poslední metodou komunikačního interface je metoda \texttt{setCallback()} (vi
 \subsubsection{Datové rozhraní}\label{chap:handler:detector_layer:dataIntf}
 Zdrojový kód \ref{src:handler:data_intf} obsahuje interface, které musí být implementováno datovým modulem detektoru.
 
+\begin{code}[h!]
 \begin{minted}[
   frame=single,
 linenos,
@@ -246,7 +247,6 @@ interface DataPersistence {
 
 }
 \end{minted}
-\begin{code}[h!]
 \caption{Datový interface detektoru, napsané v jazyce Kotlin (viz \ref{chap:arch:technologie:kotlin})).}
 \label{src:handler:data_intf}
 \end{code}
@@ -286,8 +286,69 @@ Vrstva pro management detektorů slouží jako úložiště detektorů a jako sl
 Tato vrstva se skládá z několika komponent, Spring Boot jádra a dalších knihoven Spring frameworku (viz obr. \ref{fig:handler:arch}). V této podkapitole bude čtenář seznámen s implementací jednotlivých komponent, tj. \textit{Detectors REST API controller} (viz \ref{chap:handler:spring:detectors_api}) pro správu a řízení detektorů masterem (ev. jinými systému), \textit{Handler status REST API controller} (viz \ref{chap:handler:spring:status_api}) pro zjišťování stavu handleru masterem, \textit{Swagger API doc REST controller} (viz \ref{chap:handler:spring:swagger}) pro webovou dokumentaci REST API poskytovaného handlerem a jednoduchého webového rozhraní handleru (viz \ref{chap:handler:spring:web}).
 
 \subsubsection{Detectors REST API controller}\label{chap:handler:spring:detectors_api}
-Tato
+Tato komponenta je \texttt{RestController}, poskytující endpointy\footnote{Označení pro API metodu.} pro \textit{CRUD} operace nad detektory a jejich řízení. Komponenta je závislá na \texttt{DetectorManager} a \texttt{DetectorService} (viz \ref{chap:handler:detector_layer}). Všechny endpointy mají prefix URL cesty \texttt{/api/detector/}, takže například URL endpointu pro přidání detektoru může být \url{http://localhost:8082/api/detector/add}. Seznam API endpointů této komponenty je v tabulce \ref{tab:handler:api_detectors}.
+
+\begin{table}[h]
+	\begin{center}
+		\begin{tabular}{|c|c|l|}
+			\hline
+      \textbf{HTTP} & & \\
+      \textbf{Metoda} & \textbf{Endpoint} & \textbf{Popis} \\
+			\hline
+      GET & \texttt{/getAll} & Vrátí seznam všech detektorů \\
+      GET & \texttt{/getById} & Vrátí detektor podle zadaného ID \\
+      POST & \texttt{/add} & Přidá nový detektor \\
+      DELETE & \texttt{/remove} & Odstraní detektor podle zadaného ID \\
+      POST & \texttt{/connect} & Provede připojení zvoleného detektoru \\
+      POST & \texttt{/disconnect} & Provede odpojení zvoleného detektoru \\
+      POST & \texttt{/executeValueCommand} & Vykoná \texttt{ValueCommand} \\
+      POST & \texttt{/executeExecutionCommand} & Vykoná \texttt{ExecutionCommand} \\
+      POST & \texttt{/uploadFile} & Nahraje soubor do zvoleného detektoru \\
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption{Endpointy komponenty \textit{Detectors REST API controller}.}
+	\label{tab:handler:api_detectors}
+\end{table}
+
+Pro přenášená data je použil formát JSON. Zdrojový kód \ref{src:handler:detectors_api_example} znázorňuje ukázku API volání s příkladem s nastavením akvizičního módu detektoru (definice tohoto příkladu je uvedena ve zdrojovém kódu \ref{src:handler:execution_command}) pomocí \texttt{executeExecutionCommand} endpointu.
+
+\begin{code}[h!]
+\begin{minted}[
+frame=single,
+linenos,
+breaklines
+]{JavaScript}
+> POST /api/detector/executeExecutionCommand HTTP/1.1
+> Host: localhost:8082
+> Content-Type: application/json
+> Content-Length: 133
+{
+  "detectorID": "katherine_emulator",
+  "commandID": 200,
+  "input": {
+    "acq_mode": {"intValue": 0},
+    "fast_vco_en": {"booleanValue": false}
+  }
+}
+
+< HTTP/1.1 200 
+< Content-Type: application/json;charset=UTF-8
+{
+  "success": true
+}
+\end{minted}
+\caption{Příklad volání API komponenty pro správu detektorů. V příkladu na řádcích 1 až 12 je \textit{request} pro vykonání \texttt{ExecutionCommand} pro nastavení akvizičního módu detektoru a na řádcích 14 až 18 je \textit{response} serveru.}
+\label{src:handler:detectors_api_example}
+\end{code}
+
+Dokumentace k jednotlivým endpointům je poskytování jinou komponentou systému, viz kapitola \ref{chap:handler:spring:swagger}.
 
 \subsubsection{Handler status REST API controller}\label{chap:handler:spring:status_api}
+
+
 \subsubsection{Swagger API doc REST controller}\label{chap:handler:spring:swagger}
+screenshot
+
 \subsubsection{Webové rozhraní handleru}\label{chap:handler:spring:web}
+screenshot
