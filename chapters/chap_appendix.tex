@@ -1,1 +1,128 @@
 %\chapter{Závislosti modulu Handler}\label{chap:app:handler_dependencies}
+\chapter{Přílohy vyčítacího rozhraní Katherine}\label{chap:app:katherine}
+
+\section{Přehled DAC vyčítacího rozhraní Katherine}\label{chap:app:katherine:dacs}
+\begin{table}[h]
+	\begin{center}
+		\begin{tabular}{|c|c|c|}
+			\hline
+            \textbf{Název} & \textbf{ID pro čtení} & \textbf{ID pro zápis} \\
+			\hline
+            Ibias\_Preamp\_ON & 1 & 0 \\
+            Ibias\_Preamp\_OFF & 2 & 1 \\
+            VPreamp\_NCAS & 3 & 2 \\
+            Ibias\_Ikrum & 4 & 3 \\
+            Vfbk & 5 & 4 \\
+            Vthreshold\_fine & 6 & 5 \\
+            Vthreshold\_coarse & 7 & 6 \\
+            Ibias\_DiscS1\_ON & 8 & 7 \\
+            Ibias\_DiscS1\_OFF & 9 & 8 \\
+            Ibias\_DiscS2\_ON & 10 & 9 \\
+            Ibias\_DiscS2\_OFF & 11 & 10 \\
+            Ibias\_PixelDAC & 12 & 11 \\
+            Ibias\_TPbufferIn & 13 & 12 \\
+            Ibias\_TPbufferOut & 14 & 13 \\
+            VTP\_coarse & 15 & 14 \\
+            VTP\_fine & 16 & 15 \\
+            Ibias\_CP\_PLL & 17 & 16 \\
+            PLL\_Vcntrl & 18 & 17 \\
+            BandGap output & 28 & - \\
+            BandGap\_Temp & 29 & - \\
+            Ibias\_dac & 30 & - \\
+            Ibias\_dac\_cas & 31 & - \\
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption{Přehled DAC (digitálně analogových převodníků) vyčítacího rozhraní katherine.}
+	\label{tab:app:dacs}
+\end{table}
+
+\section{Přehled HW příkazů vyčítacího rozhraní Katherine}\label{chap:app:katherine:hw_commands}
+\begin{table}[h]
+	\begin{center}
+		\begin{tabular}{|c|l|}
+			\hline
+            \textbf{ID} & \textbf{Název} \\
+			\hline
+            0 & Sensor Config Registers Update \\
+            1 & Internal DAC Update \\
+            2 & Internal DAC Back Read \\
+            3 & Timer Read \\
+            4 & Timer Set \\
+            5 & Reset Matrix Sequential \\
+            6 & Stop Matrix Command \\
+            7 & Load Column Test Pulse Register \\
+            8 & Read Column Test Pulse Register \\
+            9 & Load Pixel Register Configuration \\
+            10 & Read Pixel Register Configuration \\
+            11 & Read Pixel Matrix Sequential Setting \\
+            12 & Read Pixel Matrix Data-Driven Setting \\
+            13 & Chip ID Read \\
+            14 & Output Block Config Update \\
+            15 & Digital Test \\
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption{Přehled HW příkazů vyčítacího rozhraní katherine.}
+	\label{tab:app:hw_commands}
+\end{table}
+
+\section{Přehled registrů detektoru Timepix3 v rámci vyčítacího rozhraní Katherine}\label{chap:app:katherine:tpx3_registers}
+\begin{table}[h!]
+	\begin{center}
+		\begin{tabular}{|c|l|}
+			\hline
+            \textbf{ID} & \textbf{Název} \\
+			\hline
+            0 & Test Pulse Period \\
+            1 & Number Test Pulses \\
+            2 & Out Block Config \\
+            3 & PLL Config \\
+            4 & General Config \\
+            5 & SLVS Config \\
+            6 & Power Pulsing Pattern \\
+            7 & SetTimer 15..0 \\
+            8 & SetTimer 31..16 \\
+            9 & SetTimer 47..32 \\
+            10 & Sense DAC Selector \\
+            11 & Ext DAC Selector \\
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption{Přehled registrů detektoru Timepix3 v rámci vyčítacího rozhraní Katherine.}
+\end{table}
+
+\section{Konfigurace pixelů detektoru}\label{chap:app:katherine:pix_config}
+\begin{code}[h!]
+\begin{minted}[
+frame=single,
+linenos,
+breaklines
+]{Kotlin}
+fun bmcToMatrixConfig(bmc: ByteArray): ByteArray {
+    assert(bmc.size == 65536)
+    val buff = IntArray(16384)
+
+    for (i in bmc.indices) {
+        var y = i / 256
+        val x = i % 256
+        val tmp = bmc[i]
+        y = 255 - y
+        buff[64 * x + (y shr 2)] = buff[64 * x + (y shr 2)] or (tmp.toInt() shl 8 * (3 - y % 4))
+    }
+
+    val out = ByteArray(65536)
+    var k = 0
+    for (mem in buff) {
+        val b = ByteBuffer.allocate(4).putInt(mem).array()
+        for (i in 0..3) {
+            out[k + 3 - i] = b[i]
+        }
+        k += 4
+    }
+
+    return out
+}
+\end{minted}
+\caption{Ukázka kódu pro převod pixelové konfigurace detektoru z formátu \texttt{BMC} do formátu podporovaného vyčítacím rozhraním \textit{Katherine}.}
+\end{code}
