@@ -15,7 +15,10 @@ Komunikace v rámci manuálního módu je založena na proprietárním komunika�
 
 Protokol je založen na posílání \texttt{UDP} datagramů pomocí dvou socketů - jednoho pro řídící příkazy a druhého pro měřená data. Využití \texttt{UDP} se nabízí především z důvodu, že se jedná o nepotvrzované spojení (na rozdíl od \texttt{TCP}), takže v případě špatného spojení nedochází k zahlcení spojení a je možné dosáhnout většího datového toku. V dalších fázích vývoje je ale plánován přechod na \texttt{TCP} protokol pro řídící socket, protože objem jeho prostřednictvím přenášených dat je zanedbatelný a potvrzované doručení řídících příkazů by nemuselo být ošetřováno aplikační vrstvou.
 
-\subsection{Řídící příkazy}
+%********************************************************************************
+% Komunikační protokol - Řídící příkazy
+%********************************************************************************
+\subsection{Řídící příkazy}\label{chap:katherine:protocol:control_commands}
 Každý řídící příkaz je vždy inicializován klientem - klient pošle 8-bytový datagram na předem definovaný komunikační port \textit{Katherine}, jehož struktura je znázorněna na obr. \ref{fig:katherine:protocol:comm_packet:request} a server (resp. \textit{Katherine}) vždy pošle odpověď ve formě datagramu (viz \ref{fig:katherine:protocol:comm_packet:response}), nebo jiných dat dle specifikace příkazu, na port klienta, ze kterého spojení bylo inicializováno\footnote{Doplnění této funkcionality bylo vyžádáno až v průběhu implementace komunikačního modulu a během psaní této práce je ještě ve fázi testování. V současné produkční verzi firmware \textit{Katherine} tedy posílá response datagram na staticky konfigurovaný port, což pro operování více \textit{Katherine} o stejné statické konfiguraci z jednoho handleru znamená konflikt portů.}. Response některých příkazů je jen potvrzení (tzv. \textit{Acknowledge}) ve formě ID příkazu a daty $0x00000000$ (dále jen ACQ). Bytové pořadí pro všechny datagramy je \textit{BigEndian}\footnote{Název pro označení endianity (bytového pořadí), kde na paměťové místo s nejnižší adresou je uložen nejvíce významný byte (MSB).}.
 
 \begin{figure}[h]
@@ -145,6 +148,82 @@ Následuje výčet všech důležitých řídících příkazů, s jejich ID, n�
     \\\textit{Response}: ACQ.
 
 \end{description}
+
+%********************************************************************************
+% Komunikační protokol - Struktura měřených dat
+%********************************************************************************
+\subsection{Struktura měřených dat}\label{chap:katherine:protocol:measure_data_structure}
+Přenos měřených dat je realizován proudem datagramů ze serveru (vyčítací rozhraní) do klienta (např. handler). Data jsou posílána na předem definovaný port, uložený ve statické konfiguraci \textit{Katherine}\footnote{V době psaní této práce probíhal vývoj podpory pro dynamické nastavování klientského portu (přidáním nového příkazu do řídící části komunikačního protokolu)}. Každý datagram má délku 6 bytů a jeho struktura je znázorněna na obr. \ref{fig:katherine:protocol:data_packet}. Přehled typů datagramů, vč. jejich významu a obsažených dat, je uveden v tabulce \ref{tab:katherine:protocol:data_packet_header}.
+
+\begin{figure}[h]
+	\begin{center}
+        \begin{bytefield}[endianness=big,bitwidth=0.7em]{48}
+            \bitheader{47,0} \\
+            \bitbox{12}{\textbf{Hlavička} 47..44} & \bitbox{36}{\textbf{Data} 43..0}
+        \end{bytefield}
+	\end{center}
+	\caption{Struktura datagramu s měřenými daty.}
+	\label{fig:katherine:protocol:data_packet}
+\end{figure}
+
+\begin{table}[h]
+	\begin{center}
+		\begin{tabular}{|c|l|l|}
+			\hline
+            \textbf{Hlavička} & \textbf{Název} & \textbf{Data} \\
+			\hline
+            0x7 & Nový frame vytvořen & 0x0 \\
+            0x4 & Měřená data & Dle konfigurace \\
+            0x5 & ToA timestamp offset & ToA offset \\
+            & (pouze pro data-driven mód) & \\
+            0xC & Aktuální snímek vytvořen & Počet poslaných událostí \\
+            0x8 & Frame start timestamp LSB & \unit{32}{b} LSB \\
+            0x9 & Frame start timestamp MSB & \unit{16}{b} MSB \\
+            0xA & Frame end timestamp LSB & \unit{32}{b} LSB \\
+            0xB & Frame end timestamp MSB & \unit{16}{b} MSB \\
+            0xD & Počet ztracených pixelů & \unit{44}{b} \\
+            0xE & Notifikace o přerušeném měření & 0x0 \\
+			\hline
+		\end{tabular}
+	\end{center}
+    \caption{Přehled typů datagramů pro měřená data.}
+    \label{tab:katherine:protocol:data_packet_header}
+\end{table}
+
+%Výsledný čas ToA (viz \ref{chap:detectors:operation_modes}) je vypočten 
+Z pohledu pořadí toku jednotlivých datagramů rozlišujeme dva případy, dle nastaveného vyčítacího módu:
+\begin{description}
+   \item[Frame-based] - vyčítání po snímcích (viz \ref{chap:detectors:readout})
+   \begin{enumerate}
+       \item Klient pošle \textit{Acquisition Start} (0x03) příkaz.
+       \item Vyčítací rozhraní zahájí akvizici snímku a pošle datagram o vytvoření nového frame (hlavička 0x7).
+       \item Akvizice dat probíhá po dobu zvoleného akvizičního času. Jsou-li detekovány nějaké události, pak pro každou událost je poslán datagram s měřenými daty (hlavička 0x4). V případě zaznamenání příkazu pro přerušení měření, dojde k poslání datagramu s hlavičkou 0xE a měření je ukončeno.
+       \item Po ukončení akvizice akvizice aktuálního snímku (uzavření \textit{shutteru}) readout pošle timestamp začátku a konce akvizice dat (datagramy s hlavičkami 0x8, 0x9, 0xA a 0xB).
+       \item Je poslán datagram s informací o počtu ztracených pixelů (hlavička 0xD) a ukončení aktuálního snímku (hlavička 0xC).
+       \item Je-li počet aktuálně pořízených snímků nižší, než celkový počet snímků (nastavený řídícím příkazem 0x13), pak měření pokračuje bodem 2, v opačném případě měření končí.
+   \end{enumerate}
+   \item[Data-deiven] - režim kontinuální vyčítání dat (viz \ref{chap:detectors:readout})
+   \begin{enumerate}
+    \item Klient pošle \textit{Acquisition Start} (0x03) příkaz.
+    \item Vyčítací rozhraní zahájí akvizici dat (resp. jednoho snímku) a pošle datagram o vytvoření nového frame (hlavička 0x7).
+    \item Akvizice dat probíhá po dobu zvoleného akvizičního času. Jsou-li detekovány nějaké události, pak pro každou událost je poslán datagram s měřenými daty (hlavička 0x4). V případě zaznamenání příkazu pro přerušení měření, dojde k poslání datagramu s hlavičkou 0xE a měření je ukončeno.
+    \item Po ukončení akvizice akvizice aktuálního snímku (uzavření \textit{shutteru}) readout pošle timestamp začátku a konce akvizice dat (datagramy s hlavičkami 0x8, 0x9, 0xA a 0xB).
+    \item Je poslán datagram s informací o počtu ztracených pixelů (hlavička 0xD) a ukončení aktuálního snímku (hlavička 0xC).
+    \item Měření je ukončeno.
+\end{enumerate}
+\end{description}
+
+Tabulka \ref{tab:katherine:protocol:measurement_data_structure} znázorňuje formát datagramu s měřenými daty, dle použitého nastavení vyčítacího rozhraní.
+
+\begin{table}[h!]
+    \begin{center}
+        \includegraphics[width=14cm]{figures/katherine_pixel_measurement_data.png}
+        \caption{Struktura měřených dat \cite{katherine_docs}.}
+        \label{tab:katherine:protocol:measurement_data_structure}
+    \end{center}
+\end{table}
+
+
 
 \section{Komunikační modul}\label{chap:katherine:comm}
 
