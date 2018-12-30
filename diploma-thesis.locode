@@ -11,10 +11,11 @@
 \contentsline {code}{\numberline {4.7}{\ignorespaces P\IeC {\v r}\IeC {\'\i }klad vol\IeC {\'a}n\IeC {\'\i } API komponenty pro poskytov\IeC {\'a}n\IeC {\'\i } stavu handleru, resp. t\IeC {\v e}la odpov\IeC {\v e}di endpointu \texttt {/status}.\relax }}{39}{code.caption.30}
 \contentsline {code}{\numberline {4.8}{\ignorespaces \texttt {YAML} konfigura\IeC {\v c}n\IeC {\'\i } soubor handleru.\relax }}{41}{code.caption.33}
 \addvspace {10\p@ }
+\contentsline {code}{\numberline {5.1}{\ignorespaces P\IeC {\v r}\IeC {\'\i }klad implementace \IeC {\v r}\IeC {\'\i }d\IeC {\'\i }c\IeC {\'\i }ho p\IeC {\v r}\IeC {\'\i }kazu \textit {Katherine} pro vy\IeC {\v c}ten\IeC {\'\i } biasu pomoc\IeC {\'\i } komponent \texttt {Control Datagram Sender} a \texttt {Control Datagram Receiver}.\relax }}{50}{code.caption.39}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {code}{\numberline {A.1}{\ignorespaces Uk\IeC {\'a}zka k\IeC {\'o}du pro p\IeC {\v r}evod pixelov\IeC {\'e} konfigurace detektoru z form\IeC {\'a}tu \texttt {BMC} do form\IeC {\'a}tu podporovan\IeC {\'e}ho vy\IeC {\v c}\IeC {\'\i }tac\IeC {\'\i }m rozhran\IeC {\'\i }m \textit {Katherine}.\relax }}{61}{code.caption.42}
+\contentsline {code}{\numberline {A.1}{\ignorespaces Uk\IeC {\'a}zka k\IeC {\'o}du pro p\IeC {\v r}evod pixelov\IeC {\'e} konfigurace detektoru z form\IeC {\'a}tu \texttt {BMC} do form\IeC {\'a}tu podporovan\IeC {\'e}ho vy\IeC {\v c}\IeC {\'\i }tac\IeC {\'\i }m rozhran\IeC {\'\i }m \textit {Katherine}.\relax }}{63}{code.caption.44}
 \addvspace {10\p@ }
 \addvspace {10\p@ }

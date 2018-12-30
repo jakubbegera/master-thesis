@@ -5,6 +5,8 @@ V této kapitole bude čtenář blíže seznámen s komunikačním protokolem vy
 
 Pro účely vývoje a testování byl vyvinut emulator \textit{Katherine}, který emuluje zařízení na síťové vrstvě, včetně podpory všech příkazů komunikačního protokolu, relevantních k akvizici dat. Popis jeho návrhu a implementace bude také zahrnut v této kapitole.
 
+Pro úplnost je třeba dodat, že komunikační a datový modul sdílejí stejnou podmnožinu datového modelu a část business-logiky, vázající se k manipulaci s měřenými daty. Tato společná \textit{code-base} je implementována v rámci separátního modulu, na kterém jsou závislé oba výše zmíněné moduly. Toto řešení umožňuje použití stejné vnitřní reprezentace dat, bez nutnosti jejich serializace a deserializace, což má pozitivní vliv na výkonost systému. Nutnou podmínkou ale je aby oba moduly byly do systému zavedeny pomocí stejného \texttt{ClassLoader} objektu (z důvodu kompatibility přenášených model objektů), tento mechanizmus je ale už implementován v handleru.
+
 %********************************************************************************
 % Komunikační protokol
 %********************************************************************************
@@ -153,7 +155,7 @@ Následuje výčet všech důležitých řídících příkazů, s jejich ID, n�
 % Komunikační protokol - Struktura měřených dat
 %********************************************************************************
 \subsection{Struktura měřených dat}\label{chap:katherine:protocol:measure_data_structure}
-Přenos měřených dat je realizován proudem datagramů ze serveru (vyčítací rozhraní) do klienta (např. handler). Data jsou posílána na předem definovaný port, uložený ve statické konfiguraci \textit{Katherine}\footnote{V době psaní této práce probíhal vývoj podpory pro dynamické nastavování klientského portu (přidáním nového příkazu do řídící části komunikačního protokolu)}. Každý datagram má délku 6 bytů a jeho struktura je znázorněna na obr. \ref{fig:katherine:protocol:data_packet}. Přehled typů datagramů, vč. jejich významu a obsažených dat, je uveden v tabulce \ref{tab:katherine:protocol:data_packet_header}.
+Přenos měřených dat je realizován proudem datagramů ze serveru (vyčítací rozhraní) do klienta (např. handler). Data jsou posílána na předem definovaný port, uložený ve statické konfiguraci \textit{Katherine}\footnote{V době psaní této práce probíhal vývoj podpory pro dynamické nastavování klientského portu (přidáním nového příkazu do řídící části komunikačního protokolu).}. Každý datagram má délku 6 bytů a jeho struktura je znázorněna na obr. \ref{fig:katherine:protocol:data_packet}. Přehled typů datagramů, vč. jejich významu a obsažených dat, je uveden v tabulce \ref{tab:katherine:protocol:data_packet_header}.
 
 \begin{figure}[h]
 	\begin{center}
@@ -202,7 +204,7 @@ Z pohledu pořadí toku jednotlivých datagramů rozlišujeme dva případy, dle
        \item Je poslán datagram s informací o počtu ztracených pixelů (hlavička 0xD) a ukončení aktuálního snímku (hlavička 0xC).
        \item Je-li počet aktuálně pořízených snímků nižší, než celkový počet snímků (nastavený řídícím příkazem 0x13), pak měření pokračuje bodem 2, v opačném případě měření končí.
    \end{enumerate}
-   \item[Data-deiven] - režim kontinuální vyčítání dat (viz \ref{chap:detectors:readout})
+   \item[Data-driven] - režim kontinuální vyčítání dat (viz \ref{chap:detectors:readout})
    \begin{enumerate}
     \item Klient pošle \textit{Acquisition Start} (0x03) příkaz.
     \item Vyčítací rozhraní zahájí akvizici dat (resp. jednoho snímku) a pošle datagram o vytvoření nového frame (hlavička 0x7).
@@ -223,10 +225,72 @@ Tabulka \ref{tab:katherine:protocol:measurement_data_structure} znázorňuje for
     \end{center}
 \end{table}
 
-
-
+%********************************************************************************
+% Komunikační modul
+%********************************************************************************
 \section{Komunikační modul}\label{chap:katherine:comm}
+Pro účely řízení komunikačního rozhraní \textit{Katherine} a vyčítání měřených dat byl implementován komunikační modul, který bude poprán v této podkapitole. Aby bylo možné integrovat modul do systému, musí obsahovat implementaci komunikačního interface (viz \ref{chap:handler:detector_layer:commIntf}), které musí být v manifestu zkompilovaného \texttt{jar} archívu explicitně uvedeno (viz \ref{chap:handler:detector_layer:module_init}).
 
+Na obrázku \ref{fig:katherine:comm:arch} je přehled vrstev softwarové architektury komunikačního modulu, které budou dále popsány v následujících podkapitolách.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=14cm]{figures/katherine_comm_arch.pdf}
+		\caption{}
+		\label{fig:katherine:comm:arch}
+	\end{center}
+\end{figure}
+
+\subsection{Implementace komunikačního interface}
+Tato vrstva slouží jako tzv. fasáda\footnote{Návrhový vzor fasáda (\textit{Facade Pattern}) - použití pro poskytování zjednodušeného interface pro komplexní části kódu (analogie s pojmem fasáda, známém z architektury).} Katherine kontroléru. Implementace komunikačního interface implementuje všechny jeho metody, vč. poskytování přehledu a podpory vykonávání \textit{ValueCommands} a \textit{ExecutionCommands} (pro jejich definici viz soubor \texttt{detector\_model.json} na přiloženém CD, viz příloha \ref{chap:app:cd}), navazování spojení s detektorem, nahrávání konfigurace apod.
+
+Po zavedení modulu je vytvořena fronta měřených dat, která je přejatá handlerem.
+
+Připojením detektoru vzniká instance Katherine kontroléru, dle předané konfigurace. Při odpojení detektoru je kontrolér notifikován, aby mohl uvolnit svoje prostředky (např. uzavřít síťové spojení) a poté je odstraněn.
+
+\subsection{Katherine kontrolér}
+Tato vrstva udržuje spojení s detektorem a implementuje všechny potřebné řídící příkazy detektoru.
+
+Odesílání řídících příkazů je realizováno pomocí komponenty \texttt{Control Datagram Sender} (viz obr. \ref{fig:katherine:comm:arch}), který implementuje asynchronní frontu datagramů. Fronta je asynchronně zpracovávána nezávislým vláknem, které datagramy z fronty odesílá na řídící port \textit{Katherine}.
+
+O příjem dat z řídícího socketu se stará komponenta \texttt{Control Datagram Receiver}, který v separátním vlákně přijímá příchozí data. Každý příchozí datagram (8-bytový vektor) je zpracován a přidán do fronty příchozích řídících dat. Komponenta také implementuje blokující metodu pro přijetí dat, která dle zadaného ID příkazu a maximálního času čekání (tzv. \textit{timeout})hledá požadovanou odpověď ve frontě dat.
+
+Příklad použití obou komponent zmíněných výše je ve zdrojovém kódu \ref{src:katherine:comm:example_get_bias}. Příklad demonstruje vyčtení biasu z detektoru. Nejprve je pomocí \texttt{Control Datagram Sender} odeslán řídící příkaz s ID 0x0C (řádek 3 až 7) a následně pomocí \texttt{Control Datagram Receiver}, resp. pomocí jeho blokující metody popsané výše, je zachycena odpověď, ze které je vyčtena požadovaná hodnota napětí. Jestli se odpověď nepodaří přijmout ve zvoleném timeoutu, je vygenerována výjimka, která musí být vyššími vrstvami programu ošetřena.
+
+\begin{code}[h]
+    \begin{minted}[
+      frame=single,
+        linenos,
+        breaklines
+      ]{Kotlin}
+@Throws(DetectorException::class)
+fun getBias(): Float {
+    packetSender.send(
+        PacketBuilder.builder()
+            .commandID(KatherineValueCommands.BIAS.getterCommandId)
+            .build()
+    )
+
+    val packet = packetReceiver.pollPacketFromQueue(
+        KatherineValueCommands.BIAS.getterCommandId,
+        RESPONSE_TIMEOUT
+    )
+    return packet.floatValue
+}
+    \end{minted}
+    \caption{Příklad implementace řídícího příkazu \textit{Katherine} pro vyčtení biasu pomocí komponent \texttt{Control Datagram Sender} a \texttt{Control Datagram Receiver}.}
+    \label{src:katherine:comm:example_get_bias}
+\end{code}
+
+Poslední komponentou je \texttt{Measurement Datagram Receiver}, který ve svém separátním vlákně přijímá příchozí datagramy na socketu pro detektorem měřená data, jejichž struktura už byla popsána v \ref{chap:katherine:protocol:measure_data_structure}. Každá příchozí událost je zpracována (identifikace hlavičky apod.) a vložena do fronty měřených dat, která je zpracovávána datovým modulem.
+
+%********************************************************************************
+% Datový modul
+%********************************************************************************
 \section{Datový modul}\label{chap:katherine:data}
+Datový modul 
 
+%********************************************************************************
+% Katherine emulátor
+%********************************************************************************
 \section{Katherine emulátor}\label{chap:katherine:emulator}
