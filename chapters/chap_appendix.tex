@@ -126,3 +126,54 @@ fun bmcToMatrixConfig(bmc: ByteArray): ByteArray {
 \end{minted}
 \caption{Ukázka kódu pro převod pixelové konfigurace detektoru z formátu \texttt{BMC} do formátu podporovaného vyčítacím rozhraním \textit{Katherine}.}
 \end{code}
+
+\section{Příklad výstupních dat datové modulu.}\label{chap:app:katherine:data_example}
+\begin{code}[h!]
+\begin{minted}[
+frame=single,
+linenos,
+breaklines
+]{Bash}
+# Start of measurement: 2018.12.11 08:51:18.363+0000
+# Acq start timestamp: 1544518278053
+# Chip ID: M7-W0005
+# Acq mode: ToA & ToT with FastToA
+# Fast VCO enabled: true
+# Readout mode: Data driven
+# Bias: 230,000000
+# Temperature readout: 52,125000
+# Temperature sensor: 82,522804
+# Payload older: PIX_ID	ToA	ToT
+# NEW_FRAME_ESTABLISHED
+21541	54657847	1
+22060	54657847	3
+22310	54657840	4
+36548	9197790130	8
+36810	9197790132	75
+35266	9197790130	14
+36549	9197790129	16
+36553	9197790125	67
+35522	9197790132	23
+36809	9197790130	8
+35778	9197790135	8
+...
+3973	9674803477	9
+4239	9674803471	10
+3983	9674803465	24
+4226	9674803479	19
+5262	9674803485	27
+4495	9674803477	6
+4751	9674803474	23
+5007	9674803479	22
+29064	9846817974	5
+29319	9846817971	10
+29320	9846817966	33
+# Start of frame timestamp: 2
+# End of frame timestamp: 400000002
+# Lost pixels: 0
+# Frame 0 finished
+# Sent pixels: 859
+
+\end{minted}
+\caption{Příklad výstupních dat datové modulu.}
+\end{code}

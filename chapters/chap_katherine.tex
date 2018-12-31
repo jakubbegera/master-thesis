@@ -288,7 +288,18 @@ Poslední komponentou je \texttt{Measurement Datagram Receiver}, který ve svém
 % Datový modul
 %********************************************************************************
 \section{Datový modul}\label{chap:katherine:data}
-Datový modul 
+Datový modul implementuje \texttt{DataPersistence} interface (viz \ref{chap:handler:detector_layer:dataIntf}). Po jeho zavedení do systému je mu handlerem předána fronta dat, kterou po spuštění začne zpracovávat.
+
+Fronta dat obsahuje objekty, které jsou potomky objektu \texttt{AbstractDataFrame} (který je součástí modelu poskytovaných knihoven). V rámci modulu se společnou \textit{code-base} \textit{Katherine} modulů (viz úvod kapitoly \ref{chap:katherine}) byly implementovány tyto třídy, které jsou potomky třídy \texttt{AbstractDataFrame}:
+\begin{description}
+    \item[\texttt{DataFrame}] - třída obsahující jednu událost, přenesenou datovým socketem z \textit{Katherine} rozhraní. Objekt obsahuje dekódovanou hlavičku a vlastní data, dle typu datagramu - viz tabulka \ref{tab:katherine:protocol:data_packet_header}.
+    \item[\texttt{ControlFrame}] - obsahuje informaci generovanou komunikačním modulem, např. o začátku nebo ukončení akvizice apod.
+    \item[\texttt{AcqConfigurationFrame}] - instance tohoto objektu je poslána komunikačním modulem na začátku akvizice dat a obsahuje informace o stavu a konfiguraci detektoru (např. bias, vyčítací mód, teploty apod.).
+\end{description}  
+
+Výstupem datového modulu jsou soubory s jednotlivými měřeními ve formátu \texttt{ASCII}, které jsou ukládány do zvoleného adresáře dle konfigurace. Příklad obsahu takového souboru je uveden v příloze \ref{chap:app:katherine:data_example}. Všechny časové údaje jsou v \texttt{UTC} čase. Formát pojmenovávání souborů je \texttt{název\_detektoru\_yyyy\_MM\_dd-HH\_mm\_ss.txt}.
+
+Rovněž byla implementována varianta datového modulu, který ukládá pořízená data do \textit{MongoDB} databáze (viz \ref{chap:arch:technologie:mongodb}).
 
 %********************************************************************************
 % Katherine emulátor
