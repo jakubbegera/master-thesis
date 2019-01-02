@@ -236,7 +236,7 @@ Na obrázku \ref{fig:katherine:comm:arch} je přehled vrstev softwarové archite
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width=14cm]{figures/katherine_comm_arch.pdf}
-		\caption{}
+		\caption{Softwarová architektura komunikačního modulu, implementujícího komunikační interface.}
 		\label{fig:katherine:comm:arch}
 	\end{center}
 \end{figure}
@@ -305,3 +305,49 @@ Rovněž byla implementována varianta datového modulu, který ukládá poříz
 % Katherine emulátor
 %********************************************************************************
 \section{Katherine emulátor}\label{chap:katherine:emulator}
+Pro účely vývoje a testování byl vyvinut emulátor, které emuluje funkci \textit{Katherine} vyčítacího rozhraním s připojeným \textit{Timepix3} (viz \ref{chap:detectors:medipix_overview:timepix3}) detektorem na síťové vrstvě. Byla implementována podpora pro všechny řídící příkazy uvedené v \ref{chap:katherine:protocol:control_commands}, které jsou relevantní k akvizici dat (tj. např. akviziční čas, akviziční mód, vyčítací mód, bias, počet snímků apod.) a také příkazy pro měření teplot, vyčítání ID senzoru, či provádění testu digitální částí detektoru. Emulátor rovněž podporuje všechny datagramy pro přenos měřených dat (viz \ref{chap:katherine:protocol:measure_data_structure}).
+
+Emulátor byl vyvinut v jazyce \texttt{Java}, resp. \texttt{Kotlin} (viz \ref{chap:arch:technologie:kotlin}).
+
+\subsection{Softwarová architektura}
+Na obrázku \ref{fig:katherine:emulator:arch} jsou znázorněny jednotlivé komponenty emulátoru. Základním prvkem je jeho jádro (na obr. \ref{fig:katherine:emulator:arch} jako \textit{emulator core}), které je vytvořeno po spuštění emulátoru. Společně s jádrem je vytvořen také \textit{Control Datagram Receiver}, který přijímá příchozí datagramy na komunikačním socketu detektoru. Příchozí řídící datagram je dále zpracován dle jeho hlavičky a klientovi je odeslána příslušná odpověď.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=14cm]{figures/katherine_emulator_arch.pdf}
+		\caption{Softwarová architektura \textit{Katherine} emulátoru.}
+		\label{fig:katherine:emulator:arch}
+	\end{center}
+\end{figure}
+
+Z pohledu zpracování je možné příkazy rozdělit do tří kategorií:
+\begin{description}
+    \item[Nastavující akviziční parametry] - do této skupiny spadají všechny příkazy, které nastavují, nebo vracejí konfigurační parametry detektoru, jako je akviziční čas, bias, akviziční a vyčítací mód apod.
+    \item[Řídící akvizici] - do této kategorie patří příkazy \textit{Acquisition Start} (0x03) a \textit{Acquisition Stop} (0x06). Po spuštění akvizice je vytvořena instance \texttt{Acquisition Controller}, který dle konfigurace začne generovat události a posílat je datovým socketem klientovi.
+    
+    Příkaz \textit{Acquisition Stop} pak přeruší probíhající akvizici.
+    \item[Ostatní] - do této kategorie spadají ostatní příkazy, které nebyly zahrnuty v předchozích kategoriích (např. pro měření teploty, čtení \textit{chip id}, verze FW apod.).
+\end{description}
+
+Některé příkazy nebyly implementovány, protože simulace jejich funkce není triviální a je nad rámec požadované funkcionality (jsou to např. příkazy pro nastavování hodnot DAC, registrů apod.). Odpovědí na tyto příkazy bude vždy ACQ (viz \ref{chap:katherine:protocol:control_commands}).
+
+\subsection{Konfigurace a nasazení}
+Pro spuštění emulátoru vyčítacího rozhraní\textit{Katherine} je třeba mít nainstalované \texttt{JRE 8}\footnote{\textit{Java SE Runtime Environment, dostupné z\\\url{https://www.oracle.com/technetwork/java/javase/downloads}}.}, nebo vyšší.
+Zkompilovanou java aplikaci je třeba spustit s argumentem cesty ke konfiguračnímu souboru (pro příklad viz zdrojový kód \ref{src:emulator:config}). Konfigurační soubor obsahuje číslo portu na které bude emulátor naslouchat pro řídící příkazy (\texttt{portCommands}), číslo portu a adresu pro odesílání měřených dat (\textit{portCommands} a \texttt{hots}) a parametr udávající průměrný počet události, které budou v rámci jedná akvizice vygenerovány.
+
+Aplikaci je tedy možné spustit například takto: \mint{bash}{java -jar emulator.jar config.yaml}
+
+\begin{code}[h]
+  \begin{minted}[
+  frame=single,
+  linenos,
+  breaklines
+  ]{yaml}
+portCommands: 1555
+portData: 1556
+host: 127.0.0.1
+avgNumberOfEventsPerAcq: 10
+\end{minted}
+\caption{\texttt{YAML} konfigurační soubor emulátoru vyčítacího rozhraní \textit{katherine}.}
+\label{src:emulator:config}
+\end{code}

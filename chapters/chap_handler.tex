@@ -70,7 +70,7 @@ Zdrojový kód \ref{src:handler:comm_intf} obsahuje interface, který komunikač
 
 Prvních pět metod (tj. řádek 3 až 7) má čistě informativní charakter a jejich implementace má čistě informativní charakter pro operátora systému.
 
-Na řádcích 8 a 9 je setter a getter pro konfiguraci detektoru. Konfigurace je detektoru předána jako \texttt{String}\footnote{Datový typ obsahující textový řetězec} (setter) a musí být do něj serializovatelná (getter). Systém ale s konfigurací detektoru neumí pracovat (kromě komunikačního modulu detektoru, resp. implementace komunikačního interface), tudíž jejíž syntax není vynucována a její podoba je čistě v kompetenci poskytovatele komunikačního modulu. Avšak je doporučeno, aby zvolený formát byl strojově i lidsky čitelný, z důvodu jeho snazší editace\footnote{V dalších fázích implementace systému je plánováno přidání podpory editace konfigurace v rámci webového uživatelského rozhraní mastera.}. Takový formát může být na příklad \texttt{JSON}\footnote{Z angl. \textit{JavaScript Object Notation} (JavaScriptový objektový zápis).}, nebo \texttt{YAML}\footnoteUrl{http://yaml.org/}, který je použit pro serializace konfigurace komunikačního modulu Katherine (viz \ref{chap:katherine:comm}).
+Na řádcích 8 a 9 je setter a getter pro konfiguraci detektoru. Konfigurace je detektoru předána jako \texttt{String}\footnote{Datový typ obsahující textový řetězec} (setter) a musí být do něj serializovatelná (getter). Systém ale s konfigurací detektoru neumí pracovat (kromě komunikačního modulu detektoru, resp. implementace komunikačního interface), tudíž jejíž syntax není vynucována a její podoba je čistě v kompetenci poskytovatele komunikačního modulu. Avšak je doporučeno, aby zvolený formát byl strojově i lidsky čitelný, z důvodu jeho snazší editace\footnote{V dalších fázích implementace systému je plánováno přidání podpory editace konfigurace v rámci webového uživatelského rozhraní mastera.}. Takový formát může být například \texttt{JSON}\footnote{Z angl. \textit{JavaScript Object Notation} (JavaScriptový objektový zápis).}, nebo \texttt{YAML}\footnoteUrl{http://yaml.org/}, který je použit pro serializace konfigurace komunikačního modulu Katherine (viz \ref{chap:katherine:comm}).
 
 \begin{code}[h!]
 \begin{minted}[
@@ -431,7 +431,7 @@ Webové rozhraní je dostupné z endpointu \texttt{/detectors}. Pro jednoduchost
 Pro spuštění handleru je třeba mít nainstalované \texttt{JRE 8}\footnote{\textit{Java SE Runtime Environment, dostupné z\\\url{https://www.oracle.com/technetwork/java/javase/downloads}}.}, nebo vyšší.
 Zkompilovanou java aplikaci je třeba spustit s argumentem \texttt{handlerConfig} obsahující cestu ke konfiguračnímu souboru (pro příklad viz zdrojový kód \ref{src:handler:config}), obsahujícího port na kterém bude aplikace naslouchat a pojmenování handleru.
 
-Aplikaci je tedy možné spustit například takto: \mint{bash}{java -jar handlerConfig=config.yaml}
+Aplikaci je tedy možné spustit například takto: \mint{bash}{java -jar handler.jar handlerConfig=config.yaml}
 
 \begin{code}[h]
   \begin{minted}[
