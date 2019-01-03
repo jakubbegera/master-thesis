@@ -149,26 +149,42 @@ portToListen: 8080
 \section{Frontend}\label{chap:master:frontend}
 Pomocí frameworku \textit{ReactJS} (viz \ref{chap:arch:technologie:react}) byl implementován webový klient, který implementuje API, poskytované backendovou aplikací mastera (viz \ref{chap:master:backend:sw_arch:api}). 
 
-\begin{figure}[h]
-	\begin{center}
-        \includegraphics[width=12cm]{figures/master_detectors.png}
-	\end{center}
-	\caption{Master - frontend: screenshot seznamu detektorů.}
-	\label{fig:master:frontend:detectors}
-\end{figure}
+Jedná se o tzt. \textit{single-page} aplikaci, tj. aplikaci která načte jednu stránku, kterou pak dynamicky aktualizuje dle interakcí uživatele (ev. dalších událostí) bez nutnost stahování nové stránky ze serveru. Jak již bylo vysvětleno v kapitole \ref{chap:arch:technologie:react}, každá \textit{ReactJS} aplikace je založena na komponentách. Každá komponenta má svoje vlastnosti a svůj stav. Komponenty lze opětovně používat a je možné je libovolně zapouzdřovat. Při aktualizaci stavu některé z komponent, \textit{ReactJS} framework změnu detekuje a provede překreslení afektovaných částí uživatelského rozhraní.
+
+Pro navigaci po stránce aplikace používá knihovnu \textit{react-router}\footnoteUrl{https://reacttraining.com/react-router/web}, která mění obsah stránky renderováním těchto komponent:
+
+\begin{description}
+    \item[Subnetworks] - komponenta vizualizující seznam podsítí a umožňuje přidávání nových podsítí a odebírání existujících.
+    \item[Handlers] - tato komponenta zobrazuje seznam přidaných handlerů, včetně podseznamu jim přiřazených detektorů, stavu apod. Komponenta rovněž umožňuje přidání nových hadlerů a odstranění existujících. Pro screenshot viz obr. \ref{fig:master:frontend:handlers}.
+    \item[Detectors] - komponenta zobrazující seznam všech detektorů (viz \ref{fig:master:frontend:detectors}). Dále umožňuje přidávání nových detektorů a odebírání existujících.
+    \item[Detector detail] - komponenta s detailem detektoru (viz obr. \ref{fig:master:frontend:detector_detail}). Komponenta uživateli nabízí všechny operace nad detektorem, nabízené API backendové aplikace mastera (tj. např. přiřazování detektoru dostupnému handleru, navazování spojení s detektorem, vykonávání jeho příkazů apod.).
+\end{description}
 
 \begin{figure}[h]
 	\begin{center}
         \includegraphics[width=15cm]{figures/master_handlers.png}
 	\end{center}
-	\caption{Master - frontend: screenshot seznamu handlerů.}
+	\caption{Master - frontend: screenshot seznamu handlerů, dostupného z endpointu \texttt{/handlers}.}
 	\label{fig:master:frontend:handlers}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{center}
+        \includegraphics[width=10cm]{figures/master_detectors.png}
+	\end{center}
+	\caption{Master - frontend: screenshot seznamu detektorů, dostupného z endpointu \texttt{/detectors}.}
+	\label{fig:master:frontend:detectors}
 \end{figure}
 
 \begin{figure}[h]
 	\begin{center}
         \includegraphics[width=15cm]{figures/master_detector_detail.png}
 	\end{center}
-	\caption{Master - frontend: screenshot detailu detektoru.}
+    \caption{Master - frontend: screenshot detailu detektoru, dostupného z endpointu \texttt{detectors/\{ID detektoru\}}.}
 	\label{fig:master:frontend:detector_detail}
 \end{figure}
+
+\subsection{Nasazení}
+Nasazení aplikace je jednoduché - stačí jenom její build (k dispozici na přiloženém CD) nasadit na webový server. Build obsahuje \texttt{index.html} společně s vlastní aplikací v \texttt{bundle.js} a dalšími soubory (obrázky, CSS styly apod.).
+
+Aplikace byla vyvinuta pomocí systému na správu závislostí \texttt{Yarn}\footnoteUrl{https://yarnpkg.com}. Por vývojářské účely je možné aplikaci spustit příkazem \texttt{yarn start}, nebo příkazem \texttt{yarn build} je možné udělat build aplikace, nasaditelný na webový server.
