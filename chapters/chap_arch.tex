@@ -151,7 +151,7 @@ Jako datové úložiště pro konfigurace detektorů, informace o jejich stavu a
 %********************************************************************************
 % Hardwarová architektura
 %********************************************************************************
-\section{Hardwarová architektura}
+\section{Hardwarová architektura}\label{chap:arch:hw}
 V předchozí podkapitole byla popsána softwarová architektura. Fyzická instalace sítě přináší další omezení, především z pohledu síťové infrastruktury, které budou popsány v této podkapitole.
 
 Na obrázku \ref{fig:arch:hw_architecture} je příklad sítě sestávající se ze dvou podsítí (tzv. \textit{subnetwork}). Podsítí rozumíme takovou podmnožinu detektorů a handlerů, ve které libovolný detektor může být přiřazen libovolnému handleru. Pro úplnost je třeba doplnit, že nutnou podmínkou je, aby všechny handlery měly spojení s masterem a s distribuovaným úložištěm naměřených dat.
@@ -211,13 +211,13 @@ V této podkapitole budou stručně shrnuty technologie použité při implement
 
     Novější alternativou je Spring Boot, který je nadstavbou nad původním Spring frameworkem. Spring Boot odstraňuje nutnost komplikovaného definování konfigurace a také přináší možnost zapouzdření do samostatně spustitelné aplikace s embedovaným webovým serverem (\textit{Tomcat}, nebo \textit{Jetty}), takže již není třeba nasazovat \texttt{WAR}\footnote{Z angl. \textit{Web Application Archive} (archív se zkompilovanou webovou \texttt{J2EE} aplikací).} na webový server, protože Spring Boot aplikace je zkompilovatelná do spustitelné \texttt{JAR}\footnote{Z angl. \textit{Java Archive} (archív se zkompilovanou Java aplikací).} aplikace.
     
-    \item[ReactJS] je JavaScriptová knihovna pro vývoj uživatelského rozhraní webových aplikací, vyvíjená společností Facebook. React je používán k vývoji tzv. \textit{single-page} aplikací, tj. takových webových aplikací, které k interakci s uživatelem používají jen jednu stránku, jejíž obsah dynamicky přepisují (na rozdíl od stahování nové stránky z webového serveru).
+    \item[ReactJS]\label{chap:arch:technologie:react} je JavaScriptová knihovna pro vývoj uživatelského rozhraní webových aplikací, vyvíjená společností Facebook. React je používán k vývoji tzv. \textit{single-page} aplikací, tj. takových webových aplikací, které k interakci s uživatelem používají jen jednu stránku, jejíž obsah dynamicky přepisují (na rozdíl od stahování nové stránky z webového serveru).
     
     React je založen na principu zapouzdřených komponent, kde každá komponenta ma svoje vlastnosti a svůj stav. Komponenty jsou znovupoužitelné a zanořitelné do jiných komponent. Navíc komponenty nepracují přímo s DOM prohlížeče, ale přistupují pouze k jeho virtuální reprezentaci, což umožňuje optimalizovat operace s DOM. Například když nějaká komponenta změní svůj stav (ev. tranzitivně i stav jiných komponent), tak se na stránce přegenerují jen takové komponenty, jejichž stav byl změněn.
 
     React bude použit pro implementaci frontendové webové aplikace mastera. Vedle Reactu existuje ještě React Native, který je určen pro hybridní vývoj mobilních aplikací, tím se ale v této práci nebudeme zabývat.
     
-    \item[PostgreSQL] je nejpoužívanější open source objektově-relační databázový systém. Oproti klasickým relačním databázím (například \textit{MySQL}) má objektově orientovaný databázový model, který je přímo podporován databázovým schématem a dotazovacím jazykem.
+    \item[PostgreSQL]\label{chap:arch:technologie:postgresql} je nejpoužívanější open source objektově-relační databázový systém. Oproti klasickým relačním databázím (například \textit{MySQL}) má objektově orientovaný databázový model, který je přímo podporován databázovým schématem a dotazovacím jazykem.
     
     Tento databázový systém bude použit pro persistenci konfigurace sítě a bude k němu přistupovat backend mastera.
     
