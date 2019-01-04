@@ -1,4 +1,39 @@
 \addbibresource{reference.bib}
 
 \chapter{Závěr}\label{chap:zaver}
-\todo
+Cílem této práce bylo navrhnout a implementovat distribuovaný systém, který bude schopný řídit a vyčítat data ze sítě hybridních částicových pixelových detektorů \textit{Timepix3} za pomocí vyčítacího rozhraní \textit{Katherine}. 
+
+Výsledkem této práce je modulární distribuovaný systém, který uživateli umožňuje operovat teoreticky neomezené množství detektorů různých typů. Implementovaný systém se skládá ze dvou hlavních komponent - handlera a mastera.
+
+\textbf{Handler} slouží pro komunikaci s detektory a vyčítání dat z jemu přiřazených detektorů do uživatelem definovaném datovém úložištěm. Díky modulární architektuře je možné handleru přiřadit detektory různých typů a jimi naměřená data zpracovávat rozdílnými způsoby (např. odesílat do různých datových úložišť apod.). Komponenta také poskytuje jednoduché webové rozhraní a také \textit{API} pro své řízení jinými komponentami systému, ev. možnost integrace do systémů třetích stran. Počet detektorů, které je možné jednomu handleru přiřadit, je dán sumou jejich datového toku, komplexitou zpracovávání naměřených dat a hardwarovou konfigurací počítače, na kterém je instance handleru nasazena.
+
+\textbf{Master} je centrálním elementem systému, jehož hlavním úkolem je řízení všech handlerů sítě pomocí jejich \textit{API}. Komponenta rovněž implementuje perzistentní úložiště konfigurace a stavu systému. Master dále poskytuje \textit{API} pro své řízení. Primárním konzumentem \textit{API} je webový frontendový klient, který byl implementován jako \textit{single-page} aplikace, která uživateli poskytuje uživatelské rozhraní pro plnohodnotné řízení celého systému. Pomocí \textit{API} mastera může být systém rovněž integrován do systémů třetích stran, jako např. pro účely experimentu \textit{ATLAS-TPX} se systémem \texttt{DCS} (CERN systémem pro řízení a akvizici dat detektorových systémů).
+
+Výše zmíněná modulární architektura spočívá v možnosti operování různých typů detektorů. Při přidávání detektoru do systému je uživatel nucen poskytnout také jeho komunikační a datový modul. Komunikační modul musí obsahovat implementaci komunikačního interface (popsaného v \ref{chap:handler:detector_layer:commIntf}) a datový modul musí zase obsahovat implementaci datového interface (viz \ref{chap:handler:detector_layer:dataIntf}).
+
+V rámci této práce byl rovněž vyvinut komunikační a datový modul, jehož prostřednictvím je možné řídit a vyčítat naměřená data z vyčítacího rozhraní \textit{Katherine}, s připojeným \textit{Timepix3} detektorem. Implementovaný datový modul pak umožňuje ukládání dat ve formě souborů do uživatelem definovaného úložiště (např. do distribuovaného souborového systému, jako je např. \texttt{HDFS} (\textit{Hadoop Distributed File System})), nebo do \textit{MongoDB} distribuovatelné dokumentové databáze.
+
+Pro účely vývoje a testování byl rovněž vyvinut \textbf{emulátor} vyčítacího rozhraní \textit{Katherine}, který emuluje zařízení na síťové vrstvě. Emulátor implementuje všechny příkazy, které jsou důležité pro konfiguraci a spuštění akvizice dat (jako např. nastavení biasu, akvizičního času, vyčítacího a měřícího módu apod.). Emulátor je schopný generovat náhodná data (resp. události vzniklé interakcí s ionizujícím zářením) všech možných kombinací, daných akviziční konfigurací.
+
+%********************************************************************************
+% Budoucí vývoj
+%********************************************************************************
+\section{Budoucí vývoj}
+\subsection{Podpora více datových modulů jedním detektorem}
+V kapitole \ref{chap:arch:sw:detector} bylo popsáno, že instance detektoru v handleru je tvořena jeho komunikačním a datovým modulem, které jsou při inicializaci detektoru propojeny asynchronní frontou s naměřenými daty. Tato modifikace systému spočívá v možnosti přidání dalších konzumentů fronty - vícero datových modulů. Tento přístup umožňuje jednoduché přidání dalších komponent pro zpracování dat, např. komponentu pro analýzu naměřených dat v reálném čase, simultánní nahrávání dat do více datových současně apod.
+
+\subsection{Podpora pro analýzu a vizualizaci dat v reálném čase}
+Možnost zobrazení naměřených dat je pro operátora systému důležitá pro zajištění kvality měřených dat a ověření konfigurace systému. 
+
+Je plánováno přidání podpory pro umožnění poskytovateli komunikačního modulu, aby si definoval důležité hodnoty, které budou v reálném čase sledovány (např. okupance snímků, teploty apod.). Tyto hodnoty pak budou masterem v pravidelných intervalech vyčítány, ukládány a budou poskytovány pomocí jeho \textit{API}. Webová aplikace pak bude nabízet vizualizaci vývoje těchto sledovaných hodnot v závislosti na čase.
+
+Rovněž je plánováno přidání podpory pro vizualizaci dat z datového úložiště, ev. výsledky \textit{real-time} analýzy dat.
+
+\subsection{Zabezpečení}
+Před nasazením do produkce je plánováno přidání zabezpečení endpointů, poskytovaným \textit{API} handlera (pravděpodobně pomocí \textit{Base64}, protože \textit{API} handlera má jediného konzumenta - mastera). \textit{API} mastera bude zabezpečeno pomocí průmyslového standardu \textit{OAuth2}, protože je plánován přístup více klientů, kterými jsou uživatelé webové aplikace a ev. systémy třetích stran. Autentizace uživatelů bude rovněž implementována v rámci webové aplikace.
+
+\subsection{Podpora vyčítacího rozhraní ATLAS Pix}
+V kapitole \ref{chap:detectors:readouts:atlaspix} bylo zmíněno vyčítací rozhraní \textit{ATLAS~Pix}, pomocí kterého je v současné době realizována detektorová siť \textit{ATLAS-TPX}. Pro zajištění zpětné kompatibility s existujícím systému (resp. možnost operování i detektorů s \textit{ATLAS~Pix} rozhraním), bude implementován komunikační modul pro řízení a vyčítání dat z těchto zařízeních.
+
+\subsection{Podpora modifikovaného vyčítacího rozhraní Katherine pro řízení detektorů Timepix2}
+V současné době je dokončován vývoj nového detektoru \textit{Timepix2}, pro který je vyvíjena modifikace vyčítacího rozhraní \textit{Katherine}. Je plánováno vytvoření komunikačního modulu pro toto zařízení, modifikací existujícího komunikačního modulu, již vyvinutého pro původní \textit{Katherine}.
