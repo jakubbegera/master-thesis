@@ -134,11 +134,19 @@ unicode=true,
 	% Abstrakt / Abstract 
  
 	\abstractpage
+	This master thesis is denoted to design and implementation of Pixnet software - modular distributed system for control and data readout from network of particle pixel detectors. System consists of two components - handler and master. Handler is used for operation of subset of detectors which are assigned to him and master is used for controlling of handlers and for providing API for controlling of whole system as well. Primary consumer of this API is \textit{single-page} web application, but it can be consumed by 3rn party systems as well. Scalability of system is realized by adding of handlers instances and distribution of detectors across them.
 
-	\todo abstrakt anglicky
+	Designed system has modular architecture - instance of detector is given by his communication and data module, which has to implement defined interfaces. Thus, system allows to operate heterogenous network of detectors in homogenous way. Within this thesis has been implemented communication and data module, which added support of \textit{Timepix3} detector, operating by \textit{Katherine} readout interface.
+
+	For development and testing purposes, emulator of the \textit{Katherine} interface has beed developed. Emulator implements subsets of commands, which are needed to basic configuration of detector and data acquisition setup.
+
+	\vspace*{2cm}
+	\begin{description}
+		\item[Key words:] Timepix, Timepix3, ATLAS, ATLAS-TPX, Katherine, distributed control, ionizing radiation, pixel detector, Java, Kotlin, ReactJS, Spring Framework, Spring Boot, detectors network, modular architecture
+	\end{description}
 
 	\abstractpagecz
-	Tato práce ze zabývá návrhem a implementací software Pixnet - modulárním distribuovaném systému pro řízení sítě částicových pixelových detektorů. Systém se skládá ze dvou hlavních komponent - handlera a mastera. Handler slouží pro operování podmnožiny jemu přiřazených detektorů a master k řízení handlerů a poskytování API pro řízení celého systému. Primárním konzumentem tohoto API je webová \textit{single-page} aplikace, ale můžou jím být i systému třetích stran. Škálování systému je realizováno přidáváním instancí handlerů a distribucí detektorů mezi jejich instancemi.
+	Tato diplomová práce ze zabývá návrhem a implementací software Pixnet - modulárním distribuovaném systému pro řízení a vyčítání dat ze sítě částicových pixelových detektorů. Systém se skládá ze dvou hlavních komponent - handlera a mastera. Handler slouží pro operování podmnožiny jemu přiřazených detektorů a master k řízení handlerů a poskytování API pro řízení celého systému. Primárním konzumentem tohoto API je webová \textit{single-page} aplikace, ale můžou jím být i systému třetích stran. Škálování systému je realizováno přidáváním instancí handlerů a distribucí detektorů mezi jejich instancemi.
 	
 	Navržený systém je modulární - instance detektoru je reprezentována jeho komunikačním a datovým module, které musí implementovat definované rozhraní. Systém tedy umožňuje operování heterogenní sítě detektorů homogenním způsobem. V rámci této práce byl implementován komunikační a datový modul, které umožňují podporu detektoru \textit{Timepix3}, komunikujícího prostřednictvím vyčítacího rozhraní \textit{Katherine}.
 
