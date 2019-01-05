@@ -108,7 +108,7 @@ interface DetectorComm {
 
 }
 \end{minted}
-\caption{Komunikační interface detektoru, napsané v jazyce Kotlin (viz \ref{chap:arch:technologie:kotlin})).}
+\caption{Komunikační interface detektoru, napsaný v jazyce Kotlin (viz \ref{chap:arch:technologie:kotlin})).}
 \label{src:handler:comm_intf}
 \end{code}
 
@@ -207,7 +207,7 @@ Pro přípojení detektoru, odpojení detektoru a zjišťování stavu připojen
 Do detektorů rodiny \textit{Medipix} je třeba před jejich použitím nahrát konfiguraci jednotlivých pixelů detektoru. Konfigurace je pole bytů, kde nastavení jednoho pixelu je serializováno do jednoho bytu. Z tohoto důvodu je třeba přidat podporu pro nahrávání velkých binárních objektů (tzv. \texttt{LOB}\footnote{Z angl. Large Object.}).
 Pro nahrávání souborů do detektoru slouží příkaz \texttt{uploadFile()} (viz řádek 22 zdrojového kódu \ref{src:handler:comm_intf}), který akceptuje ID souboru a jeho binární reprezentaci. Pro poskytnutí seznamu podporovaných souborů, resp. jejich ID, je třeba implementovat metodu \texttt{getAcceptedFilesKeys()} (viz řádek 12 zdrojového kódu \ref{src:handler:comm_intf}).
 
-V kapitole \ref{chap:arch:sw:detector} již byl popsán tok měřených dat v handleru, resp. od komunikačního k datovému modulu. Přenos dat je realizován asynchronní blokující frontou (viz obr. \ref{fig:handler:data_queue}), tj. frontou ke které může asynchronně přistupovat více vláken současně a zároveň čtení z fonty je implementováno jako blokující operace (tzn. že zablokuje čtecí vlákno, než bude ve frontě nějaký element v vyčtení). Jelikož komunikační modul je zodpovědný za vytvoření instance fronty, tak její implementace je zcela v kompetenci poskytovatele komunikačního modulu. Jedinou podmínkou je, aby fronta implementovala interface \texttt{BlockingQueue}\footnote{Z \textit{Java Collections Framework}.}. V další části textu (viz \ref{chap:katherine}) bude čtenář seznámen s implementací komunikačního modulu s implementací fronty pomocí \texttt{LinkedBlockingQueue}\footnote{Implementace \texttt{BlockingQueue} pomocí spojového seznamu. V této frontě jsou elementy řazení pomocí FIFO (first-in-first-out). Fronty založené na spojové struktuře umožňují (ve srovnání s frontami založenými na dynamickém poly) vyšší datový tok, zejména pro vícevláknové aplikace.}.
+V kapitole \ref{chap:arch:sw:detector} již byl popsán tok měřených dat v handleru, resp. od komunikačního k datovému modulu. Přenos dat je realizován asynchronní blokující frontou (viz obr. \ref{fig:handler:data_queue}), tj. frontou ke které může asynchronně přistupovat více vláken současně a zároveň čtení z fronty je implementováno jako blokující operace (tzn. že zablokuje čtecí vlákno, než bude ve frontě nějaký element k vyčtení). Jelikož komunikační modul je zodpovědný za vytvoření instance fronty, tak její implementace je zcela v kompetenci poskytovatele komunikačního modulu. Jedinou podmínkou je, aby fronta implementovala interface \texttt{BlockingQueue}\footnote{Z \textit{Java Collections Framework}.}. V další části textu (viz \ref{chap:katherine}) bude čtenář seznámen s implementací komunikačního modulu s implementací fronty pomocí \texttt{LinkedBlockingQueue}\footnote{Implementace \texttt{BlockingQueue} pomocí spojového seznamu. V této frontě jsou elementy řazení pomocí FIFO (first-in-first-out). Fronty založené na spojové struktuře umožňují (ve srovnání s frontami založenými na dynamickém poly) vyšší datový tok, zejména pro vícevláknové aplikace.}.
 \begin{figure}[h]
 	\begin{center}
 		\vspace*{0.5cm}
@@ -253,7 +253,7 @@ interface DataPersistence {
 
 Metoda \texttt{setDataFrameQueue()} (viz řádek 3) je zavolána po inicializaci modulu a jejím prostřednictvím handler předá datovému modulu frontu měřených dat, která byla vytvořena komunikačním modulem (viz předchozí komponenta).
 
-Na 4. řádku je metoda pro předání konfigurace, které probíhá stejně, jako u komunikačního interface. Za tímto účelem je v datovém interface také \texttt{Callback} interface a metoda pro předání jeho instance, vytvořené handlerem. \texttt{Callback} obsahuje metodu pro předání \texttt{ClassLoader}, kterým byl modul zaveden.
+Na 4. řádku je metoda pro předání konfigurace, která probíhá stejně, jako u komunikačního interface. Za tímto účelem je v datovém interface také \texttt{Callback} interface a metoda pro předání jeho instance, vytvořené handlerem. \texttt{Callback} obsahuje metodu pro předání \texttt{ClassLoader}, kterým byl modul zaveden.
 
 Na řádcích 6 a 7 jsou metody \texttt{start()} a \texttt{stop()}, kterými se spouští a zastavuje vlákno zpracovávající frontu měřených dat.
 
@@ -311,7 +311,7 @@ Tato komponenta je \texttt{RestController}, poskytující endpointy\footnote{Ozn
 	\label{tab:handler:api_detectors}
 \end{table}
 
-Pro přenášená data je použil formát JSON. Zdrojový kód \ref{src:handler:detectors_api_example} znázorňuje ukázku API volání s příkladem s nastavením akvizičního módu detektoru (definice tohoto příkladu je uvedena ve zdrojovém kódu \ref{src:handler:execution_command}) pomocí \texttt{executeExecutionCommand} endpointu.
+Pro přenášená data je použit formát JSON. Zdrojový kód \ref{src:handler:detectors_api_example} znázorňuje ukázku API volání s příkladem s nastavením akvizičního módu detektoru (definice tohoto příkladu je uvedena ve zdrojovém kódu \ref{src:handler:execution_command}) pomocí \texttt{executeExecutionCommand} endpointu.
 
 \begin{code}[h!]
 \begin{minted}[
@@ -387,9 +387,9 @@ Tato komponenta je určena pro poskytování stavu handlerům dalším částem 
 \subsubsection{Swagger API doc REST controller}\label{chap:handler:spring:swagger}
 Ke každému API je třeba poskytovat dokumentaci pro umožnění jeho implementace. Navíc, každá změna API by se měla současně projevit i v dokumentaci. Manuální udržování API dokumentace je pracné a náchylné na možné odchylky dokumentace od aktuálního stavu API. Proto bylo rozhodnuto použít automatizovaný nástroj na generování dokumentace.
 
-Za tímto účelem byla implementována knihovna \textit{Springfox} \cite{springfox} - nástroj pro generování strojově i lidsky čitelné dokumentace. \textit{Springfox} je založen na \textit{OpenAPI}\footnote{\textit{OpenAPI Specification} (dříve \textit{Swagger Specification}) je formát pro popis REST API.} specifikaci a \textit{Swagger}\footnote{Nadstavba nad \textit{OpenAPI} umožňující návrh, vytváření (resp. generování serverového i klientského kódu), dokumentaci a testování REST API.} frameworku. \textit{Springfox} po spuštění aplikace automaticky analyzuje její komponenty a jednotlivé její třídy pomocí Java reflexe. Na základě analýzy potom vytvoří sémantický model jednotlivých endpointů.
+Za tímto účelem byla implementována knihovna \textit{Springfox} \cite{springfox} - nástroj pro generování strojově i lidsky čitelné dokumentace. \textit{Springfox} je založen na \textit{OpenAPI}\footnote{\textit{OpenAPI Specification} (dříve \textit{Swagger Specification}) je formát pro popis REST API.} specifikaci a \textit{Swa\-gger}\footnote{Nadstavba nad \textit{OpenAPI} umožňující návrh, vytváření (resp. generování serverového i klientského kódu), dokumentaci a testování REST API.} frameworku. \textit{Springfox} po spuštění aplikace automaticky analyzuje její komponenty a jednotlivé její třídy pomocí Java reflexe. Na základě analýzy potom vytvoří sémantický model jednotlivých endpointů.
 
-Výstupem je pak online webová dokumentace, dostupná pomocí \texttt{swagger-ui.html} endpointu (tzn. url dokumentace je například \url{http://localhost:8082/swagger-ui.html}, dle konfigurace - viz \ref{chap:handler:config}) - viz obrázek \ref{fig:handler:swagger}. Webové rozhraní poskytuje nejen přehled všech endpointů včetně jejich parametrů, ale i definici datového modelu a nástroj pro manuální volání jednotlivých endpointů.
+Výstupem je pak online webová dokumentace, dostupná pomocí \texttt{swagger-ui.html} end\-pointu (tzn. url dokumentace je například \url{http://localhost:8082/swagger-ui.html}, dle konfigurace - viz \ref{chap:handler:config}) - viz obrázek \ref{fig:handler:swagger}. Webové rozhraní poskytuje nejen přehled všech endpointů včetně jejich parametrů, ale i definici datového modelu a nástroj pro manuální volání jednotlivých endpointů.
 Endpoint pro stažení JSON OpenAPI specifikace je \texttt{/v2/api-docs}.
 
 \begin{figure}[h]
@@ -428,7 +428,7 @@ Webové rozhraní je dostupné z endpointu \texttt{/detectors}. Pro jednoduchost
 % Konfigurace a nasazení
 %********************************************************************************
 \section{Konfigurace a nasazení}\label{chap:handler:config}
-Pro spuštění handleru je třeba mít nainstalované \texttt{JRE 8}\footnote{\textit{Java SE Runtime Environment, dostupné z\\\url{https://www.oracle.com/technetwork/java/javase/downloads}}.}, nebo vyšší.
+Pro spuštění handleru je třeba mít nainstalované \texttt{JRE 8}\footnote{\textit{Java SE Runtime Environment, dostupné z\\\url{https://www.oracle.com/technetwork/java/javase/downloads}}.} nebo vyšší.
 Zkompilovanou java aplikaci je třeba spustit s argumentem \texttt{handlerConfig} obsahující cestu ke konfiguračnímu souboru (pro příklad viz zdrojový kód \ref{src:handler:config}), obsahujícího port na kterém bude aplikace naslouchat a pojmenování handleru.
 
 Aplikaci je tedy možné spustit například takto: \mint{bash}{java -jar handler.jar handlerConfig=config.yaml}

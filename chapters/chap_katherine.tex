@@ -5,7 +5,7 @@ V této kapitole bude čtenář blíže seznámen s komunikačním protokolem vy
 
 Pro účely vývoje a testování byl vyvinut emulator \textit{Katherine}, který emuluje zařízení na síťové vrstvě, včetně podpory všech příkazů komunikačního protokolu, relevantních k akvizici dat. Popis jeho návrhu a implementace bude také zahrnut v této kapitole.
 
-Pro úplnost je třeba dodat, že komunikační a datový modul sdílejí stejnou podmnožinu datového modelu a část business-logiky, vázající se k manipulaci s měřenými daty. Tato společná \textit{code-base} je implementována v rámci separátního modulu, na kterém jsou závislé oba výše zmíněné moduly. Toto řešení umožňuje použití stejné vnitřní reprezentace dat, bez nutnosti jejich serializace a deserializace, což má pozitivní vliv na výkonost systému. Nutnou podmínkou ale je aby oba moduly byly do systému zavedeny pomocí stejného \texttt{ClassLoader} objektu (z důvodu kompatibility přenášených model objektů), tento mechanizmus je ale už implementován v handleru.
+Pro úplnost je třeba dodat, že komunikační a datový modul sdílejí stejnou podmnožinu datového modelu a část business-logiky, vázající se k manipulaci s měřenými daty. Tato společná \textit{code-base} je implementována v rámci separátního modulu, na kterém jsou závislé oba výše zmíněné moduly. Toto řešení umožňuje použití stejné vnitřní reprezentace dat, bez nutnosti jejich serializace a deserializace, což má pozitivní vliv na výkonost systému. Nutnou podmínkou ale je, aby oba moduly byly do systému zavedeny pomocí stejného \texttt{ClassLoader} objektu (z důvodu kompatibility přenášených model objektů), tento mechanizmus je ale už implementován v handleru.
 
 %********************************************************************************
 % Komunikační protokol
@@ -62,7 +62,7 @@ Následuje výčet všech důležitých řídících příkazů, s jejich ID, n�
     \\\textit{Request}: \texttt{data[0]} akviziční mód (0 = sekvenční, 1 = data-driven).
     \\\textit{Response}: ACQ.
     
-    \item[0x04 - Internal DAC Settings] - nastavení hodnoty DAC (digitálně analogového převodníku detektoru) detektoru. Přehled jednotlivých dat je uveden v příloze \ref{chap:app:katherine:dacs}.
+    \item[0x04 - Internal DAC Settings] - nastavení hodnoty DAC (digitálně analogového převodníku) detektoru. Přehled jednotlivých dat je uveden v příloze \ref{chap:app:katherine:dacs}.
     \\\textit{Request}: \texttt{data[15..0]} hodnota DAC, \texttt{data[16..31]} ID DAC pro čtení.
     \\\textit{Response}: ACQ.
 
@@ -200,7 +200,7 @@ Z pohledu pořadí toku jednotlivých datagramů rozlišujeme dva případy, dle
        \item Klient pošle \textit{Acquisition Start} (0x03) příkaz.
        \item Vyčítací rozhraní zahájí akvizici snímku a pošle datagram o vytvoření nového frame (hlavička 0x7).
        \item Akvizice dat probíhá po dobu zvoleného akvizičního času. Jsou-li detekovány nějaké události, pak pro každou událost je poslán datagram s měřenými daty (hlavička 0x4). V případě zaznamenání příkazu pro přerušení měření, dojde k poslání datagramu s hlavičkou 0xE a měření je ukončeno.
-       \item Po ukončení akvizice akvizice aktuálního snímku (uzavření \textit{shutteru}) readout pošle timestamp začátku a konce akvizice dat (datagramy s hlavičkami 0x8, 0x9, 0xA a 0xB).
+       \item Po ukončení akvizice aktuálního snímku (uzavření \textit{shutteru}) readout pošle timestamp začátku a konce akvizice dat (datagramy s hlavičkami 0x8, 0x9, 0xA a 0xB).
        \item Je poslán datagram s informací o počtu ztracených pixelů (hlavička 0xD) a ukončení aktuálního snímku (hlavička 0xC).
        \item Je-li počet aktuálně pořízených snímků nižší, než celkový počet snímků (nastavený řídícím příkazem 0x13), pak měření pokračuje bodem 2, v opačném případě měření končí.
    \end{enumerate}
@@ -209,7 +209,7 @@ Z pohledu pořadí toku jednotlivých datagramů rozlišujeme dva případy, dle
     \item Klient pošle \textit{Acquisition Start} (0x03) příkaz.
     \item Vyčítací rozhraní zahájí akvizici dat (resp. jednoho snímku) a pošle datagram o vytvoření nového frame (hlavička 0x7).
     \item Akvizice dat probíhá po dobu zvoleného akvizičního času. Jsou-li detekovány nějaké události, pak pro každou událost je poslán datagram s měřenými daty (hlavička 0x4). V případě zaznamenání příkazu pro přerušení měření, dojde k poslání datagramu s hlavičkou 0xE a měření je ukončeno.
-    \item Po ukončení akvizice akvizice aktuálního snímku (uzavření \textit{shutteru}) readout pošle timestamp začátku a konce akvizice dat (datagramy s hlavičkami 0x8, 0x9, 0xA a 0xB).
+    \item Po ukončení akvizice aktuálního snímku (uzavření \textit{shutteru}) readout pošle timestamp začátku a konce akvizice dat (datagramy s hlavičkami 0x8, 0x9, 0xA a 0xB).
     \item Je poslán datagram s informací o počtu ztracených pixelů (hlavička 0xD) a ukončení aktuálního snímku (hlavička 0xC).
     \item Měření je ukončeno.
 \end{enumerate}
@@ -229,7 +229,7 @@ Tabulka \ref{tab:katherine:protocol:measurement_data_structure} znázorňuje for
 % Komunikační modul
 %********************************************************************************
 \section{Komunikační modul}\label{chap:katherine:comm}
-Pro účely řízení komunikačního rozhraní \textit{Katherine} a vyčítání měřených dat byl implementován komunikační modul, který bude poprán v této podkapitole. Aby bylo možné integrovat modul do systému, musí obsahovat implementaci komunikačního interface (viz \ref{chap:handler:detector_layer:commIntf}), které musí být v manifestu zkompilovaného \texttt{jar} archívu explicitně uvedeno (viz \ref{chap:handler:detector_layer:module_init}).
+Pro účely řízení komunikačního rozhraní \textit{Katherine} a vyčítání měřených dat byl implementován komunikační modul, který bude popsán v této podkapitole. Aby bylo možné integrovat modul do systému, musí obsahovat implementaci komunikačního interface (viz \ref{chap:handler:detector_layer:commIntf}), které musí být v manifestu zkompilovaného \texttt{jar} archívu explicitně uvedeno (viz \ref{chap:handler:detector_layer:module_init}).
 
 Na obrázku \ref{fig:katherine:comm:arch} je přehled vrstev softwarové architektury komunikačního modulu, které budou dále popsány v následujících podkapitolách.
 
@@ -253,7 +253,7 @@ Tato vrstva udržuje spojení s detektorem a implementuje všechny potřebné ř
 
 Odesílání řídících příkazů je realizováno pomocí komponenty \texttt{Control Datagram Sender} (viz obr. \ref{fig:katherine:comm:arch}), který implementuje asynchronní frontu datagramů. Fronta je asynchronně zpracovávána nezávislým vláknem, které datagramy z fronty odesílá na řídící port \textit{Katherine}.
 
-O příjem dat z řídícího socketu se stará komponenta \texttt{Control Datagram Receiver}, který v separátním vlákně přijímá příchozí data. Každý příchozí datagram (8-bytový vektor) je zpracován a přidán do fronty příchozích řídících dat. Komponenta také implementuje blokující metodu pro přijetí dat, která dle zadaného ID příkazu a maximálního času čekání (tzv. \textit{timeout})hledá požadovanou odpověď ve frontě dat.
+O příjem dat z řídícího socketu se stará komponenta \texttt{Control Datagram Receiver}, která v separátním vlákně přijímá příchozí data. Každý příchozí datagram (8-bytový vektor) je zpracován a přidán do fronty příchozích řídících dat. Komponenta také implementuje blokující metodu pro přijetí dat, která dle zadaného ID příkazu a maximálního času čekání (tzv. \textit{timeout}) hledá požadovanou odpověď ve frontě dat.
 
 Příklad použití obou komponent zmíněných výše je ve zdrojovém kódu \ref{src:katherine:comm:example_get_bias}. Příklad demonstruje vyčtení biasu z detektoru. Nejprve je pomocí \texttt{Control Datagram Sender} odeslán řídící příkaz s ID 0x0C (řádek 3 až 7) a následně pomocí \texttt{Control Datagram Receiver}, resp. pomocí jeho blokující metody popsané výše, je zachycena odpověď, ze které je vyčtena požadovaná hodnota napětí. Jestli se odpověď nepodaří přijmout ve zvoleném timeoutu, je vygenerována výjimka, která musí být vyššími vrstvami programu ošetřena.
 
@@ -332,8 +332,8 @@ Z pohledu zpracování je možné příkazy rozdělit do tří kategorií:
 Některé příkazy nebyly implementovány, protože simulace jejich funkce není triviální a je nad rámec požadované funkcionality (jsou to např. příkazy pro nastavování hodnot DAC, registrů apod.). Odpovědí na tyto příkazy bude vždy ACQ (viz \ref{chap:katherine:protocol:control_commands}).
 
 \subsection{Konfigurace a nasazení}
-Pro spuštění emulátoru vyčítacího rozhraní\textit{Katherine} je třeba mít nainstalované \texttt{JRE 8}\footnote{\textit{Java SE Runtime Environment, dostupné z\\\url{https://www.oracle.com/technetwork/java/javase/downloads}}.}, nebo vyšší.
-Zkompilovanou java aplikaci je třeba spustit s argumentem cesty ke konfiguračnímu souboru (pro příklad viz zdrojový kód \ref{src:emulator:config}). Konfigurační soubor obsahuje číslo portu na které bude emulátor naslouchat pro řídící příkazy (\texttt{portCommands}), číslo portu a adresu pro odesílání měřených dat (\textit{portCommands} a \texttt{hots}) a parametr udávající průměrný počet události, které budou v rámci jedná akvizice vygenerovány.
+Pro spuštění emulátoru vyčítacího rozhraní \textit{Katherine} je třeba mít nainstalované \texttt{JRE 8}\footnote{\textit{Java SE Runtime Environment, dostupné z\\\url{https://www.oracle.com/technetwork/java/javase/downloads}}.}, nebo vyšší.
+Zkompilovanou java aplikaci je třeba spustit s argumentem cesty ke konfiguračnímu souboru (pro příklad viz zdrojový kód \ref{src:emulator:config}). Konfigurační soubor obsahuje číslo portu, na které bude emulátor naslouchat pro řídící příkazy (\texttt{portCommands}), číslo portu a adresu pro odesílání měřených dat (\textit{portCommands} a \texttt{hots}) a parametr udávající průměrný počet události, které budou v rámci jedné akvizice vygenerovány.
 
 Aplikaci je tedy možné spustit například takto: \mint{bash}{java -jar emulator.jar config.yaml}
 

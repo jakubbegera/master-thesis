@@ -10,7 +10,7 @@ V rámci této práce byly implementovány moduly, které systému Pixnet umož�
 \section{Motivace}
 Podobný systém pro řízení sítě částicových pixelových detektorů již existuje \cite{atlastpx_sw,BegeraBcThesis2016} a byl vyvinut pro účely řízení a vyčítání dat z experimentu \textit{ATLAS-TPX} - sítě \textit{Timepix} detektorů, která byla instalována v rámci experimentu \textit{ATLAS} na \textit{LHC} v \textit{CERN} a měřila data během \textit{LHC} \texttt{run 2}\footnote{Označení druhého běhu částicového urychlovače \textit{LHC}, který probíhal v letech 2014 až 2018.}. 
 
-V letech 2018 až 2020 je plánován LS2\footnote{Z angl. \textit{Long Shutdown 2}, technologická odstávka částicového urychlovače \textit{LHC}.}, v rámci které proběhne modernizace detektorové sítě \textit{ATLAS-TPX} za použití detektorů \textit{Timepix3}. Z pohledu softwarové architektury modernizace přináší nová omezení, které existující systém není schopný zajistit. Především se jedná o vysoký datový tok (detektor \textit{Timepix3} je teoreticky schopný generovat až \unit{5,12}{Gb/s}), který by současné nedistribuované řešení nebylo schopné zpracovat. Díky modulární architektuře, další výhodou nově navrženého systému je možnost homogenního způsobu řízení nehomogenní detektorové sítě, tj. takové sítě, která se skládá z více druhů detektorů.
+V letech 2019 až 2020 je plánován LS2\footnote{Z angl. \textit{Long Shutdown 2}, technologická odstávka částicového urychlovače \textit{LHC}.}, v rámci které proběhne modernizace detektorové sítě \textit{ATLAS-TPX} za použití detektorů \textit{Timepix3}. Z pohledu softwarové architektury modernizace přináší nová omezení, které existující systém není schopný zajistit. Především se jedná o vysoký datový tok (detektor \textit{Timepix3} je teoreticky schopný generovat až \unit{5,12}{Gb/s}), který by současné nedistribuované řešení nebylo schopné zpracovat. Díky modulární architektuře, další výhodou nově navrženého systému je možnost homogenního způsobu řízení nehomogenní detektorové sítě, tj. takové sítě, která se skládá z více druhů detektorů.
 
 \section{Timepix3 detektor}
 Hybridní částicový pixelový detektor Timepix3\cite{timepix3} je nástupcem detektoru Timepix\cite{timepix} a je vyvíjen v rámci Medipix\footnoteUrl{http://medipix.web.cern.ch/} kolaborace v CERN, mezi jejíž členy patří od roku 1999 i ÚTEF ČVUT v Praze.
@@ -37,7 +37,7 @@ Jednotlivé pixely se skládají z citlivého polovodičového senzoru (nejčast
 Timepix3 detektor přináší oproti svému předchůdci několik výhod. Je schopný operovat i v kontinuálním módu, ve kterém je každý pixel detektoru schopný detekovanou událost ihned zpracovat, nezávisle na ostatních pixelech. Tím se téměř odstraňuje mrtvá doba detektoru, zvyšuje detekční účinnost, ale i zvyšuje datový tok z detektoru, jehož maximální teoretická hodnota je až $5.12 Gb/s$.
 
 \section{Struktura práce}
-Práce je strukturovaná do 8 \todo následujících kapitol:
+Práce je strukturovaná do následujících kapitol:
 \begin{itemize}
     
     \item \textbf{Kapitola} \ref{chap:detectors} - \nameref{chap:detectors}: V této kapitole bude čtenář seznámen se základními fyzikálními principy detekce ionizujícího záření v polovodiči, budou zde představeny hybridních částicové pixelové detektory rodiny \textit{Medipix}, včetně jejich módu, aspektů kalibrace a dostupných vyčítacích rozhraní.
@@ -50,6 +50,8 @@ Práce je strukturovaná do 8 \todo následujících kapitol:
     
     \item \textbf{Kapitola} \ref{chap:master} - \nameref{chap:master}: V této kapitole bude představen master - centrální element systému Pixnet, který řídí handlery, přiřazuje jim detektory a umožňuje centralizované řízení detektorů.
     
-    \item \textbf{Kapitola} \ref{chap:zaver} - \nameref{chap:zaver}: \todo
+    \item \todo testování...
+    
+    \item \textbf{Kapitola} \ref{chap:zaver} - \nameref{chap:zaver}: V závěru práce bude čtenář seznámen z dosaženými výsledky a plány na budoucí vývoj systému.
 
 \end{itemize}

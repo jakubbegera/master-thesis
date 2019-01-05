@@ -12,7 +12,7 @@ Tato komponenta se skládá ze dvou nezávislých částí - backendového serve
 Backendová aplikace mastera, podobně jako handlera, byla implementována za pomocí Spring Boot frameworku (viz \ref{chap:arch:technologie:spring}) a obsahuje embedovaný webový server \texttt{Tomcat}. Aplikace komunikuje s handlery, jejichž prostřednictvím řídí jim přiřazené detektory.
 
 \subsection{Softwarová architektura}\label{chap:master:backend:sw_arch}
-Na obrázku \ref{fig:master:arch} je znázorněna softwarová architektura backendové aplikace mastera, rozdělené do několika vrstev, které budou v následujících podkapitolách blíže vysvětleny.
+Na obrázku \ref{fig:master:arch} je znázorněna softwarová architektura backendové aplikace mastera, rozdělená do několika vrstev, které budou v následujících podkapitolách blíže vysvětleny.
 
 \begin{figure}[h]
 	\begin{center}
@@ -104,7 +104,7 @@ Tato vrstva se sestává z REST API kontrolérů pro poskytování API metod pro
         \label{tab:master:api_detectors}
     \end{table}    
 
-    \item[\texttt{Swagger API DOC Controller}] - kontrolér pro poskytování webové API dokumentace, dostupné z endpointu \texttt{/apiDoc}. Tato komponenta byla implementována, podobně jako u handleru (viz \ref{chap:handler:spring:swagger}), za pomocí \textit{Springfox} \cite{springfox} knihovně. Kromě přehledu všech endpointů webové rozhraní také poskytuje definici datového modelu API (ve formátu JSON) a umožňuje manuální volání jednotlivých endpointů. Endpoint pro stažení OpenAPI specifikace ve formátu JSON je \texttt{/v2/api-docs}.
+    \item[\texttt{Swagger API DOC Controller}] - kontrolér pro poskytování webové API dokumentace, dostupné z endpointu \texttt{/apiDoc}. Tato komponenta byla implementována, podobně jako u handleru (viz \ref{chap:handler:spring:swagger}), za pomocí \textit{Springfox} \cite{springfox} knihovny. Kromě přehledu všech endpointů webové rozhraní také poskytuje definici datového modelu API (ve formátu JSON) a umožňuje manuální volání jednotlivých endpointů. Endpoint pro stažení OpenAPI specifikace ve formátu JSON je \texttt{/v2/api-docs}.
 \end{description}
 
 \subsubsection{Handlers Heartbeat Service}
@@ -125,7 +125,7 @@ Ve schématu jsou dále definována různá integritní omezení, která vynucuj
 \end{figure}
 
 \subsection{Konfigurace a nasazení}
-Pro spuštění mastera je třeba mít nainstalované \texttt{JRE 8}\footnote{\textit{Java SE Runtime Environment, dostupné z\\\url{https://www.oracle.com/technetwork/java/javase/downloads}}.}, nebo vyšší.
+Pro spuštění mastera je třeba mít nainstalované \texttt{JRE 8}\footnote{\textit{Java SE Runtime Environment, dostupné z\\\url{https://www.oracle.com/technetwork/java/javase/downloads}}.} nebo vyšší.
 Zkompilovanou java aplikaci je třeba spustit s argumentem \texttt{masterConfig} obsahující cestu ke konfiguračnímu souboru (pro příklad viz zdrojový kód \ref{src:master:config}), obsahujícího port na kterém bude aplikace naslouchat příchozí spojení.
 
 Aplikaci je tedy možné spustit například takto: \mint{bash}{java -jar master.jar masterConfig=config.yaml}
