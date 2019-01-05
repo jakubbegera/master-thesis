@@ -81,7 +81,7 @@ Následuje výčet všech důležitých řídících příkazů, s jejich ID, n�
     \\\textit{Response}: ACQ.
     
     \item[0x09 - Acquisition Mode Setting] - nastavení akvizičního módu detektoru.
-    \\\textit{Request}: \texttt{data[1..0]} akviziční mód (00 = \textit{ToA \& ToT}, 01 = \textit{pouze ToA}, 10 = \textit{Event \& iToT}), \texttt{data[7]} povolení \textit{FastToA}\footnote{LSB (bit s nejnižší hodnotou) ToA je \unit{25}{ns}, s aktivovaným FastToA je časové rozlišení zlepšeno na \unit{1.5625}{ns}} (1 = povoleno).
+    \\\textit{Request}: \texttt{data[1..0]} akviziční mód (00 = \textit{ToA \& ToT}, 01 = \textit{pouze ToA}, 10 = \textit{Event \& iTOT}), \texttt{data[7]} povolení \textit{FastToA}\footnote{LSB (bit s nejnižší hodnotou) ToA je \unit{25}{ns}, s aktivovaným FastToA je časové rozlišení zlepšeno na \unit{1.5625}{ns}} (1 = povoleno).
     \\\textit{Response}: ACQ.
 
     \item[0x0A - Acquisition Time Setting - MSB] - nastaví nejvyšších 32 bitů akvizičního času v desítkách nanosekund.

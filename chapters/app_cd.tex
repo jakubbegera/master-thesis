@@ -43,35 +43,21 @@
     before computing xy={l=15pt},
   }  
 [CD/
-	[atlas\_tpx/
-		[dokumentace/ - adresář obsahující popis API
-		]
-		[exe/
-			[emulator/
-				[readme.txt - README soubor]
-				[AtlasPixEmulator-0.1.jar - spustitelný jar soubor emulátoru]
-			]
-			[atlas\_tpx\_server/
-				[readme.txt - README soubor]
-				[AtlasTPX.server-0.1.jar - spustitelný jar soubor serveru]
-				[server-configuration.yml - soubor s konfigurací serveru]
-				[detectors.csv - tabulka s detektory]
-			]
-		]
-		[src/ - adresář se zdrojovými kódy]
+	[pixnet/
+		[commons/ - modul se společnými závislosti]
+		[detector\_communication\_intf/ - modul s komunikačním interface]
+		[detector\_communication\_katherine/ - komunikační modul Katherine]
+		[detector\_data\_persistence\_intf/ - modul s datovým interface]
+		[handler/ - modul s handlerem]
+		[katherine\_commons/ - společné závislosti Katherine modulů]
+		[katherine\_emulator/ - emulátor Katherine]
+		[katherine\_persistence\_file/ - datový modul Katherine]
+		[master/ - modul s backendovou aplikací mastera]
 	]
-	[kalibrace/
-		[exe/ - spustitelné binární soubory
-			[libs/ - jar knihovny]
-			[test\_data/ - vstupní data kalibrace (spektra)]
-			[readme.txt - README soubor]
-			[X-rayTimepixCalibration.jar - spustitelný jar soubor]
-		]
-		[src/ - adresář se zdrojovými kódy]
-	]
+	[pixnet\_frontend/ - webová single-page aplikace]
 	[text/
-		[LaTeX/ - adresář se zdrojovými soubory tohoto dokumentu]
-		[thesis-begerjak-2016.pdf - tato práce ve formátu PDF]
+		[src/ - adresář se zdrojovými soubory tohoto dokumentu]
+		[master-thesis-jakub-begera-2019.pdf - tato práce ve formátu PDF]
 		[abstract\_cz.txt - abstrakt česky]
 		[abstract\_en.txt - abstrakt anglicky]
 	]
