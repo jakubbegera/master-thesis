@@ -1,4 +1,21 @@
 \addbibresource{reference.bib}
 
 \chapter{Testování}\label{chap:test}
-\todo
+V této kapitol bude čtenář seznámen s metodami testování pro zajištění kvality jednotlivých softwarových komponent a s provedenými experimenty.
+
+%********************************************************************************
+% Metody testování
+%********************************************************************************
+\section{Metody testování}
+\subsection{Jednotkové testy}
+Pro části jednotlivých softwarových komponent byly použity jednotkové testy \cite{testing_evans} (tzv. \textit{Unit testy}). Jednotkové testy jsou základním typem testu, který ověřuje funkčnost samostatně testovatelných částí systému - tzv. jednotek. Výhodou těchto testů je jejich automatizovatelnost. Byl použit \textit{JUnit} framework - framework pro jednotkové testy pro platformu Java. 
+
+\subsection{Integrační testy}
+Integrační testy byly použity pro ověření správné komunikace jednotlivých komponent systému, zejména pak handlera (viz \ref{chap:handler}) a backendové aplikace mastera (viz \ref{chap:master:backend}).
+
+\subsection{Systémové testy}
+
+%********************************************************************************
+% Experimenty
+%********************************************************************************
+\section{Experimenty}

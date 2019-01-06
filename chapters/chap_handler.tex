@@ -2,7 +2,7 @@
 
 \chapter{Handler}\label{chap:handler}
 
-V této kapitole bude čtenář podrobně seznámen s handlerem - komponentou pro distribuované řízení detektorů. Jak již bylo zmíněno v kapitole \ref{chap:arch}, handler je komponenta zajišťující komunikaci a vyčítání dat z detektorů (viz obr. \ref{fig:handler:overview}) skrze poskytnuté implementace komunikačního a datového interface.
+V této kapitole bude čtenář podrobně seznámen s handlerem -- komponentou pro distribuované řízení detektorů. Jak již bylo zmíněno v kapitole \ref{chap:arch}, handler je komponenta zajišťující komunikaci a vyčítání dat z detektorů (viz obr. \ref{fig:handler:overview}) skrze poskytnuté implementace komunikačního a datového interface.
   
 Handler implementuje \textit{Spring framework} (viz \ref{chap:arch:technologie:spring}), aby mohl poskytovat \texttt{REST API} pro management detektorů a pro poskytování stavových informací o své instanci. Handler dále poskytuje jednoduché webové rozhraní s přehledem připojených detektorů.
 
@@ -12,7 +12,7 @@ Na obrázku \ref{fig:handler:overview} je znázorněn příklad instance handler
 	\begin{center}
 		\vspace*{1cm}
 		\includegraphics[width=14cm]{figures/handler_overview.pdf}
-		\caption{Pixnet - handler: příklad instance handleru s pěti připojenými detektory, poskytujícího REST API pro své řízení a webové uživatelské rozhraní s přehledem připojených detektorů.}
+		\caption{Pixnet -- handler: příklad instance handleru s pěti připojenými detektory, poskytujícího REST API pro své řízení a webové uživatelské rozhraní s přehledem připojených detektorů.}
 		\label{fig:handler:overview}
 	\end{center}
 \end{figure}
@@ -23,13 +23,13 @@ Na obrázku \ref{fig:handler:overview} je znázorněn příklad instance handler
 % Vrstvy softwarové architektury
 %********************************************************************************
 \section{Vrstvy softwarové architektury}\label{chap:handler:architecture}
-Tato podkapitola je věnována softwarové architektuře handleru. Budou zde představeny jednotlivé její vrstvy, tj. od vrstvy pro komunikaci s detektorem, management detektorů, Spring implementaci, až po výstupní vrstvu poskytující \texttt{REST API} a webové rozhraní - viz obr. \ref{fig:handler:arch}. Vybrané vrstvy budou popsány detailněji v dalších podkapitolách.
+Tato podkapitola je věnována softwarové architektuře handleru. Jsou zde představeny jednotlivé její vrstvy, tj. od vrstvy pro komunikaci s detektorem, management detektorů, Spring implementaci, až po výstupní vrstvu poskytující \texttt{REST API} a webové rozhraní -- viz obr. \ref{fig:handler:arch}. Vybrané vrstvy budou popsány detailněji v dalších podkapitolách.
 
 \begin{figure}[th]
 	\begin{center}
 		\vspace*{0.4cm}
 		\includegraphics[width=14cm]{figures/handler_architecture.pdf}
-		\caption{Pixnet - handler: softwarová architektura s vrstvami pro (i) rozhraní detektoru (\textit{Detector layer}), (ii) management detektorů (\textit{Detectors management layer}),(iii) Spring vrstvu (\textit{Spring layer}) a (iv) výstupní vrstvou pro \texttt{REST API} a webové uživatelské rozhraní.}
+		\caption{Pixnet -- handler: softwarová architektura s vrstvami pro (i) rozhraní detektoru (\textit{Detector layer}), (ii) management detektorů (\textit{Detectors management layer}),(iii) Spring vrstvu (\textit{Spring layer}) a (iv) výstupní vrstvou pro \texttt{REST API} a webové uživatelské rozhraní.}
 		\label{fig:handler:arch}
 	\end{center}
 \end{figure}
@@ -38,13 +38,13 @@ Tato podkapitola je věnována softwarové architektuře handleru. Budou zde př
 % Vrstvy softwarové architektury - Detektorová vrstva
 %********************************************************************************
 \subsection{Detektorová vrstva}\label{chap:handler:detector_layer}
-Detektorová vrstva se skládá ze dvou částí - externě poskytnuté implementace komunikačního a datového interface. Tyto tzv. moduly jsou zavedené až za běhu programu pomocí vyšších vrstev systému.
+Detektorová vrstva se skládá ze dvou částí -- externě poskytnuté implementace komunikačního a datového interface. Tyto tzv. moduly jsou zavedené až za běhu programu pomocí vyšších vrstev systému.
 
 \subsubsection{Zavádění modulů}\label{chap:handler:detector_layer:module_init}
-Každý modul, obsahující implementaci komunikačního, nebo datového interface, musí pro své zavedení do systému splňovat následující kritéria:
+Každý modul, obsahující implementaci komunikačního nebo datového interface, musí pro své zavedení do systému splňovat následující kritéria:
 
 \begin{itemize}
-	\item Musí být zkompilován do Java archívu (\texttt{*.jar}) - současná verze implementace podporuje pouze moduly vyvinuté v jazyce Java (resp. také v jazyce Kotlin, zkompilovaného do Java \textit{bytecode}), v dalších verzích je plánováno přidání podpory pro \texttt{C++} a \texttt{Python}.
+	\item Musí být zkompilován do Java archívu (\texttt{*.jar}) -- současná verze implementace podporuje pouze moduly vyvinuté v jazyce Java (resp. také v jazyce Kotlin, zkompilovaného do Java \textit{bytecode}), v dalších verzích je plánováno přidání podpory pro \texttt{C++} a \texttt{Python}.
 	\item Při vývoji modulu musí být použit datový model, který je součástí poskytovaných knihoven.
 	\item Modul musí obsahovat implementaci jednoho z již zmíněních rozhraní. Navíc, celý název implementující třídy (vč. tzv. \texttt{package}) musí být uveden jako atribut s názvem \texttt{PluginImplClass} v manifestu \texttt{jar} archívu, viz zdrojový kód \ref{src:handler:manifest}.
 \end{itemize}
@@ -116,16 +116,16 @@ Pro získání seznamu podporovaných \textit{value commands} (tj. příkazů pr
 \begin{enumerate}[label=(\roman*)]
 	\item \texttt{ValueCommand} obsahuje atributy pro daného příkazu, tj.:
 	\begin{itemize}
-		\item \textbf{id} - celočíselný unikátní identifikátor daného příkazu,
-		\item \textbf{name} - název příkazu, resp. manipulované hodnoty detektoru,
-		\item \textbf{valueUnit} - jednotka veličiny manipulované hodnoty detektoru (může nabývat hodnot z \textit{Enum} třídy \texttt{ValueUnit} poskytovaného modelu, např. \texttt{ValueUnit.VOLT} apod.),
-		\item \textbf{accessType} - modifikátor přístupu manipulované hodnoty, který může nabývat těchto hodnot:
+		\item \textbf{id} -- celočíselný unikátní identifikátor daného příkazu,
+		\item \textbf{name} -- název příkazu, resp. manipulované hodnoty detektoru,
+		\item \textbf{valueUnit} -- jednotka veličiny manipulované hodnoty detektoru (může nabývat hodnot z \textit{Enum} třídy \texttt{ValueUnit} poskytovaného modelu, např. \texttt{ValueUnit.VOLT} apod.),
+		\item \textbf{accessType} -- modifikátor přístupu manipulované hodnoty, který může nabývat těchto hodnot:
 		\begin{description}
 			\item[\texttt{SETTER}] pro takové hodnoty, které je možné pouze nastavovat,
 			\item[\texttt{GETTER}] pro takové hodnoty, které je možné pouze číst a
 			\item[\texttt{SETTER\_AND\_GETTER}] pro hodnoty, které je možné nastavovat i číst.
 		\end{description}
-		\item \textbf{valueModel} - datový model hodnoty daného příkazu, který definuje datový typ veličiny (podporovány jsou \texttt{Boolean}, \texttt{String}, \texttt{Integer}, \texttt{Long}, \texttt{Float} a \texttt{Double}) a omezení rozsahu hodnot. Model může být diskrétní (tzn. hodnota může nabývat jen nějaké z předem definovaných hodnot), nebo spojitý (hodnota může nabývat jakékoliv hodnoty ze zadaného intervalu).
+		\item \textbf{valueModel} -- datový model hodnoty daného příkazu, který definuje datový typ veličiny (podporovány jsou \texttt{Boolean}, \texttt{String}, \texttt{Integer}, \texttt{Long}, \texttt{Float} a \texttt{Double}) a omezení rozsahu hodnot. Model může být diskrétní (tzn. hodnota může nabývat jen nějaké z předem definovaných hodnot), nebo spojitý (hodnota může nabývat jakékoliv hodnoty ze zadaného intervalu).
 	\end{itemize}
 	Viz zdrojový kód \ref{src:handler:value_command} pro příklad definice \textit{ValueCommand} pro \textit{bias} (prahové napětí detektoru).
 
@@ -154,7 +154,7 @@ Pro vykonání \texttt{ValueCommand} je třeba implementovat metody \texttt{exec
 
 Dalším typem příkazů je získání seznamu podporovaných \texttt{ExecutionCommands} (viz 11. řádek komunikačního interface \ref{src:handler:comm_intf}). Od \texttt{ValueCommands} se liší tím, že vstup a výstup není omezen stejnou veličinou (resp. jejím modelem hodnot) a ani jejich množstvím. Tento přístup tedy umožňuje definovat příkazy, které mají libovolný počet vstupních hodnot a libovolný počet výstupních hodnot. Obdobně jako \texttt{AbstractValueCommand}, i \texttt{AbstractExecutionCommands} má v poskytované knihovně dvě implementace:
 \begin{enumerate}[label=(\roman*)]
-	\item \texttt{ExecutionCommand} je definován obdobně jako \texttt{ValueCommand} - má své ID, jméno, ale také obsahuje seznamy rozšířených modelů hodnot - jeden vstupní a jeden výstupní. Rozšířený model hodnot obsahuje již zmíněný \texttt{valueModel}, dále pak jméno hodnoty, její ID (textový řetězec) a \texttt{valueUnit}.
+	\item \texttt{ExecutionCommand} je definován obdobně jako \texttt{ValueCommand} -- má své ID, jméno, ale také obsahuje seznamy rozšířených modelů hodnot -- jeden vstupní a jeden výstupní. Rozšířený model hodnot obsahuje již zmíněný \texttt{valueModel}, dále pak jméno hodnoty, její ID (textový řetězec) a \texttt{valueUnit}.
 	
 	Zdrojový kód \ref{src:handler:execution_command} obsahuje příklad s \texttt{ExecutionCommand} pro nastavení akvizičního módu detektoru. Z příkladu je patrné, že příkaz akceptuje právě dvě vstupní hodnoty (akviziční mód a \textit{FastVCO} přepínač) a že žádné hodnoty nevrací.
 	
@@ -200,7 +200,7 @@ executionCommands.add(ExecutionCommand(
 \label{src:handler:execution_command}
 \end{code}
 
-Pro vykonání \texttt{ExecutionCommand} slouží metoda \texttt{executeExecutionCommand()}, viz řádek 21 komunikačního interface (zdrojový kód \ref{src:handler:comm_intf}). Metoda akceptuje ID příkazu a mapu (tzn. seznam párů klíč - hodnota) jednotlivých hodnot. Klíčem v mapě je ID parametru a hodnota je již výše zmíněný \texttt{ValuePayload}, obsahující hodnotu parametru. Výstupem volání metody je pak mapa výstupních parametrů příkazu.
+Pro vykonání \texttt{ExecutionCommand} slouží metoda \texttt{executeExecutionCommand()}, viz řádek 21 komunikačního interface (zdrojový kód \ref{src:handler:comm_intf}). Metoda akceptuje ID příkazu a mapu (tzn. seznam párů klíč -- hodnota) jednotlivých hodnot. Klíčem v mapě je ID parametru a hodnota je již výše zmíněný \texttt{ValuePayload}, obsahující hodnotu parametru. Výstupem volání metody je pak mapa výstupních parametrů příkazu.
 
 Pro přípojení detektoru, odpojení detektoru a zjišťování stavu připojení slouží metody \texttt{connect()}, \texttt{disconnect()} a \texttt{isConnected()} (viz řádky 15 až 17 zdrojového kódu \ref{src:handler:comm_intf}). Aby bylo možné provést jakoukoliv operaci interagující s detektorem (tj. vykonávání příkazů a nahrávání souborů) je nutné, aby byl detektor připojen, resp. metoda \texttt{isConnected()} musí vracet \texttt{true}.
 
@@ -268,12 +268,12 @@ Vrstva pro management detektorů slouží jako úložiště detektorů a jako sl
   
   Detektor je reprezentován instancí třídy \texttt{Detector}, které má následující parametry:
   \begin{itemize}
-    \item \texttt{}{detectorID} - unikátní textový identifikátor detektoru v systému,
-    \item \texttt{name} - vlastní pojmenování detektoru (např. s označením fyzického umístění detektoru apod., nemusí být unikátní),
-    \item \texttt{detectorComm} - instance komunikačního interface detektoru (viz \ref{chap:handler:detector_layer:commIntf}),
-    \item \texttt{dataPersistence} - instance datového interface detektoru (viz \ref{chap:handler:detector_layer:dataIntf}),
-    \item \texttt{pluginsClassLoader} - Java \texttt{ClassLoader}, kterým byly načteny výše zmíněné moduly a
-    \item \texttt{status} - instance třídy \texttt{DetectorStatus}, ve které jsou uloženy stavové informace o detektoru (např. stav připojení, měření apod.).
+    \item \texttt{}{detectorID} -- unikátní textový identifikátor detektoru v systému,
+    \item \texttt{name} -- vlastní pojmenování detektoru (např. s označením fyzického umístění detektoru apod., nemusí být unikátní),
+    \item \texttt{detectorComm} -- instance komunikačního interface detektoru (viz \ref{chap:handler:detector_layer:commIntf}),
+    \item \texttt{dataPersistence} -- instance datového interface detektoru (viz \ref{chap:handler:detector_layer:dataIntf}),
+    \item \texttt{pluginsClassLoader} -- Java \texttt{ClassLoader}, kterým byly načteny výše zmíněné moduly a
+    \item \texttt{status} -- instance třídy \texttt{DetectorStatus}, ve které jsou uloženy stavové informace o detektoru (např. stav připojení, měření apod.).
   \end{itemize}
   
   \item[\texttt{DetectorService}] je komponenta poskytující operace nad detektorem, vč. navazování spojení, nahrávání souborů, vykonávání \textit{ValueCommands} a \textit{ExecutionCommands} apod. Komponenta je implementována jako \texttt{Service}\footnote{Dle \cite{Evans-domain-driven-design} \textit{Service} je množina operací, která není součástí modelu a zároveň není nositelem stavu.}.
@@ -345,7 +345,7 @@ breaklines
 Dokumentace k jednotlivým endpointům je poskytování jinou komponentou systému, viz kapitola \ref{chap:handler:spring:swagger}.
 
 \subsubsection{Handler status REST API controller}\label{chap:handler:spring:status_api}
-Tato komponenta je určena pro poskytování stavu handlerům dalším částem systému (např. master), ev. systémům třetích stran. Komponenta poskytuje jediný endpoint - \texttt{/status} (HTTP metoda \texttt{GET})). Ve zdrojovém kódu \ref{src:handler:status_api_example} je příklad volání tohoto endpointu, resp. JSON těla odpovědi. Z příkladu je patrné, že handler je online, má verzi software \texttt{0.0.0.1} a spravuje dva detektory.
+Tato komponenta je určena pro poskytování stavu handlerům dalším částem systému (např. master), ev. systémům třetích stran. Komponenta poskytuje jediný endpoint -- \texttt{/status} (HTTP metoda \texttt{GET})). Ve zdrojovém kódu \ref{src:handler:status_api_example} je příklad volání tohoto endpointu, resp. JSON těla odpovědi. Z příkladu je patrné, že handler je online, má verzi software \texttt{0.0.0.1} a spravuje dva detektory.
 
 \begin{code}[h!]
   \begin{minted}[
@@ -387,9 +387,9 @@ Tato komponenta je určena pro poskytování stavu handlerům dalším částem 
 \subsubsection{Swagger API doc REST controller}\label{chap:handler:spring:swagger}
 Ke každému API je třeba poskytovat dokumentaci pro umožnění jeho implementace. Navíc, každá změna API by se měla současně projevit i v dokumentaci. Manuální udržování API dokumentace je pracné a náchylné na možné odchylky dokumentace od aktuálního stavu API. Proto bylo rozhodnuto použít automatizovaný nástroj na generování dokumentace.
 
-Za tímto účelem byla implementována knihovna \textit{Springfox} \cite{springfox} - nástroj pro generování strojově i lidsky čitelné dokumentace. \textit{Springfox} je založen na \textit{OpenAPI}\footnote{\textit{OpenAPI Specification} (dříve \textit{Swagger Specification}) je formát pro popis REST API.} specifikaci a \textit{Swa\-gger}\footnote{Nadstavba nad \textit{OpenAPI} umožňující návrh, vytváření (resp. generování serverového i klientského kódu), dokumentaci a testování REST API.} frameworku. \textit{Springfox} po spuštění aplikace automaticky analyzuje její komponenty a jednotlivé její třídy pomocí Java reflexe. Na základě analýzy potom vytvoří sémantický model jednotlivých endpointů.
+Za tímto účelem byla implementována knihovna \textit{Springfox} \cite{springfox} -- nástroj pro generování strojově i lidsky čitelné dokumentace. \textit{Springfox} je založen na \textit{OpenAPI}\footnote{\textit{OpenAPI Specification} (dříve \textit{Swagger Specification}) je formát pro popis REST API.} specifikaci a \textit{Swa\-gger}\footnote{Nadstavba nad \textit{OpenAPI} umožňující návrh, vytváření (resp. generování serverového i klientského kódu), dokumentaci a testování REST API.} frameworku. \textit{Springfox} po spuštění aplikace automaticky analyzuje její komponenty a jednotlivé její třídy pomocí Java reflexe. Na základě analýzy potom vytvoří sémantický model jednotlivých endpointů.
 
-Výstupem je pak online webová dokumentace, dostupná pomocí \texttt{swagger-ui.html} end\-pointu (tzn. url dokumentace je například \url{http://localhost:8082/swagger-ui.html}, dle konfigurace - viz \ref{chap:handler:config}) - viz obrázek \ref{fig:handler:swagger}. Webové rozhraní poskytuje nejen přehled všech endpointů včetně jejich parametrů, ale i definici datového modelu a nástroj pro manuální volání jednotlivých endpointů.
+Výstupem je pak online webová dokumentace, dostupná pomocí \texttt{swagger-ui.html} end\-pointu (tzn. url dokumentace je například \url{http://localhost:8082/swagger-ui.html}, dle konfigurace -- viz \ref{chap:handler:config}) -- viz obrázek \ref{fig:handler:swagger}. Webové rozhraní poskytuje nejen přehled všech endpointů včetně jejich parametrů, ale i definici datového modelu a nástroj pro manuální volání jednotlivých endpointů.
 Endpoint pro stažení JSON OpenAPI specifikace je \texttt{/v2/api-docs}.
 
 \begin{figure}[h]

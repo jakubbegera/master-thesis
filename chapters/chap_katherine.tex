@@ -11,17 +11,17 @@ Pro úplnost je třeba dodat, že komunikační a datový modul sdílejí stejno
 % Komunikační protokol
 %********************************************************************************
 \section{Komunikační protokol}\label{chap:katherine:protocol}
-Jak již bylo vysvětleno v kapitole \ref{chap:detectors:readouts:katherine:comm}, \textit{Katherine} podporuje dva provozní módy - autonomní a manuální. Tato práce se zabývá pouze použitím manuálního módu, který umožňuje plnohodnotné řízení detektorů a umožňuje (ve srovnání s autonomním módem) efektivněji přenášet naměřená data, díky čemuž je možné maximalizovat tok výstupních dat detektoru.
+Jak již bylo vysvětleno v kapitole \ref{chap:detectors:readouts:katherine:comm}, \textit{Katherine} podporuje dva provozní módy -- autonomní a manuální. Tato práce se zabývá pouze použitím manuálního módu, který umožňuje plnohodnotné řízení detektorů a umožňuje (ve srovnání s autonomním módem) efektivněji přenášet naměřená data, díky čemuž je možné maximalizovat tok výstupních dat detektoru.
 
 Komunikace v rámci manuálního módu je založena na proprietárním komunikačním protokolu, který bude popsán v této podkapitole. Klientská část tohoto protokolu je implementována v komunikačním modulu handleru (viz \ref{chap:katherine:comm}) a jeho serverová část v \textit{Katherine} emulátoru (viz \ref{chap:katherine:emulator}).
 
-Protokol je založen na posílání \texttt{UDP} datagramů pomocí dvou socketů - jednoho pro řídící příkazy a druhého pro měřená data. Využití \texttt{UDP} se nabízí především z důvodu, že se jedná o nepotvrzované spojení (na rozdíl od \texttt{TCP}), takže v případě špatného spojení nedochází k zahlcení spojení a je možné dosáhnout většího datového toku. V dalších fázích vývoje je ale plánován přechod na \texttt{TCP} protokol pro řídící socket, protože objem jeho prostřednictvím přenášených dat je zanedbatelný a potvrzované doručení řídících příkazů by nemuselo být ošetřováno aplikační vrstvou.
+Protokol je založen na posílání \texttt{UDP} datagramů pomocí dvou socketů -- jednoho pro řídící příkazy a druhého pro měřená data. Využití \texttt{UDP} se nabízí především z důvodu, že se jedná o nepotvrzované spojení (na rozdíl od \texttt{TCP}), takže v případě špatného spojení nedochází k zahlcení spojení a je možné dosáhnout většího datového toku. V dalších fázích vývoje je ale plánován přechod na \texttt{TCP} protokol pro řídící socket, protože objem jeho prostřednictvím přenášených dat je zanedbatelný a potvrzované doručení řídících příkazů by nemuselo být ošetřováno aplikační vrstvou.
 
 %********************************************************************************
-% Komunikační protokol - Řídící příkazy
+% Komunikační protokol -- Řídící příkazy
 %********************************************************************************
 \subsection{Řídící příkazy}\label{chap:katherine:protocol:control_commands}
-Každý řídící příkaz je vždy inicializován klientem - klient pošle 8-bytový datagram na předem definovaný komunikační port \textit{Katherine}, jehož struktura je znázorněna na obr. \ref{fig:katherine:protocol:comm_packet:request} a server (resp. \textit{Katherine}) vždy pošle odpověď ve formě datagramu (viz \ref{fig:katherine:protocol:comm_packet:response}), nebo jiných dat dle specifikace příkazu, na port klienta, ze kterého spojení bylo inicializováno\footnote{Doplnění této funkcionality bylo vyžádáno až v průběhu implementace komunikačního modulu a během psaní této práce je ještě ve fázi testování. V současné produkční verzi firmware \textit{Katherine} tedy posílá response datagram na staticky konfigurovaný port, což pro operování více \textit{Katherine} o stejné statické konfiguraci z jednoho handleru znamená konflikt portů.}. Response některých příkazů je jen potvrzení (tzv. \textit{Acknowledge}) ve formě ID příkazu a daty $0x00000000$ (dále jen ACQ). Bytové pořadí pro všechny datagramy je \textit{BigEndian}\footnote{Název pro označení endianity (bytového pořadí), kde na paměťové místo s nejnižší adresou je uložen nejvíce významný byte (MSB).}.
+Každý řídící příkaz je vždy inicializován klientem -- klient pošle 8-bytový datagram na předem definovaný komunikační port \textit{Katherine}, jehož struktura je znázorněna na obr. \ref{fig:katherine:protocol:comm_packet:request} a server (resp. \textit{Katherine}) vždy pošle odpověď ve formě datagramu (viz \ref{fig:katherine:protocol:comm_packet:response}), nebo jiných dat dle specifikace příkazu, na port klienta, ze kterého spojení bylo inicializováno\footnote{Doplnění této funkcionality bylo vyžádáno až v průběhu implementace komunikačního modulu a během psaní této práce je ještě ve fázi testování. V současné produkční verzi firmware \textit{Katherine} tedy posílá response datagram na staticky konfigurovaný port, což pro operování více \textit{Katherine} o stejné statické konfiguraci z jednoho handleru znamená konflikt portů.}. Response některých příkazů je jen potvrzení (tzv. \textit{Acknowledge}) ve formě ID příkazu a daty $0x00000000$ (dále jen ACQ). Bytové pořadí pro všechny datagramy je \textit{BigEndian}\footnote{Název pro označení endianity (bytového pořadí), kde na paměťové místo s nejnižší adresou je uložen nejvíce významný byte (MSB).}.
 
 \begin{figure}[h]
 	\begin{center}
@@ -50,109 +50,109 @@ Každý řídící příkaz je vždy inicializován klientem - klient pošle 8-b
 Následuje výčet všech důležitých řídících příkazů, s jejich ID, názvem a stručným popisem.
 
 \begin{description}
-    \item[0x01 - Set acq. time (LSB)] - nastaví nejnižších 32 bitů akvizičního času v desítkách nanosekund.
+    \item[0x01 -- Set acq. time (LSB)] -- nastaví nejnižších 32 bitů akvizičního času v desítkách nanosekund.
     \\\textit{Request}: \texttt{data[31..0]} LSB akvizičního času.
     \\\textit{Response}: ACQ.
 
-    \item[0x02 - Set bias] - nastaví \textit{bias} napětí detektoru.
+    \item[0x02 -- Set bias] -- nastaví \textit{bias} napětí detektoru.
     \\\textit{Request}: \texttt{data[39..32]} ID biasu, \texttt{data[31..0]} float\footnote{IEEE 754 standart pro reprezentaci čísel s plovoucí desetinou čárkou.} hodnota biasu.
     \\\textit{Response}: ACQ.
     
-    \item[0x03 - Acquisition Start] - spuštění akvizice dat.
+    \item[0x03 -- Acquisition Start] -- spuštění akvizice dat.
     \\\textit{Request}: \texttt{data[0]} akviziční mód (0 = sekvenční, 1 = data-driven).
     \\\textit{Response}: ACQ.
     
-    \item[0x04 - Internal DAC Settings] - nastavení hodnoty DAC (digitálně analogového převodníku) detektoru. Přehled jednotlivých dat je uveden v příloze \ref{chap:app:katherine:dacs}.
+    \item[0x04 -- Internal DAC Settings] -- nastavení hodnoty DAC (digitálně analogového převodníku) detektoru. Přehled jednotlivých dat je uveden v příloze \ref{chap:app:katherine:dacs}.
     \\\textit{Request}: \texttt{data[15..0]} hodnota DAC, \texttt{data[16..31]} ID DAC pro čtení.
     \\\textit{Response}: ACQ.
 
-    %\item[0x05 - Seq. Readout Start] - TODO
+    %\item[0x05 -- Seq. Readout Start] -- TODO
     
-    \item[0x06 - Acquisition Stop] - zastaví probíhající akvizici dat (měření).
+    \item[0x06 -- Acquisition Stop] -- zastaví probíhající akvizici dat (měření).
     \\\textit{Request}: prázdný.
     \\\textit{Response}: ACQ.
     
-    \item[0x07 - HW Command Start] - spustí interní hardwarový příkaz vyčítacího rozhraní. Přehled HW příkazů je uveden v příloze \ref{chap:app:katherine:hw_commands}.
+    \item[0x07 -- HW Command Start] -- spustí interní hardwarový příkaz vyčítacího rozhraní. Přehled HW příkazů je uveden v příloze \ref{chap:app:katherine:hw_commands}.
     \\\textit{Request}: \texttt{data[7..0]} ID HW příkazu.
     \\\textit{Response}: ACQ.
 
-    \item[0x08 - Sensor Register Setting] - nastavení registru připojeného \textit{Timepix3} detektoru ve vyčítacím rozhraní. Přehled registrů je uveden v příloze \ref{chap:app:katherine:tpx3_registers}. Pro propsání nastavení registru do detektoru je třeba ještě vykonat interní HW příkaz s ID \textbf{0}.
+    \item[0x08 -- Sensor Register Setting] -- nastavení registru připojeného \textit{Timepix3} detektoru ve vyčítacím rozhraní. Přehled registrů je uveden v příloze \ref{chap:app:katherine:tpx3_registers}. Pro propsání nastavení registru do detektoru je třeba ještě vykonat interní HW příkaz s ID \textbf{0}.
     \\\textit{Request}: \texttt{data[39..32]} ID registru, \texttt{data[31..0]} hodnota registru.
     \\\textit{Response}: ACQ.
     
-    \item[0x09 - Acquisition Mode Setting] - nastavení akvizičního módu detektoru.
+    \item[0x09 -- Acquisition Mode Setting] -- nastavení akvizičního módu detektoru.
     \\\textit{Request}: \texttt{data[1..0]} akviziční mód (00 = \textit{ToA \& ToT}, 01 = \textit{pouze ToA}, 10 = \textit{Event \& iTOT}), \texttt{data[7]} povolení \textit{FastToA}\footnote{LSB (bit s nejnižší hodnotou) ToA je \unit{25}{ns}, s aktivovaným FastToA je časové rozlišení zlepšeno na \unit{1.5625}{ns}} (1 = povoleno).
     \\\textit{Response}: ACQ.
 
-    \item[0x0A - Acquisition Time Setting - MSB] - nastaví nejvyšších 32 bitů akvizičního času v desítkách nanosekund.
+    \item[0x0A -- Acquisition Time Setting -- MSB] -- nastaví nejvyšších 32 bitů akvizičního času v desítkách nanosekund.
     \\\textit{Request}: \texttt{data[31..0]} MSB akvizičního času.
     \\\textit{Response}: ACQ.
 
-    \item[0x0B - Echo Chip ID] - vrátí ID připojeného detektoru.
+    \item[0x0B -- Echo Chip ID] -- vrátí ID připojeného detektoru.
     \\\textit{Request}: nic.
     \\\textit{Response}: \texttt{data[31..0]} ID detektoru.
 
-    \item[0x0C - Get Bias Voltage] - změří a vrátí bias napětí detektoru.
+    \item[0x0C -- Get Bias Voltage] -- změří a vrátí bias napětí detektoru.
     \\\textit{Request}: \texttt{data[39..32]} ID biasu.
     \\\textit{Response}: \texttt{data[31..0]} float hodnotu biasu detektoru.
 
-    %\item[0x0D - Get ADC Voltage] - 
-    %\item[0x0E - Get Back Read Register] - 
+    %\item[0x0D -- Get ADC Voltage] -- 
+    %\item[0x0E -- Get Back Read Register] -- 
 
-    \item[0x0F - Internal DAC Scan] - naměří a vrátí hodnotu DAC.
+    \item[0x0F -- Internal DAC Scan] -- naměří a vrátí hodnotu DAC.
     \\\textit{Request}: \texttt{data[7..0]} ID DAC (viz \ref{tab:app:dacs}).
     \\\textit{Response}: \texttt{data[31..0]} float hodnota napětí analogového výstupu převodníku.
 
-    %\item[0x10 - Set Pixel Config] - nastaví konfiguraci jednotlivých pixelů detektoru. V příloze \ref{chap:app:katherine:pix_config} je příklad převodu z formátu \texttt{BMC}\footnote{Z angl. \textit{Binary Matrix Configuration}, standardizovaný formát pro konfiguraci pixelů detektorů rodiny Medipix.} do formátu vyžadovaného \textit{Katherine} rozhraním.
+    %\item[0x10 -- Set Pixel Config] -- nastaví konfiguraci jednotlivých pixelů detektoru. V příloze \ref{chap:app:katherine:pix_config} je příklad převodu z formátu \texttt{BMC}\footnote{Z angl. \textit{Binary Matrix Configuration}, standardizovaný formát pro konfiguraci pixelů detektorů rodiny Medipix.} do formátu vyžadovaného \textit{Katherine} rozhraním.
     %\\\textit{Request}: nejprve je poslán příkaz z prázdnými daty. Poté \textit{Katherine} očekává 65536 bytů s konfigurací pixelů.
     %\\\textit{Response}: ACQ.
 
-    %\item[0x11 - Get Pixel Config ] - příkaz vyčte a vrátí konfiguraci pixelů detektoru.
+    %\item[0x11 -- Get Pixel Config ] -- příkaz vyčte a vrátí konfiguraci pixelů detektoru.
     %\\\textit{Request}: nic.
     %\\\textit{Response}: posloupnost 65536 bytů s konfigurací pixelů.
 
-    \item[0x12 - Set All Pixel Config] - nastaví konfiguraci jednotlivých pixelů detektoru. V příloze \ref{chap:app:katherine:pix_config} je příklad převodu z formátu \texttt{BMC}\footnote{Z angl. \textit{Binary Matrix Configuration}, standardizovaný formát pro konfiguraci pixelů detektorů rodiny Medipix.} do formátu vyžadovaného \textit{Katherine} rozhraním.
+    \item[0x12 -- Set All Pixel Config] -- nastaví konfiguraci jednotlivých pixelů detektoru. V příloze \ref{chap:app:katherine:pix_config} je příklad převodu z formátu \texttt{BMC}\footnote{Z angl. \textit{Binary Matrix Configuration}, standardizovaný formát pro konfiguraci pixelů detektorů rodiny Medipix.} do formátu vyžadovaného \textit{Katherine} rozhraním.
     \\\textit{Request}: nejprve je poslán příkaz z prázdnými daty. Poté \textit{Katherine} očekává 65536 bytů s konfigurací pixelů.
     \\\textit{Response}: ACQ.
 
-    \item[0x13 - Number of Frames Setting] - nastaví počet snímků, které se naměří, je-li akvizice dat spuštěna v \textit{frame-based} módu (viz \ref{chap:detectors:operation_modes}).
+    \item[0x13 -- Number of Frames Setting] -- nastaví počet snímků, které se naměří, je-li akvizice dat spuštěna v \textit{frame-based} módu (viz \ref{chap:detectors:operation_modes}).
     \textit{Request}: \texttt{data[31..0]} počet snímků.
     \textit{Response}: ACQ.
 
-    \item[0x14 - Get All DAC Scan] - vrátí sekvenci 22 naměřených hodnot DAC, seřazených dle čtecího ID DAC (viz \ref{chap:app:katherine:dacs}).
+    \item[0x14 -- Get All DAC Scan] -- vrátí sekvenci 22 naměřených hodnot DAC, seřazených dle čtecího ID DAC (viz \ref{chap:app:katherine:dacs}).
     \\\textit{Request}: nic.
     \\\textit{Response}: 22 response datagramů, kde \texttt{data[31..0]} je float hodnota napětí analogového výstupu převodníku.
 
-    \item[0x15 - Get HW/Readout Temperature] - naměří a vrátí teplotu vyčítacího rozhraní.
+    \item[0x15 -- Get HW/Readout Temperature] -- naměří a vrátí teplotu vyčítacího rozhraní.
     \\\textit{Request}: nic.
     \\\textit{Response}: \texttt{data[31..0]} teplota (v °C, float).
 
-    %\item[0x16 - LED settings] - 
+    %\item[0x16 -- LED settings] -- 
     
-    \item[0x17 - Get Readout Status] - vrátí informace o své HW a FW konfiguraci.
+    \item[0x17 -- Get Readout Status] -- vrátí informace o své HW a FW konfiguraci.
     \\\textit{Request}: nic.
     \\\textit{Response}: \texttt{data[7..0]} typ hardware ($0x1$ pro \textit{Katherine} ethernet readout),\\\texttt{data[15..8]} verze HW revize, \texttt{data[31..16]} sériové číslo HW, \texttt{data[47..32]} verze FW.
 
-    \item[0x18 - Get Communication Status] - vrátí stav komunikace mezi vyčítacím rozhraním a detektorem.
+    \item[0x18 -- Get Communication Status] -- vrátí stav komunikace mezi vyčítacím rozhraním a detektorem.
     \\\textit{Request}: nic.
     \\\textit{Response}: \texttt{data[7..0]} maska komunikačních kanálů, \texttt{data[15..8]} aktuální maximální datový tok mezi vyčítacím rozhraním a detektorem (float, po vynásobení této hodnoty 5 je získána výsledná hodnota v Mb/s), \texttt{data[16]} flag připojení detektoru (1 = přípojen).
 
-    \item[0x19 - Get Sensor Temperature] - naměří a vrátí teplotu senzoru připojeného detektoru.
+    \item[0x19 -- Get Sensor Temperature] -- naměří a vrátí teplotu senzoru připojeného detektoru.
     \\\textit{Request}: nic.
     \\\textit{Response}: \texttt{data[31..0]} teplota (v °C, float).
 
-    \item[0x20 - Digital Test] - provede test digitální části detektoru a vrátí výsledek. Je-li výsledek roven 64, pak test proběhl v pořádku.
+    \item[0x20 -- Digital Test] -- provede test digitální části detektoru a vrátí výsledek. Je-li výsledek roven 64, pak test proběhl v pořádku.
     \\\textit{Request}: nic.
     \\\textit{Response}: \texttt{data[7..0]} výsledek testu.
 
-    \item[0x28 - ToA Calibration Setup] - zapnutí/vypnutí \textit{ToA offset korekce} (viz \ref{chap:detectors:calibration:toa_correction}).
+    \item[0x28 -- ToA Calibration Setup] -- zapnutí/vypnutí \textit{ToA offset korekce} (viz \ref{chap:detectors:calibration:toa_correction}).
     \\\textit{Request}: \texttt{data[0]} zapnutí \textit{ToA offset korekce} (1 = zapnuto).
     \\\textit{Response}: ACQ.
 
 \end{description}
 
 %********************************************************************************
-% Komunikační protokol - Struktura měřených dat
+% Komunikační protokol -- Struktura měřených dat
 %********************************************************************************
 \subsection{Struktura měřených dat}\label{chap:katherine:protocol:measure_data_structure}
 Přenos měřených dat je realizován proudem datagramů ze serveru (vyčítací rozhraní) do klienta (např. handler). Data jsou posílána na předem definovaný port, uložený ve statické konfiguraci \textit{Katherine}\footnote{V době psaní této práce probíhal vývoj podpory pro dynamické nastavování klientského portu (přidáním nového příkazu do řídící části komunikačního protokolu).}. Každý datagram má délku 6 bytů a jeho struktura je znázorněna na obr. \ref{fig:katherine:protocol:data_packet}. Přehled typů datagramů, vč. jejich významu a obsažených dat, je uveden v tabulce \ref{tab:katherine:protocol:data_packet_header}.
@@ -195,7 +195,7 @@ Přenos měřených dat je realizován proudem datagramů ze serveru (vyčítac�
 %Výsledný čas ToA (viz \ref{chap:detectors:operation_modes}) je vypočten 
 Z pohledu pořadí toku jednotlivých datagramů rozlišujeme dva případy, dle nastaveného vyčítacího módu:
 \begin{description}
-   \item[Frame-based] - vyčítání po snímcích (viz \ref{chap:detectors:readout})
+   \item[Frame-based] -- vyčítání po snímcích (viz \ref{chap:detectors:readout})
    \begin{enumerate}
        \item Klient pošle \textit{Acquisition Start} (0x03) příkaz.
        \item Vyčítací rozhraní zahájí akvizici snímku a pošle datagram o vytvoření nového frame (hlavička 0x7).
@@ -204,7 +204,7 @@ Z pohledu pořadí toku jednotlivých datagramů rozlišujeme dva případy, dle
        \item Je poslán datagram s informací o počtu ztracených pixelů (hlavička 0xD) a ukončení aktuálního snímku (hlavička 0xC).
        \item Je-li počet aktuálně pořízených snímků nižší, než celkový počet snímků (nastavený řídícím příkazem 0x13), pak měření pokračuje bodem 2, v opačném případě měření končí.
    \end{enumerate}
-   \item[Data-driven] - režim kontinuální vyčítání dat (viz \ref{chap:detectors:readout})
+   \item[Data-driven] -- režim kontinuální vyčítání dat (viz \ref{chap:detectors:readout})
    \begin{enumerate}
     \item Klient pošle \textit{Acquisition Start} (0x03) příkaz.
     \item Vyčítací rozhraní zahájí akvizici dat (resp. jednoho snímku) a pošle datagram o vytvoření nového frame (hlavička 0x7).
@@ -242,7 +242,7 @@ Na obrázku \ref{fig:katherine:comm:arch} je přehled vrstev softwarové archite
 \end{figure}
 
 \subsection{Implementace komunikačního interface}
-Tato vrstva slouží jako tzv. fasáda\footnote{Návrhový vzor fasáda (\textit{Facade Pattern}) - použití pro poskytování zjednodušeného interface pro komplexní části kódu (analogie s pojmem fasáda, známém z architektury).} Katherine kontroléru. Implementace komunikačního interface implementuje všechny jeho metody, vč. poskytování přehledu a podpory vykonávání \textit{ValueCommands} a \textit{ExecutionCommands} (pro jejich definici viz soubor \texttt{detector\_model.json} na přiloženém CD, viz příloha \ref{chap:app:cd}), navazování spojení s detektorem, nahrávání konfigurace apod.
+Tato vrstva slouží jako tzv. fasáda\footnote{Návrhový vzor fasáda (\textit{Facade Pattern}) -- použití pro poskytování zjednodušeného interface pro komplexní části kódu (analogie s pojmem fasáda, známém z architektury).} Katherine kontroléru. Implementace komunikačního interface implementuje všechny jeho metody, vč. poskytování přehledu a podpory vykonávání \textit{ValueCommands} a \textit{ExecutionCommands} (pro jejich definici viz soubor \texttt{detector\_model.json} na přiloženém CD, viz příloha \ref{chap:app:cd}), navazování spojení s detektorem, nahrávání konfigurace apod.
 
 Po zavedení modulu je vytvořena fronta měřených dat, která je přejatá handlerem.
 
@@ -292,9 +292,9 @@ Datový modul implementuje \texttt{DataPersistence} interface (viz \ref{chap:han
 
 Fronta dat obsahuje objekty, které jsou potomky objektu \texttt{AbstractDataFrame} (který je součástí modelu poskytovaných knihoven). V rámci modulu se společnou \textit{code-base} \textit{Katherine} modulů (viz úvod kapitoly \ref{chap:katherine}) byly implementovány tyto třídy, které jsou potomky třídy \texttt{AbstractDataFrame}:
 \begin{description}
-    \item[\texttt{DataFrame}] - třída obsahující jednu událost, přenesenou datovým socketem z \textit{Katherine} rozhraní. Objekt obsahuje dekódovanou hlavičku a vlastní data, dle typu datagramu - viz tabulka \ref{tab:katherine:protocol:data_packet_header}.
-    \item[\texttt{ControlFrame}] - obsahuje informaci generovanou komunikačním modulem, např. o začátku nebo ukončení akvizice apod.
-    \item[\texttt{AcqConfigurationFrame}] - instance tohoto objektu je poslána komunikačním modulem na začátku akvizice dat a obsahuje informace o stavu a konfiguraci detektoru (např. bias, vyčítací mód, teploty apod.).
+    \item[\texttt{DataFrame}] -- třída obsahující jednu událost, přenesenou datovým socketem z \textit{Katherine} rozhraní. Objekt obsahuje dekódovanou hlavičku a vlastní data, dle typu datagramu -- viz tabulka \ref{tab:katherine:protocol:data_packet_header}.
+    \item[\texttt{ControlFrame}] -- obsahuje informaci generovanou komunikačním modulem, např. o začátku nebo ukončení akvizice apod.
+    \item[\texttt{AcqConfigurationFrame}] -- instance tohoto objektu je poslána komunikačním modulem na začátku akvizice dat a obsahuje informace o stavu a konfiguraci detektoru (např. bias, vyčítací mód, teploty apod.).
 \end{description}  
 
 Výstupem datového modulu jsou soubory s jednotlivými měřeními ve formátu \texttt{ASCII}, které jsou ukládány do zvoleného adresáře dle konfigurace. Příklad obsahu takového souboru je uveden v příloze \ref{chap:app:katherine:data_example}. Všechny časové údaje jsou v \texttt{UTC} čase. Formát pojmenovávání souborů je \texttt{název\_detektoru\_yyyy\_MM\_dd-HH\_mm\_ss.txt}.
@@ -322,11 +322,11 @@ Na obrázku \ref{fig:katherine:emulator:arch} jsou znázorněny jednotlivé komp
 
 Z pohledu zpracování je možné příkazy rozdělit do tří kategorií:
 \begin{description}
-    \item[Nastavující akviziční parametry] - do této skupiny spadají všechny příkazy, které nastavují, nebo vracejí konfigurační parametry detektoru, jako je akviziční čas, bias, akviziční a vyčítací mód apod.
-    \item[Řídící akvizici] - do této kategorie patří příkazy \textit{Acquisition Start} (0x03) a \textit{Acquisition Stop} (0x06). Po spuštění akvizice je vytvořena instance \texttt{Acquisition Controller}, který dle konfigurace začne generovat události a posílat je datovým socketem klientovi.
+    \item[Nastavující akviziční parametry] -- do této skupiny spadají všechny příkazy, které nastavují, nebo vracejí konfigurační parametry detektoru, jako je akviziční čas, bias, akviziční a vyčítací mód apod.
+    \item[Řídící akvizici] -- do této kategorie patří příkazy \textit{Acquisition Start} (0x03) a \textit{Acquisition Stop} (0x06). Po spuštění akvizice je vytvořena instance \texttt{Acquisition Controller}, který dle konfigurace začne generovat události a posílat je datovým socketem klientovi.
     
     Příkaz \textit{Acquisition Stop} pak přeruší probíhající akvizici.
-    \item[Ostatní] - do této kategorie spadají ostatní příkazy, které nebyly zahrnuty v předchozích kategoriích (např. pro měření teploty, čtení \textit{chip id}, verze FW apod.).
+    \item[Ostatní] -- do této kategorie spadají ostatní příkazy, které nebyly zahrnuty v předchozích kategoriích (např. pro měření teploty, čtení \textit{chip id}, verze FW apod.).
 \end{description}
 
 Některé příkazy nebyly implementovány, protože simulace jejich funkce není triviální a je nad rámec požadované funkcionality (jsou to např. příkazy pro nastavování hodnot DAC, registrů apod.). Odpovědí na tyto příkazy bude vždy ACQ (viz \ref{chap:katherine:protocol:control_commands}).
