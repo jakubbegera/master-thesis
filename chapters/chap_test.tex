@@ -21,7 +21,7 @@ Integrační testy byly použity pro ověření správné komunikace jednotlivý
 \section{Experimenty}
 Pro ověření funkčnosti a dostatečné propustnosti systému bylo provedeno několik experimentů, které budou v této podkapitole popsány. Pro tyto experimenty byla použita dvě různá prostředí:
 \begin{description}
-    \item[localhost] -- jeden počítač, na kterém byl spuštěn emulátor, handler a master současně. Použití počítač má CPU 3 GHz Intel Core i7, 16 GB 1600 MHz DDR3 RAM a SSD disk o kapacitě \unit{500}{GB} (MacBook Pro).
+    \item[lokální] -- jeden počítač, na kterém byl spuštěn emulátor, handler a master současně. Použití počítač má CPU 3 GHz Intel Core i7, 16 GB 1600 MHz DDR3 RAM a SSD disk o kapacitě \unit{500}{GB} (MacBook Pro).
     \item[CERN openstack] -- cloudová infrastruktura v CERN, kterou CERN poskytuje partnerským univerzitám a dalším institucím. Tato infrastruktura je založená na \textit{OpenStack} \textit{IaaS}\footnote{Z angl. \textit{Infrastructure as a Service}.} platformě, která umožňuje řízení výpočetního výkonu, úložiště a síťových prostředcích v datacentrech skrze webovou aplikaci nebo \textit{OpenStack API}.
 
     Byl vytvořen cluster s těmito virtuálními počítači:
@@ -35,7 +35,49 @@ Pro ověření funkčnosti a dostatečné propustnosti systému bylo provedeno n
 \end{description}
 
 \subsection{Experiment první: zpracovávání fronty naměřených dat}
+Kritickou částí každého datového akvizičního systému je proces zpracování dat, od přijetí až po jejich uložení. Jelikož v rámci systému Pixnet data procházejí pouze přes handler (resp. od komunikačního do datového modulu daného detektoru, zavedených v handleru) do datovým modulem definovaného úložiště, budou v rámci tohoto experimentu zkoumány jen metadata jednotlivých událostí (od jejich vzniku až po uložení).
 
+Experiment byl proveden v obou prostředích, v každém s jedním emulátorem vyčítacího rozhraní \textit{Katherine}, jedním handlerem a masterem. Byly sledovány dva parametry - čas zpracování události (tj. doba od jeho přijetí komunikačním modulem až po jeho uložení datovým modulem) a aktuální počet událostí ve frontě. Pro všechna měření byl emulátor nastaven tak, aby generoval fixní počet událostí za sekundu. Jako vyčítací mód emulátoru byl použit \textit{Data-Driven} (viz \ref{chap:detectors:readout}), akviziční mód byl \textit{ToA \& TOT} a délka akvizice byla vždy \unit{60}{s}. Na obr. \ref{fig:test:exp1:jedna_akvizice_50k_udalosti} je znázorněn průběh jednoho měření, při kterém emulátor generoval 50000 událostí za vteřinu, který zaznamenává vývoj doby zpracovávání událostí a velikosti fronty v čase.
+
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+          xmin = 0, xmax = 62000,
+          ymin = 0,
+          axis y line*=left,
+          xlabel={Čas [ms]},
+          xlabel near ticks,
+          ylabel={Doba zpracování událostí [ns]},
+          ylabel near ticks,
+          width=0.90\textwidth,
+          height=0.88\textwidth,
+        ]
+          \addplot[color=orange] table {figures/data/test_queue_waiting.dat};
+          \label{plot_1_y1}
+        \end{axis}
+        \begin{axis}[
+          xmin = 0, xmax = 62000,
+          ymin = 0,% ymax = 11000,
+          hide x axis,
+          axis y line*=right,
+          ylabel={Počet událostí ve frontě},
+          ylabel near ticks,
+          width=0.90\textwidth,
+          height=0.88\textwidth,
+        ]
+        \addplot[color=gray] table {figures/data/test_queue_size.dat};
+        \label{plot_1_y2}
+        \addlegendimage{/pgfplots/refstyle=plot_1_y1}\addlegendentry{Doba zpracování událostí}
+        \addlegendimage{/pgfplots/refstyle=plot_1_y2}\addlegendentry{Počet událostí ve frontě}
+        \end{axis}
+      \end{tikzpicture}
+
+    \caption{Vývoj doby zpracovávání událostí a počtu událostí ve frontě v rámci \unit{60}{s} dlouhé akvizice, při konstantním generovaném množství událostí ($50000~s^{-1}$).}
+    \label{fig:test:exp1:jedna_akvizice_50k_udalosti}
+\end{figure}
+
+Měření byla provedena pro různé počty generovaných událostí za vteřinu (1, 10, 100, 1000, 10000, 25000, 50000, 75000 a 100000), ze kterých byla stanovena průměrná doba zpracovávání události v závislosti na počtu příchozích dat (viz obr. \ref{fig:test:exp1:zavyslost_na_poctu_udalosti:doba_zpracovani}) a průměrná velikost fronty v závislosti na počtu příchozích dat (viz obr. \ref{fig:test:exp1:zavyslost_na_poctu_udalosti:velikost_fronty}). Jednotlivá měření byla vícekrát zopakována a jejich dílčí hodnoty byly zprůměrovány. Maximální testovaný počet generovaných událostí za vteřinu byl 100000, kvůli omezení emulátoru.
 
 \begin{figure}[h]
     \centering
@@ -80,11 +122,11 @@ Pro ověření funkčnosti a dostatečné propustnosti systému bylo provedeno n
                     (75000,4674643.645)
                     (100000,27828674.3)
                 };
-            \legend{localhost,CERN openstack} 
+            \legend{lokální,CERN openstack} 
             \end{loglogaxis}
         \end{tikzpicture}
         \caption{Závislost průměrné doby zpracování události na počtu událostí za sekundu.}
-        \label{fig:test:arch}
+        \label{fig:test:exp1:zavyslost_na_poctu_udalosti:doba_zpracovani}
     \end{subfigure}
     \hspace{0.2cm}
     \begin{subfigure}[t!]{0.47\textwidth}
@@ -129,52 +171,16 @@ Pro ověření funkčnosti a dostatečné propustnosti systému bylo provedeno n
                     (75000,5.154103853)
                     (100000,12.20805369)
                 };
-            \legend{localhost,CERN openstack}
+            \legend{lokální,CERN openstack}
             \end{loglogaxis}
         \end{tikzpicture}
         \caption{Závislost průměrné velikosti fronty s událostmi na počtu událostí za sekundu.}
-        \label{fig:test:arch}
+        \label{fig:test:exp1:zavyslost_na_poctu_udalosti:velikost_fronty}
         
     \end{subfigure}
         
-    \caption{Závislost průměrné doby zpracování událostí a jejich průměrnému počtu ve frontě na počtu událostí za sekundu.}
-    \label{fig:test:arch}
+    \caption{Závislost průměrné doby zpracování událostí a jejich průměrného počtu ve frontě na počtu událostí za sekundu.}
+    \label{fig:test:exp1:zavyslost_na_poctu_udalosti}
 \end{figure}
 
-\begin{figure}[h]
-    \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-          xmin = 0, xmax = 62000,
-          ymin = 0,
-          axis y line*=left,
-          xlabel={Čas [ms]},
-          xlabel near ticks,
-          ylabel={Doba zpracování událostí [ns]},
-          ylabel near ticks,
-          width=0.90\textwidth,
-          height=0.88\textwidth,
-        ]
-          \addplot[color=orange] table {figures/data/test_queue_waiting.dat};
-          \label{plot_1_y1}
-        \end{axis}
-        \begin{axis}[
-          xmin = 0, xmax = 62000,
-          ymin = 0,% ymax = 11000,
-          hide x axis,
-          axis y line*=right,
-          ylabel={Počet událostí ve frontě},
-          ylabel near ticks,
-          width=0.90\textwidth,
-          height=0.88\textwidth,
-        ]
-        \addplot[color=gray] table {figures/data/test_queue_size.dat};
-        \label{plot_1_y2}
-        \addlegendimage{/pgfplots/refstyle=plot_1_y1}\addlegendentry{Doba zpracování událostí}
-        \addlegendimage{/pgfplots/refstyle=plot_1_y2}\addlegendentry{Počet událostí ve frontě}
-        \end{axis}
-      \end{tikzpicture}
-
-    \caption{Vývoj doby zpracovávání událostí a počtu událostí ve frontě v rámci \unit{60}{s} dlouhé akvizice, při konstantním generovaném množství událostí ($50000~s^{-1}$).}
-    \label{fig:test:arch}
-\end{figure}
+Z výsledku experimentu je patrné, že obě sledované hodnoty rostou s počtem událostí. Oproti očekávaným hodnotám (resp. očekávané rostoucí závislosti) lze z obr. \ref{fig:test:exp1:zavyslost_na_poctu_udalosti} pozorovat dva rozdíly. Tím prvním je vývoj průměrné doby zpracování události od jedné do 1000 událostí za sekundu. Tento efekt je pravděpodobně způsoben nastavenou velikostí \textit{bufferu} a režie přenosu dat. Druhým rozdílem je různý trend hodnot pro \textit{CERN openstack} a \textit{lokání} prostředí od 50000 událostí za vteřinu. Nejvíce pravděpodobnou příčinou tohoto jevu je rozdílná konfigurace obou prostředí. Zatímco v rámci \textit{CERN openstack} každá komponenta systémů je spuštěna na jiném počítači, v \textit{lokální} prostředí všechny komponenty sdílí stejný počítač a vzájemně se ovlivňují.
