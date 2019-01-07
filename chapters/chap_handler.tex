@@ -429,7 +429,7 @@ Webové rozhraní je dostupné z endpointu \texttt{/detectors}. Pro jednoduchost
 %********************************************************************************
 \section{Konfigurace a nasazení}\label{chap:handler:config}
 Pro spuštění handleru je třeba mít nainstalované \texttt{JRE 8}\footnote{\textit{Java SE Runtime Environment, dostupné z\\\url{https://www.oracle.com/technetwork/java/javase/downloads}}.} nebo vyšší.
-Zkompilovanou java aplikaci je třeba spustit s argumentem \texttt{handlerConfig} obsahující cestu ke konfiguračnímu souboru (pro příklad viz zdrojový kód \ref{src:handler:config}), obsahujícího port na kterém bude aplikace naslouchat a pojmenování handleru.
+Zkompilovanou java aplikaci je třeba spustit s argumentem \texttt{handlerConfig} obsahující cestu ke konfiguračnímu souboru (pro příklad viz zdrojový kód \ref{src:handler:config}), obsahujícího port na kterém bude aplikace naslouchat a název handleru.
 
 Aplikaci je tedy možné spustit například takto: \mint{bash}{java -jar handler.jar handlerConfig=config.yaml}
 

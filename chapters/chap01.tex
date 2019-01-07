@@ -8,15 +8,15 @@ Systém se skládá z několika částí - backendové aplikace \textbf{handleru
 V rámci této práce byly implementovány moduly, které systému Pixnet umožňují řízení a vyčítání dat z detektorů \textit{Timepix3}, připojeným pomocí vyčítacího rozhraní \textit{Katherine}, viz kapitola \ref{chap:katherine}.
 
 \section{Motivace}
-Podobný systém pro řízení sítě částicových pixelových detektorů již existuje \cite{atlastpx_sw,BegeraBcThesis2016} a byl vyvinut pro účely řízení a vyčítání dat z experimentu \textit{ATLAS-TPX} - sítě \textit{Timepix} detektorů, která byla instalována v rámci experimentu \textit{ATLAS} na \textit{LHC} v \textit{CERN} a měřila data během \textit{LHC} \texttt{run 2}\footnote{Označení druhého běhu částicového urychlovače \textit{LHC}, který probíhal v letech 2014 až 2018.}. 
+Podobný systém pro řízení sítě částicových pixelových detektorů již existuje \cite{atlastpx_sw,BegeraBcThesis2016} a byl vyvinut pro účely řízení a vyčítání dat z experimentu \textit{ATLAS-TPX} - sítě \textit{Timepix} detektorů, která byla instalována v rámci experimentu \textit{ATLAS} na \textit{LHC} v \textit{CERN} a měřila data během \textit{LHC} \texttt{run 2}\footnote{Označení druhého období provozu částicového urychlovače \textit{LHC}, který probíhal v letech 2014 až 2018.}. 
 
-V letech 2019 až 2020 je plánován LS2\footnote{Z angl. \textit{Long Shutdown 2}, technologická odstávka částicového urychlovače \textit{LHC}.}, v rámci které proběhne modernizace detektorové sítě \textit{ATLAS-TPX} za použití detektorů \textit{Timepix3}. Z pohledu softwarové architektury modernizace přináší nová omezení, které existující systém není schopný zajistit. Především se jedná o vysoký datový tok (detektor \textit{Timepix3} je teoreticky schopný generovat až \unit{5,12}{Gb/s}), který by současné nedistribuované řešení nebylo schopné zpracovat. Díky modulární architektuře je další výhodou nově navrženého systému možnost homogenního způsobu řízení nehomogenní detektorové sítě, tj. takové sítě, která se skládá z více druhů detektorů.
+V letech 2019 až 2020 je plánován LS2\footnote{Z angl. \textit{Long Shutdown 2}, technologická odstávka částicového urychlovače \textit{LHC}.}, v rámci kterého proběhne modernizace detektorové sítě \textit{ATLAS-TPX} za použití detektorů \textit{Timepix3}. Z pohledu softwarové architektury modernizace přináší nová omezení, které existující systém není schopný zajistit. Především se jedná o vysoký datový tok (detektor \textit{Timepix3} je teoreticky schopný generovat až \unit{5,12}{Gb/s}), který by současné nedistribuované řešení nebylo schopné zpracovat. Díky modulární architektuře je další výhodou nově navrženého systému možnost homogenního způsobu řízení nehomogenní detektorové sítě, tj. takové sítě, která se skládá z více druhů detektorů.
 
 \section{Timepix3 detektor}
 Hybridní částicový pixelový detektor Timepix3 \cite{timepix3} je nástupcem detektoru Timepix \cite{timepix} a je vyvíjen v rámci Medipix\footnoteUrl{http://medipix.web.cern.ch/} kolaborace v CERN\footnote{Evropská organizace pro jaderný výzkum (z francouzského \textit{Conseil Européen pour la Recherche Nucléaire}), se sídlem v Ženevě.}, mezi jejíž členy patří od roku 1999 i ÚTEF\footnote{Ústav technické a experimentální fyziky.} ČVUT v Praze.
 
 Detektor se skládá z matice $256\times256$ čtvercových nezávislých pixelů, každý o hraně $55~\mu m$. 
-Jednotlivé pixely se skládají z citlivého polovodičového senzoru (nejčastěji \textit{Si}, nebo \textit{GaAs}) a vyčítací CMOS elektroniky (čítače, komparátory apod.). Princip funkce detektoru lze přirovnat digitálnímu fotoaparátu. Podobně jako u digitálního fotoaparátu, začátek a konec akvizice dat je řízen závěrkou (tzv. \textit{shutter signál}). Po tuto dobu pak citlivý polovodičový objem detektoru zaznamenává interakce s nabitými částicemi a dále je zpracovává dle nastaveného módu. V kapitole \ref{chap:detectors} bude například popsán \textit{Time-Over-Threshold} mód, kde hodnota čítače pixelu na konci akvizice odpovídá deponované energii interagovaných částic s daným pixelem (mezi energií a TOT je nelineární závislost, která je dána fyzikálními vlastnostmi každého pixelu a je předmětem energetické kalibrace detektoru \cite{Jakubek2011S262}). 
+Jednotlivé pixely se skládají z citlivého polovodičového senzoru (nejčastěji \textit{Si}, nebo \textit{CdTe}) a vyčítací CMOS elektroniky (čítače, komparátory apod.). Princip funkce detektoru lze přirovnat digitálnímu fotoaparátu. Podobně jako u digitálního fotoaparátu, začátek a konec akvizice dat je řízen závěrkou (tzv. \textit{shutter signál}). Po dobu otevření závěrky pak citlivý polovodičový objem detektoru zaznamenává interakce s nabitými částicemi a dále je zpracovává dle nastaveného módu. V kapitole \ref{chap:detectors} budou popsány jednotlivé módy, včetně \textit{Time-Over-Threshold} módu, kde hodnota čítače pixelu na konci akvizice odpovídá deponované energii interagovaných částic s daným pixelem (mezi energií a TOT je nelineární závislost, která je dána fyzikálními vlastnostmi každého pixelu a je předmětem energetické kalibrace detektoru \cite{Jakubek2011S262}). 
 
 \begin{figure}[bh]
     \begin{center}
@@ -27,10 +27,10 @@ Jednotlivé pixely se skládají z citlivého polovodičového senzoru (nejčast
         \hspace{0.1cm}
         \begin{subfigure}{7.0cm}
             \includegraphics[width=7cm]{figures/timepix_data_satram.png}    
-            \caption{Ukázka dat z detektoru Timepix, naměřených zařízením \textit{SATRAM} (z angl. \textit{Space Application of Timepix based Radiation Monitor}), které od roku 2013 obíhá Zemi na heliosynchronní kruhové polární dráze ve výšce \unit{820}{km} \cite{PlatkevicDisertace}.}
+            \caption{Ukázka dat z detektoru Timepix, naměřených zařízením \textit{SATRAM} (z angl. \textit{Space Application of Timepix based Radiation Monitor}), které od roku 2013 obíhá Zemi na heliosynchronní kruhové polární dráze ve výšce \unit{820}{km}, jako součást \textit{ESA Proba-V} satelitu \cite{PlatkevicDisertace}.}
         \end{subfigure}
 	\end{center}
-    \caption{Detektor Timepix3 a vizualizace naměřeného vzorku dat.}
+    \caption{Detektor Timepix3 a vizualizace naměřených dat.}
 	\label{fig:master:frontend:detector_detail}
 \end{figure}
 
@@ -46,7 +46,7 @@ Práce je rozdělená do následujících kapitol:
     
     \item \textbf{Kapitola} \ref{chap:handler} -- \nameref{chap:handler}: V této kapitole bude čtenář seznámen s handlerem -- komponentou systému Pixnet pro řízení jemu přiřazených detektorů.
     
-    \item \textbf{Kapitola} \ref{chap:katherine} -- \nameref{chap:katherine}: Tato kapitola je věnována vyčítacímu rozhraní \textit{Katherine} (zařízení pro řízení a vyčítání dat z detektoru \textit{Timepix3} s embedovaným počítačem, komunikující po ethernetu). Je zde popsán návrh a implementace modulů, umožňující jeho integraci do systému Pixnet. Dále zde je představen emulátor, který emuluje \textit{Katherine} na síťové vrstvě.
+    \item \textbf{Kapitola} \ref{chap:katherine} -- \nameref{chap:katherine}: Tato kapitola je věnována vyčítacímu rozhraní \textit{Katherine} (zařízení pro řízení a vyčítání dat z detektoru \textit{Timepix3} s embedovaným počítačem, komunikující po ethernetu). Je zde popsán návrh a implementace modulů, umožňující jeho integraci do systému Pixnet. Také je představen emulátor, který emuluje \textit{Katherine} na síťové vrstvě.
     
     \item \textbf{Kapitola} \ref{chap:master} -- \nameref{chap:master}: V této kapitole bude představen master -- centrální element systému Pixnet, který řídí handlery, přiřazuje jim detektory a umožňuje centralizované řízení detektorů.
     

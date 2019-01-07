@@ -1,7 +1,7 @@
 \addbibresource{reference.bib}
 
 \chapter{Úvod do problematiky hybridních částicových pixelových detektorů}\label{chap:detectors}
-Ionizující záření je lidskými smysly nedetekovatelné, avšak jeho studium nám pomáhá pochopit podstatu hmoty, její vlastnosti a interakce. To lidstvu umožnilo mnohé aplikace, jako je například protonová terapie \cite{tpx_app_radiotherapy}, defektoskopie nebo zkoumání pravosti uměleckých děl. První pokusy o detekci ionizujícího záření sahají do počátku 20. století, kdy se pomocí mlžné komory prvně podařilo zachytit trajektorii nabitých částic. Rozvoj polovodičové technologie dal vzniknout novým detekčním technologiím až po v současné době nejpokrokovějším -- pixelovým detektorům.
+Ionizující záření je lidskými smysly nedetekovatelné, avšak jeho studium nám pomáhá pochopit podstatu hmoty, její vlastnosti a vzájemné interakce. To lidstvu umožnilo rozvinout mnohé aplikace, jako je například protonová terapie \cite{tpx_app_radiotherapy}, defektoskopie nebo zkoumání pravosti uměleckých děl. První pokusy o detekci ionizujícího záření sahají do 19. století. Například na počátku 20. století se pomocí mlžné komory prvně podařilo zachytit trajektorii nabitých částic. Rozvoj polovodičové technologie dal vzniknout novým detekčním technologiím až po v současné době nejpokrokovějším -- pixelovým detektorům.%todo
 
 Existuje celá řada částicových pixelových detektorů, ale v této kapitole budou popsány jen hybridní pixelové detektory, pro které je typické, že se skládají ze dvou nezávisle vyrobených částí -- senzoru a vyčítacího čipu. To oproti monolitickým detektorům, kde vyčítací elektronika je součástí senzoru, přináší řadu výhod, jako například snížení výrobních nákladů nebo možnost kombinace vyčítacího čipu se senzory různých materiálů (\textit{Si}, \textit{GaAs}, \textit{CdTe} apod.) a tlouštěk (vetšinou $300\mu m$, nebo $500\mu m$).
 
@@ -14,30 +14,31 @@ Na tomto místě je třeba zmínit, že existuje více druhů těchto detektorů
 \begin{figure}[th]
 	\begin{center}
 		\includegraphics[width=12cm]{figures/det_chip.png}
-		\caption{Struktura hybridního polovodičového pixelového detektoru Timepix3, skládající se z vyčítacího čipu a polovodičového senzoru \cite{PlatkevicDisertace}.}
+		\caption{Struktura hybridního polovodičového pixelového detektoru Timepix3, skládajícího se z vyčítacího čipu (\textit{Readout chip}) a polovodičového senzoru (\textit{Sensor chip}) \cite{PlatkevicDisertace}.}
 		\label{fig:det:chip}
 	\end{center}
 \end{figure}
-Většina hybridních částicových pixelových detektorů rodiny Medipix obsahuje matici $256\times256$ pixelů. Každý z nich má hranu o délce $55~\mu m$, takže senzor čítající $65536$ má plochu $1.4 \times 1.4 cm^2$. 
+Většina hybridních částicových pixelových detektorů rodiny Medipix obsahuje matici čtvercových $256\times256$ pixelů. Každý z nich má hranu o délce $55~\mu m$, takže detektor obsahující $65536$ má aktivní plochu $1,96~cm^2$. 
 
-Na obrázku \ref{fig:det:chip} je znázorněna struktura detektoru Timepix3. Vrchní část detektoru tvoří polovodičový senzor, který je nejčastěji vyroben z křemíku, ale výjimkou není ani \textit{GaAs} nebo \textit{CdTe}. Jednotlivé pixely senzoru jsou spojeny s integrovaným \texttt{ASIC}\footnote{z angl. Application Specific Integrated Circuit} vyčítacím čipem pomocí technologie zvané \textit{Bump-Bounding}. Vyčítací čip je pak propojen se základní deskou pomocí \textit{wire-bound}, z které je ještě přivedeno měřící napětí na senzor detektoru (tzv. \textit{bias}).
+Na obrázku \ref{fig:det:chip} je znázorněna struktura detektoru Timepix3. Vrchní část detektoru tvoří polovodičový senzor, který je nejčastěji vyroben z křemíku, ale výjimkou není ani \textit{GaAs} nebo \textit{CdTe}. Jednotlivé pixely senzoru jsou spojeny s integrovaným \texttt{ASIC}\footnote{z angl. Application Specific Integrated Circuit} vyčítacím čipem pomocí technologie zvané \textit{Bump-Bonding}. Vyčítací čip je pak propojen se základní deskou pomocí \textit{wire-bond}, z které je ještě přivedeno měřící napětí na senzor detektoru (tzv. \textit{bias}).
 
 
 %********************************************************************************
 % Princip detekce
 %********************************************************************************
 \section{Princip detekce}\label{chap:detectors:princip}
+Princip detekce ionizujícího záření v polovodiči je znázorněn na obrázku \ref{fig:det:recombination}.
+
 \begin{figure}[th]
 	\begin{center}
 		\includegraphics[width=10cm]{figures/det_recombination.png}
-		\caption{Princip detekce ionizujícího záření detektorem Timepix3, kde červená šipka znázorňuje interagující částici, elektrony jsou znázorněny žlutě, modře díry \cite{PlatkevicDisertace}.}
+		\caption{Princip detekce ionizujícího záření detektorem Timepix3, kde červená šipka znázorňuje interagující částici, elektrony jsou znázorněny žlutě, díry modře \cite{PlatkevicDisertace}.}
 		\label{fig:det:recombination}
 	\end{center}
 \end{figure}
+%Princip detekce ionizujícího záření pixelovými detektory je založen na známém jevu detekce ionizujícího záření v polovodiči. 
 
-Princip detekce ionizujícího záření pixelovými detektory je založen na známém jevu detekce ionizujícího záření v polovodiči. 
-
-Jako náhradní schéma jednoho pixelu si lze představit diodu zapojenou v závěrném směru, kterou bez přítomnosti ionizujícího záření protéká minimální proud. Vnikne-li do senzoru ionizující částice a dojde k její interakci se senzorem, resp. část její energie je deponována do polovodičového objemu senzoru, dojde v senzoru ke vzniku elektron-děrových párů a díky lavinovému efektu i k následnému otevření PN přechodu (viz obr. \ref{fig:det:recombination}).
+Jako náhradní schéma jednoho pixelu si lze představit diodu zapojenou v závěrném směru, kterou bez přítomnosti ionizujícího záření protéká minimální proud. Vnikne-li do senzoru částice ionizující záření a dojde k její interakci se senzorem, resp. část její energie je deponována do polovodičového objemu senzoru, dojde v senzoru ke vzniku elektron-děrových párů a díky lavinovému efektu i k následnému otevření PN přechodu (viz obr. \ref{fig:det:recombination}).
 
 Vzniklý proudový impulz je měřícím odporem převeden na napětí, které je komparátorem porovnáno s prahovým napětím (tzv. \textit{threshold}). Výsledek je dále CMOS\footnote{Z angl. \textit{Complementary Metal–Oxide–Semiconductor}, výrobní technologie logických integrovaných obvodů.} obvodem zpracován dle použitého měřícího módu, jak bude ukázáno v kapitole \ref{chap:detectors:operation_modes}.
 
@@ -47,6 +48,8 @@ Na rozdíl od CCD\footnote{Z angl. \textit{Charge-coupled device}.} technologie,
 % Operační módy detektoru
 %********************************************************************************
 \section{Operační módy detektoru}\label{chap:detectors:operation_modes}
+V této podkapitole bude vysvětlena většina operačních módů, ve kterých detektory rodiny \textit{Medipix} jsou schopny pracovat. 
+
 \begin{figure}[th]
 	\begin{center}
 		\includegraphics[width=14cm]{figures/det_pix.png}
@@ -55,16 +58,13 @@ Na rozdíl od CCD\footnote{Z angl. \textit{Charge-coupled device}.} technologie,
 	\end{center}
 \end{figure}
 
-
-V této podkapitole bude vysvětlena většina operačních módů, ve kterých detektory rodiny \textit{Medipix} jsou schopny pracovat. 
-
-Interagovaná částice vyvolá napěťový impulz, jehož tvar je dán s deponovanou energií. Pro účely analýzy se ale používá pouze binární informace o překročení prahového napětí v čase. Výsledek této analýzy je po jejím dokončení uložen ve 14-bitovém registru pixelu.
+Interagovaná částice vyvolá napěťový impulz, jehož tvar je dán deponovanou energií. Pro účely analýzy se ale používá pouze binární informace o překročení prahového napětí v čase. Výsledek této analýzy je po jejím dokončení uložen ve 14-bitovém registru pixelu.
 
 Na obr. \ref{chap:detectors:operation_modes} je znázorněn příklad zpracování analýzy signálu následujícími módy:
 \begin{description}
     \item[Medipix mód (Counting mód)] V tomto módu je čítač inkrementován v každém cyklu měřící frekvence, pokud měřící napětí překročilo prahové napětí pixelu. Na konci akvizice pak hodnota čítače odpovídá počtu zaznamenaných částic.
     \item[Time-Over-Threshold (TOT)] Pracuje-li pixel v tomto módu, pak jeho čítač je inkrementovaný v každém cyklu měřící frekvence, pokud měřící napětí je vyšší, než prahové napětí pixelu. Hodnota uložená v čítači odpovídá deponované energii interagovaných částic. Mezi energií a \texttt{TOT} je nelineární závislost a její zkoumání je předmětem energetické kalibrace detektoru, jak bude ukázáno v kapitole \ref{chap:detectors:calibration:energy}. Tento mód má široké spektrum aplikací, například \cite{tot_app_counting} nebo \cite{tpx_app_radiotherapy}.
-    \item[Time-of-Arrival (ToA)] Tímto módem disponují pouze detektory \textit{Timepix} a \textit{Timepix3}, avšak nesdílí stejný princip. Zatímco \textit{Timepix} detektor začne inkrementovat čítač v každém cyklu měřící frekvence po první náběžné hraně z komparátoru, \textit{Timepix3} na náběžnou hranu uloží do 14-bitového registru aktuální časové razítko z hodin detektoru. V obou případech \texttt{ToA} udává čas první interakce částice v dané akvizici.
+    \item[Time-of-Arrival (ToA)] Tímto módem disponují pouze detektory \textit{Timepix} a \textit{Timepix3}, avšak nesdílí stejný princip. Zatímco \textit{Timepix} detektor začne inkrementovat čítač v každém cyklu měřící frekvence po první náběžné hraně z komparátoru, \textit{Timepix3} na náběžnou hranu uloží do 14-bitového registru aktuální časové razítko z hodin detektoru. V obou případech \texttt{ToA} udává čas první interakce částice v dané akvizici. Na obr. \ref{fig:det:modes} jako \textit{Timepix mode}.
 \end{description}
 
 %********************************************************************************
@@ -111,28 +111,28 @@ Každý detektor má své specifické vlastnosti, které jsou dány nejenom výr
 \subsection{Threshold equalizace}\label{chap:detectors:calibration:equalization}
 V podkapitole \ref{chap:detectors:princip} a \ref{chap:detectors:operation_modes} již bylo vysvětleno použití prahového napětí (\textit{threshold}) v průběhu akvizice dat detektorem. Každý pixel detektoru má ale rozdílné fyzikální vlastnosti dané výrobním procesem, s čímž souvisí i citlivost (resp. oddělení užitečného signálu od šumu) jednotlivých pixelů. Kromě globální hodnoty thresholdu je možné pro každý pixel upravit citlivost pomocí lokální $4b$ hodnoty thresholdu (viz obr. \ref{fig:det:medipix_overview:timepix3_schema}).
 
-Vlastní proces equalizace probíhá tak, že se pro všechny pixely detektoru provede měření se všemi kombinacemi thresholdu, přičemž je třeba minimalizovat interakce detektoru z částicemi. V běžné praxi stačí detektor dostatečně odstínit. Výstupem tohoto procesu je pak globální threshold a jeho 4-bitové korekce pro jednotlivé pixely.
+Vlastní proces equalizace probíhá tak, že se pro všechny pixely detektoru provede měření se všemi kombinacemi thresholdu, přičemž je třeba minimalizovat interakce detektoru s částicemi. V běžné praxi stačí detektor dostatečně odstínit a provést několik sad měření. Výstupem tohoto procesu je pak globální threshold a jeho 4-bitové korekce pro jednotlivé pixely.
 
-Jako vedlejší produkt tohoto procesu je rovněž maskovací matice detektoru, která obsahuje šumějící, nebo jinak poškozené pixely. To jsou například takové pixely, které bez přítomnosti interagujících částic hlásí překročení thresholdu.
+Během tohoto procesu vznikne rovněž maskovací matice detektoru, která obsahuje šumějící, nebo jinak poškozené pixely. To jsou například takové pixely, které bez přítomnosti interagujících částic hlásí překročení thresholdu.
 
 \subsection{Energetická kalibrace}\label{chap:detectors:calibration:energy}
 \begin{figure}[th]
 	\begin{center}
 		\includegraphics[width=13cm]{figures/calib_function.png}
-		\caption{Kalibrační funkce, udávající závislost mezi energií v \texttt{keV} a \texttt{TOT} \cite{Jakubek2011S262}, vzniklá proložením získaných kalibračních bodů funkcí \ref{eq:det:energyCalib} a sestávající se ze dvou částí -- (i) nelineární částí pro oblast nižších energií (hyperbola) a (ii) lineární částí pro vyšší energie (přímka).}
+		\caption{Kalibrační funkce, udávající závislost mezi energií v \texttt{keV} a \texttt{TOT} \cite{Jakubek2011S262}, vzniklá proložením získaných kalibračních bodů funkcí \ref{eq:det:energyCalib} a sestávající se ze dvou částí -- (i) nelineární části pro oblast nižších energií (hyperbola) a (ii) lineární části pro vyšší energie (přímka).}
 		\label{fig:det:calib:calib_function}
 	\end{center}
 \end{figure}
 
-V předchozí části práce byl již představen \textit{Time-Over-Threshold} mód (viz \ref{chap:detectors:operation_modes}), ve kterém je detektor schopný měřit deponovanou energii interagovaných částic, která je udávána v \texttt{TOT}. Jak již bylo ukázáno, vztah mezi energií v \textit{keV} a \texttt{TOT} je nelineární závislost a závisí na fyzikálních vlastnostech daného pixelu, což je předmětem energetické kalibrace, která bude v této podkapitole popsána.
+V kapitole \ref{chap:detectors:operation_modes} byl již popsán \textit{Time-Over-Threshold} mód, ve kterém je detektor schopný měřit deponovanou energii interagovaných částic, která je udávána v \texttt{TOT}. Jak již bylo ukázáno, vztah mezi energií v \textit{keV} a \texttt{TOT} je nelineární a závisí na fyzikálních vlastnostech daného pixelu, což je předmětem energetické kalibrace, která bude v této podkapitole popsána.
 
-Tato metoda \cite{Jakubek2011S262} spočívá v provedení několika sad měření se zdroji ionizujícího záření, jejichž energie jsou předem známy, a v jejich analytickém zpracování a vytvoření kalibrační funkce \ref{eq:det:energyCalib} pro každý pixel detektoru. V předchozí práci \cite{BegeraBcThesis2016} byly tyto metody podrobně popsány a byl vytvořen software, který uživateli umožňuje vytvoření energetické kalibrace detektoru z naměřených dat.
+Tato metoda \cite{Jakubek2011S262} spočívá v provedení několika sad měření se zdroji ionizujících záření, jejichž energie jsou předem známy, a v jejich analytickém zpracování a vytvoření kalibrační funkce \ref{eq:det:energyCalib} pro každý pixel detektoru. V předchozí práci \cite{BegeraBcThesis2016} byly tyto metody podrobně popsány a byl vytvořen software, který uživateli umožňuje vytvoření energetické kalibrace detektoru z naměřených dat.
 
 \begin{equation}\label{eq:det:energyCalib}
 	f_{calib}(x) = ax + b - \frac{c}{x-t}
 \end{equation}
 
-Pro měření kalibračních dat se jako efektivní řešení v praxi ukázalo použití rentgenové fluorescence\footnote{Děj, ke kterému dochází při ozařování materiálu (nejčastěji \textit{Cu}, \textit{Fe}, \text{In} apod.) rentgenovým zářením, při kterém jsou z něj vyráženy excitované elektrony. Při vyražení elektronu na nižší energetické úrovni, elektron z vyšší energetické úrovně obsadí jeho místo a přebytečnou energii emituje formou vyzářeného fotonu -- fluorescenčního záření, jehož charakteristické monoenergetické spektrum je pro většinu prvků dobře známé.} \cite{Jakubek-radiography_and_charge_sharing}. Pro zajištění dobré kvality kalibrace je třeba naměřit takový počet událostí, aby spektra ve snímcích byla dobře rozeznatelná. Z naměřených dat jsou vyfiltrovány pouze tzv. \textit{Single-hit} události\footnote{Události, ve kterých částice interagovala pouze s jedním pixelem detektoru}, aby se minimalizovaly negativní vlastnosti \textit{Charge-sharing} efektu (díky společné elektrodě senzoru jsou díky interagující částici vzniklé elektrony zpracovány více pixely najednou a část deponované energie nemusí být ASIC čipem zpracována, protože vzniklý signál může být nižší než threshold daného pixelu).
+Pro získání kalibračních dat se jako efektivní řešení v praxi ukázalo měření rentgenových fluorescencí\footnote{Děj, ke kterému dochází při ozařování materiálu (nejčastěji se pro kalibraci využívá \textit{Cu}, \textit{Fe}, \text{In} apod.) rentgenovým zářením, při kterém jsou z něj vyráženy excitované elektrony. Při vyražení elektronu na nižší energetické úrovni, elektron z vyšší energetické úrovně obsadí jeho místo a přebytečnou energii emituje formou vyzářeného fotonu -- fluorescenčního záření, jehož charakteristické monoenergetické spektrum je pro většinu prvků dobře známé.} \cite{Jakubek-radiography_and_charge_sharing}. Pro zajištění dobré kvality kalibrace je třeba naměřit takový počet událostí, aby spektra ve snímcích byla dobře rozeznatelná. Z naměřených dat jsou vyfiltrovány pouze tzv. \textit{Single-hit} události\footnote{Události, ve kterých částice interagovala pouze s jedním pixelem detektoru}, aby se minimalizovaly negativní vlastnosti efektu sdílení náboje (\textit{Charge-sharing}). Tento efekt je dán společnou elektrodou senzoru a může způsobit, že  vzniklé elektrony jsou zpracovány více pixely najednou a část deponované energie nemusí být ASIC čipem zpracována, protože vzniklý signál může být nižší než threshold daného pixelu.
 
 \begin{figure}[th]
 	\begin{center}
@@ -164,7 +164,7 @@ kde:
 
 \subsection{Time-Walk korekce}\label{chap:detectors:calibration:timeWalk}
 
-\textit{Time-Walk} efekt je nežádoucí jev, který vzniká při interakci ionizujícího záření o různé energii. Velikost deponované energie má vliv na amplitudu a sklon napěťového pulzu na zesilovači pixelu. Při interakci ionizující částice s více pixely je pak díky tomuto jevu interagovanými pixely zaznamenána jiná hodnota ToA, i přes to že událost byla způsobena stejnou částicí a hodnoty ToA by měly být stejné. Viz obrázek \ref{fig:det:calib:timeWalk}, kde jsou pro interakci stejné částice čtyřmi sousedními pixely zaznamenány různé hodnoty ToA. 
+\textit{Time-Walk} efekt je nežádoucí jev, který vzniká při interakci ionizujícího záření o různé energii. Velikost deponované energie má vliv na amplitudu a sklon náběžné hrany napěťového pulzu na výstupu zesilovače pixelu. Při interakci ionizující částice s více pixely je pak díky tomuto jevu interagovanými pixely zaznamenána jiná hodnota ToA, i přes to že událost byla způsobena stejnou částicí a hodnoty ToA by měly být stejné. Viz obrázek \ref{fig:det:calib:timeWalk}, kde jsou pro interakci stejné částice čtyřmi sousedními pixely zaznamenány různé hodnoty ToA. 
 
 \begin{figure}
 	\begin{center}
@@ -174,7 +174,7 @@ kde:
 	\end{center}
 \end{figure}
 
-S použitím detektoru \textit{Timepix3} je možné tuto energeticky závislou chybu eliminovat za použití kalibrační metody \cite{Turecek2016TimeWakl}, protože tento detektor umožňuje měřit v ToA a TOT módu současně. Tato kalibrační metoda spočívá v analytickém zpracování dat získaných z měření se zdrojem $\alpha$ částic (v \cite{Turecek2016TimeWakl} použito $^{241}$\texttt{Am}), které generuje clustery o více pixelech. Nejprve je však třeba potřeba jej energeticky zkalibrovat \ref{chap:detectors:calibration:energy}. 
+S použitím detektoru \textit{Timepix3} je možné tuto energeticky závislou chybu eliminovat za použití kalibrační metody \cite{Turecek2016TimeWakl}, protože tento detektor umožňuje měřit v ToA a TOT módu současně. Tato kalibrační metoda spočívá v analytickém zpracování dat získaných z měření se zdrojem $\alpha$ částic (v \cite{Turecek2016TimeWakl} použito $^{241}$\texttt{Am}), které generuje clustery o více pixelech. Nejprve je však třeba jej energeticky zkalibrovat \ref{chap:detectors:calibration:energy}. 
 
 O vybraných clusterech o velikosti 3 a 4 pixely pro $^{241}$\texttt{Am} víme, že součet jejich energií je $59.5keV$. Z clusteru je vybrán pixel s energií $30keV$, který je použit jako referenční (na \ref{chap:detectors:calibration:timeWalk} jako $t_1$), zbylá energie je náhodně rozdělena mezi ostatní pixely (na \ref{chap:detectors:calibration:timeWalk} jako $t_{2-4}$). Jednotlivé rozdíly $t_i+t_1$ jsou analytickými metodami, popsanými v \cite{Turecek2016TimeWakl}, zpracovány a výsledkem tohoto procesu jsou konstanty $c,d$ pro každý pixel detektoru, kterými lze vypočítat jeho \textit{Time-Walk offset} $\Delta T$:
 
@@ -204,13 +204,13 @@ V této podkapitole budou stručně představeny jednotlivé detektory, které b
 
 \begin{description}
 
-	\item[Medipix1] V roce 1998 byl vyvinut detektor \textit{Medipix1} \cite{medipix1}, také zvaný \textit{Photon-Counting-Chip}, který byl prvním velkoplošným detektorem používající CMOS technologii. S maticí $64\times64$ pixelů, každým o hraně $170~\mu m$, má celkovou aktivní plochu $1,1~cm^2$. I přes malý počet pixelů a jejich velkou rozteč, tento detektor prokázal dobré rozlišovací vlastnosti, především pak v rentgenovém zobrazování. 
+	\item[Medipix1] V roce 1998 byl vyvinut detektor \textit{Medipix1} \cite{medipix1}, také zvaný \textit{Photon-Counting-Chip}, který byl prvním velkoplošným detektorem používajícím CMOS technologii. S maticí $64\times64$ pixelů, každým o hraně $170~\mu m$, má celkovou aktivní plochu $1,1~cm^2$. I přes malý počet pixelů a jejich velkou rozteč, tento detektor prokázal dobré rozlišovací vlastnosti, především pak v rentgenovém zobrazování. 
 	
 	Detektor je vyrobený pomocí $1~\mu m$ technologie a je schopný operovat pouze v Medipix módu (viz \ref{fig:det:modes}) a podporuje pouze vyčítání po snímcích (viz \ref{chap:detectors:readout}).
 	
 	\item[Medipix2] V roce 2001 byl vyvinut detektor \textit{Medipix2} \cite{medipix2}, jako náhrada za svého předchůdce \textit{Medipix1}. Díky $250~nm$ technologii bylo možné zvýšit počet pixelů a zároveň snížit jejich rozteč -- detektor má $256\times256$ pixelů, každý o hraně $55~\mu m$. Navíc má dva thresholdy s diskriminací na 4 pixely. 
 	
-	Stejně jako svůj předchůdce je schopný operovat pouze v Medipix módu (viz \ref{fig:det:modes}) a podporuje pouze vyčítání po snímcích (viz \ref{chap:detectors:readout}).
+	Stejně jako jeho předchůdce je schopný operovat pouze v Medipix módu (viz \ref{fig:det:modes}) a podporuje pouze vyčítání po snímcích (viz \ref{chap:detectors:readout}).
 	
 	\item[Timepix]\label{chap:detectors:medipix_overview:timepix} V roce 2006 byl vyvinut detektor \textit{Timepix} \cite{timepix}, který vychází z detektoru \textit{Medipix2}. Detektory mají stejné rozměry, ale architektura pixelů se změnila. Nově každý pixel detektoru umožňuje nezávisle měřit čas interakce částice, její energii, nebo je schopný počítat jednotlivé interakce. 
 	
@@ -222,11 +222,11 @@ V této podkapitole budou stručně představeny jednotlivé detektory, které b
 
 	Také je možné zapojit tento readout čip (s pixelem o hraně $55~\mu m$) na senzor s pixely o hraně $110~\mu m$, takže výsledný super-pixel má k dispozici 8 čítačů a pomocí různých úrovní thresholdů jej lze použít jako 8-kanálový spektrometr.
 
-	Stejně jako svůj předchůdce je schopný operovat pouze v Medipix módu (viz \ref{fig:det:modes}) a podporuje pouze vyčítání po snímcích (viz \ref{chap:detectors:readout}).
+	Stejně jako jeho předchůdce je schopný operovat pouze v Medipix módu (viz \ref{fig:det:modes}) a podporuje pouze vyčítání po snímcích (viz \ref{chap:detectors:readout}).
 
-	\item[Timepix3]\label{chap:detectors:medipix_overview:timepix3} V roce 2014 byl vyvinut detektor \textit{Timepix3} \cite{timepix3}, jako nástupce \textit{Timepix} detektoru. Rozměry byly zachovány, ale byla použita $130~\mu m$ výrobní technologie, jako u \textit{Medipix3}. Detektor nově umožňuje měřit v \texttt{ToA} a \texttt{TOT} současně a jeho časové rozlišení bylo vylepšeno více než na šestinásobek.
+	\item[Timepix3]\label{chap:detectors:medipix_overview:timepix3} V roce 2014 byl vyvinut detektor \textit{Timepix3} \cite{timepix3}, jako nástupce \textit{Timepix} detektoru. Rozměry byly zachovány, ale byla použita $130~nm$ výrobní technologie, jako u \textit{Medipix3}. Detektor nově umožňuje měřit v \texttt{ToA} a \texttt{TOT} současně a jeho časové rozlišení bylo vylepšeno více než na šestinásobek.
 
-	Detektor nově umožňuje kromě vyčítání po snímcích i \textit{Data-Driven} mód, kde jsou data v rámci akvizice kontinuálně z detektoru vyčítána (viz \ref{chap:detectors:readout}). Takto navržená architektura umožňuje vyčítat data až do $40M_{hits}*cm^{-2}*s^{-1}$ bez globální mrtvé doby detektoru (pouze s lokální mrtvou dobou -- pro jednotlivé pixely, ze kterých jsou vyčítána naměřená data).
+	Detektor nově umožňuje kromě vyčítání po snímcích i \textit{Data-Driven} mód, kde jsou data v rámci akvizice kontinuálně z detektoru vyčítána (viz \ref{chap:detectors:readout}). Takto navržená architektura umožňuje vyčítat události až do $40M_{hits}*cm^{-2}*s^{-1}$ bez globální mrtvé doby detektoru (pouze s lokální mrtvou dobou -- pro jednotlivé pixely, ze kterých jsou vyčítána naměřená data).
 
 	Na obrázku \ref{fig:det:medipix_overview:timepix3_schema} je znázorněno blokové schéma jednoho pixelu \textit{Timepix3} detektoru, který se skládá z analogové a digitální části (pro popis funkcionality viz \ref{chap:detectors:princip}). Na obrázku vpravo je pak společná elektronika, sdílená vždy 8 sousedními pixely (tzv. \textit{Super-pixel}).
 
@@ -251,15 +251,15 @@ FITPix \cite{fitpix} vyčítací rozhraní bylo vyvinuto v roce 2010 a skládá 
 
 Zařízení je s detektorem propojeno pomocí \textit{LVDS}\footnote{Z angl. Low-voltage differential signaling} a je schopné jeho plnohodnotného řízení, vč. nastavování hodnot (měřící frekvence, threshold, bias apod.), řízení akvizice a vyčítání naměřených dat rychlostí až $90$ snímků za sekundu. Zařízení rovněž umožňuje připojení externího trigger signálů pro synchronizované měření s více detektory současně.
 
-FITPix je možné použít pouze jako nízkoúrovňové vyčítací rozhraní a veškerá business logika musí být implementována v připojeném počítači (např. deserializace a derandomizace naměřených dat apod.). Jako řídící software je použit \textit{Pixelman}\cite{pixelman}. Zařízení je kompatibilní se všemi detektory uvedenými v \ref{chap:detectors:medipix_overview}, kromě \textit{Timepix3}.
+FITPix je možné použít pouze jako nízkoúrovňové vyčítací rozhraní a veškerá business logika musí být implementována v připojeném počítači (např. deserializace a derandomizace naměřených dat apod.). Jako řídící software je použit \textit{Pixelman}\cite{pixelman}. Zařízení je kompatibilní se všemi detektory uvedenými v \ref{chap:detectors:medipix_overview}, kromě \textit{Medipix1}.
 
 \subsection{AdvaDAQ}
-AdvaDAQ \cite{Turecek2016TimeWakl} je nástupcem vyčítacího rozhraní FITPix a kompatibilní se všemi detektory uvedenými v \ref{chap:detectors:medipix_overview}. Principem funkce vychází ze svého předchůdce, ale díky použitému rozhraní USB 3.0 je schopné dosahovat maximálního datového toku $2,9~Gb/s$. Deserializace naměřených dat byla implementována do firmware \textit{FPGA}. Pro řízení tohoto rozhraní, vizualizaci a analýzu naměřených dat byl vyvinut software Pixet.
+AdvaDAQ \cite{Turecek2016TimeWakl} je nástupcem vyčítacího rozhraní FITPix a kompatibilní se všemi detektory uvedenými v \ref{chap:detectors:medipix_overview} (kromě \textit{Medipix1}). Principem funkce vychází ze svého předchůdce, ale díky použitému rozhraní USB 3.0 je schopné dosahovat maximálního datového toku $2,9~Gb/s$. Deserializace naměřených dat byla implementována do firmware \textit{FPGA}. Pro řízení tohoto rozhraní, vizualizaci a analýzu naměřených dat byl vyvinut software Pixet.
 
 \subsection{ATLAS Pix}\label{chap:detectors:readouts:atlaspix}
-ATLAS Pix \cite{atlastpx_sw, BegeraBcThesis2016} je zařízení vyvinuté v rámci experimentu \textit{ATLAS-TPX}, síti 16 hybridních částicových detektorů \textit{Timepix}, instalované v rámci experimentu \textit{ATLAS} na \textit{LHC} v \textit{CERN}, operující od roku 2014.
+ATLAS Pix \cite{atlastpx_sw, BegeraBcThesis2016} je zařízení vyvinuté v rámci experimentu \textit{ATLAS-TPX}, síti hybridních částicových detektorů \textit{Timepix}, instalované v rámci experimentu \textit{ATLAS} na \textit{LHC} v \textit{CERN}, operující od roku 2014.
 
-Zařízení vzniklo modifikací vyčítacího rozhraní \textit{FITPix} a disponuje \texttt{FPGA}, \texttt{LVDS} zesilovačem a počítačem \textit{Raspberry Pi}, ve kterém je implementován software, poskytující API pro své vzdálené řízení přes \texttt{TPC} protokol. Komunikace mezi \texttt{FPGA} a počítačem je realizována pomocí \texttt{SPI}\footnote{Z angl. Serial Peripheral Interface.} protokolu.
+Zařízení vzniklo modifikací vyčítacího rozhraní \textit{FITPix} a disponuje \texttt{FPGA}, \texttt{LVDS} zesilovačem a počítačem \textit{Raspberry Pi}, ve kterém je implementován software, poskytující API pro své vzdálené řízení přes \texttt{TCP} protokol. Komunikace mezi \texttt{FPGA} a počítačem je realizována pomocí \texttt{SPI}\footnote{Z angl. Serial Peripheral Interface.} protokolu.
 
 \subsection{Katherine}\label{chap:detectors:readouts:katherine}
 
@@ -273,9 +273,9 @@ Katherine \cite{Katherine} je pokročilé vyčítací rozhraní dedikované pro 
 	\end{center}
 \end{figure}
 
-Hlavním benefitem zařízení je možnost jeho použití při experimentech, kde je nutná větší vzdálenost mezi detektorem a vyčítacím rozhraním (u \textit{Katherine až $100~m$}). Toto omezení je dáno především nedostatečnou radiační a elektromagnetickou odolností použité elektroniky. To umožňuje aplikace v blízkosti jaderných reaktorů nebo na částicových urychlovačích (například měření luminosity v rámci experimentu ATLAS na LHC v CERN \cite{atlastpx_luminosity}). 
+Hlavním benefitem zařízení je možnost jeho použití při experimentech, kde je nutná větší vzdálenost mezi detektorem a vyčítacím rozhraním (u \textit{Katherine až $100~m$}), především kvůli nedostatečné radiační a elektromagnetické odolností použité elektroniky. To umožňuje aplikace v blízkosti jaderných reaktorů nebo na částicových urychlovačích (například měření luminosity v rámci experimentu ATLAS na LHC v CERN \cite{atlastpx_luminosity}). 
 
-Zařízení je kompatibilní s \textit{Timepix3} detektory, které jsou osazeny na CERN chipboard, nebo na kompatibilní \texttt{PCB}\footnote{Z angl. Printed Circuit Board.} s \texttt{VHDCI}\footnote{Z angl. Very-High-Density-Cable-Interconnect.} 68-pinovým konektorem. S detektorem může být propojeno napřímo (viz obr. \ref{fig:det:readout:katherine} vlevo), prodlužovacím \texttt{VHDCI} kabelem o maximální délce až $10~m$, nebo speciálním extenderem na bázi ethernetu pro vzdálenosti až $120~m$. S rostoucí vzdáleností ale klesá maximální datový tok (viz tabulka \ref{tab:det:katherine:data_flow}).
+Zařízení je kompatibilní s \textit{Timepix3} detektory, které jsou osazeny na CERN chipboardu, nebo na kompatibilní \texttt{PCB}\footnote{Z angl. Printed Circuit Board.} s \texttt{VHDCI}\footnote{Z angl. Very-High-Density-Cable-Interconnect.} 68-pinovým konektorem. S detektorem může být propojeno napřímo (viz obr. \ref{fig:det:readout:katherine} vlevo), prodlužovacím \texttt{VHDCI} kabelem o maximální délce až $10~m$, nebo speciálním extenderem na bázi ethernetu pro vzdálenosti až $120~m$. S rostoucí vzdáleností ale klesá maximální datový tok (viz tabulka \ref{tab:det:katherine:data_flow}).
 
 \begin{table}[th]
 	\begin{center}
@@ -294,9 +294,9 @@ Zařízení je kompatibilní s \textit{Timepix3} detektory, které jsou osazeny 
 	\label{tab:det:katherine:data_flow}
 \end{table}
 
-Jeho maximální výstupní datový tok je daný použitým gigabitovým ethernetem, které odpovídá ekvivalentu datového toku $16M_{hits}*cm^{-2}*s^{-1}$ v \textit{Data-Driven} módu (viz \ref{chap:detectors:readout}). \textit{Timepix3} detektor je schopný generovat až $80M_{hits}*cm^{-2}*s^{-1}$, takže při vyšší zátěži není zařízení schopné přenést všechny zaznamenané události. Nicméně, \textit{Katherine} disponuje vestavěnou \texttt{DDR3} pamětí o velikosti $1~GB$, která funguje jako buffer -- když je aktuální počet zpracovávaných událostí vyšší, než je maximální datový tok spojení s nadřazeným počítačem, tak se data hromadí v bufferu, aby později při nižší intenzitě zpracovávaných událostí mohla být přenesena.
+Jeho maximální výstupní datový tok je daný použitým gigabitovým ethernetem, které odpovídá ekvivalentu počtu událostí $16M_{hits}*cm^{-2}*s^{-1}$ v \textit{Data-Driven} módu (viz \ref{chap:detectors:readout}). \textit{Timepix3} detektor je schopný detekovat až $80M_{hits}*cm^{-2}*s^{-1}$, takže při vyšší zátěži není zařízení schopné přenést všechny zaznamenané události. Nicméně, \textit{Katherine} disponuje vestavěnou \texttt{DDR3} pamětí o velikosti $1~GB$, která funguje jako buffer -- když je aktuální počet zpracovávaných událostí vyšší, než je maximální datový tok spojení s nadřazeným počítačem, tak se data hromadí v bufferu, aby později při nižší intenzitě zpracovávaných událostí mohla být přenesena.
 
-Pro úplnost výčtu vstupních a výstupných portů je třeba doplnit, že \textit{Katherine} také disponuje \texttt{GPIO}\footnote{Z angl. General Purpose Input/Output.} konektorem (viz obr. \ref{fig:det:readout:katherine} vpravo), zahrnující 4 obecné signály pro integraci s dalšími zařízeními a další rozšíření, jako například pro trigger synchronizaci (pro možnost zapojení například do detektorového teleskopu \cite{katherine_telescope}). Zařízení dále disponuje \texttt{LEMO} konektorem (viz \ref{fig:det:readout:katherine}), poskytujícím vysokonapěťový zdroj ($\pm300~V$) pro \textit{bias} (měřící napětí) detektoru.
+Pro úplnost výčtu vstupních a výstupných portů je třeba doplnit, že \textit{Katherine} také disponuje \texttt{GPIO}\footnote{Z angl. General Purpose Input/Output.} konektorem (viz obr. \ref{fig:det:readout:katherine} vpravo), zahrnujícím 4 obecné signály pro integraci s dalšími zařízeními a další rozšíření, jako například pro trigger synchronizaci (pro možnost zapojení například do detektorového teleskopu \cite{katherine_telescope}). Zařízení dále disponuje \texttt{LEMO} konektorem (viz \ref{fig:det:readout:katherine}), poskytujícím zdroj vysokého napětí ($\pm300~V$) pro \textit{bias} (měřící napětí) detektoru.
 
 Vyčítací rozhraní má implementovanou podporu pro \texttt{ToA} korekci (viz \ref{chap:detectors:calibration:toa_correction}), které je automaticky vykonána v rámci startovací sekvence, kde jsou poškozené sloupce identifikovány pomocí středních hodnot testovacích pulzů a je sestavena kompenzační tabulka. V průběhu akvizice dat jsou \texttt{ToA} hodnoty automaticky opraveny odečtením příslušných hodnot z výše zmíněné tabulky.
 
@@ -304,7 +304,7 @@ Vyčítací rozhraní má implementovanou podporu pro \texttt{ToA} korekci (viz 
 Vyčítací rozhraní \textit{Katherine} je dle dané konfigurace schopné operovat ve dvou módech:
 
 \begin{description}
-	\item [SFTP klient (autonomní mód)] V tomto módu zařízení operuje z pohledu řízení a akvizice dat zcela nezávisle. Po spuštění zařízení, resp. dokončení startovací sekvence, jsou z dodané konfigurace automaticky nastaveny měřící a akviziční parametry detektoru a je spuštěna akvizice dat. Získaná data jsou pak nepřetržitě posílána pomocí \textit{SFTP}\footnote{Z angl. Secure File Transfer Protocol (protokol pro zabezpečený přenos souborů mezi počítači pomocí \texttt{TPC} protokolu).} na server, kde jsou data ukládána do definovaného adresáře v \texttt{ASCII} souborech. Výhoda tohoto módu spočívá v jednoduchosti obsluhy a hodí se především pro takové aplikace, kde není očekáván vysoký datový tok a kde není potřeba měnit nastavení detektoru, protože každá jeho změna vyžaduje restart zařízení.
+	\item [SFTP klient (autonomní mód)] V tomto módu zařízení operuje z pohledu řízení a akvizice dat zcela nezávisle. Po spuštění zařízení, resp. dokončení startovací sekvence, jsou z dodané konfigurace automaticky nastaveny měřící a akviziční parametry detektoru a je spuštěna akvizice dat. Získaná data jsou pak nepřetržitě posílána pomocí \textit{SFTP}\footnote{Z angl. Secure File Transfer Protocol (protokol pro zabezpečený přenos souborů mezi počítači pomocí \texttt{TCP} protokolu).} na server, kde jsou data ukládána do definovaného adresáře v \texttt{ASCII} souborech. Výhoda tohoto módu spočívá v jednoduchosti obsluhy a hodí se především pro takové aplikace, kde není očekáván vysoký datový tok a kde není potřeba měnit nastavení detektoru, protože každá jeho změna vyžaduje restart zařízení.
 	
 	\item [Manuální mód] Pracuje-li zařízení v tomto módu, pak k jeho funkci je třeba řízení z nadřazeného počítače pomocí proprietárního \texttt{UDP}\footnote{Z angl. User Datagram Protocol.} protokolu. Protokol využívá dvou \texttt{UDP} portů -- \textbf{řídícího} a \textbf{datového}.
 

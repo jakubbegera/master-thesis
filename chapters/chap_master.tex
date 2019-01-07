@@ -9,7 +9,7 @@ Tato komponenta se skládá ze dvou nezávislých částí -- backendového serv
 % Backend
 %********************************************************************************
 \section{Backend}\label{chap:master:backend}
-Backendová aplikace mastera, podobně jako handlera, byla implementována za pomocí Spring Boot frameworku (viz \ref{chap:arch:technologie:spring}) a obsahuje embedovaný webový server \texttt{Tomcat}. Aplikace komunikuje s handlery, jejichž prostřednictvím řídí jim přiřazené detektory.
+Backendová aplikace mastera, podobně jako handlera, byla implementována pomocí Spring Boot frameworku (viz \ref{chap:arch:technologie:spring}) a obsahuje embedovaný webový server \texttt{Tomcat}. Aplikace komunikuje s handlery, jejichž prostřednictvím řídí jim přiřazené detektory.
 
 \subsection{Softwarová architektura}\label{chap:master:backend:sw_arch}
 Na obrázku \ref{fig:master:arch} je znázorněna softwarová architektura backendové aplikace mastera, rozdělená do několika vrstev, které budou v následujících podkapitolách blíže vysvětleny.
@@ -26,7 +26,7 @@ Na obrázku \ref{fig:master:arch} je znázorněna softwarová architektura backe
 \subsubsection{Vrstva pro persistenci konfigurace a stavu systému}
 Tato vrstva je zodpovědná za komunikaci s \textit{PostgreSQL} databází (viz \ref{chap:arch:technologie:postgresql}) pomocí \textit{PostgreSQL} \texttt{JDBC}\footnote{Z angl. \textit{Java Database Connectivity} -- API pro programovací jazyk Java, definující přístup klienta k databázi.} ovladače. Pro mapování jednotlivých entit (resp. Java objektů, tzv. \texttt{ORM}\footnote{Z angl. \textit{Object-relational mapping} -- objektově-relační mapování.}) byl implementován framework \textit{Hibernate}.
 
-Vrstva poskytuje repositáře (viz obr. \ref{fig:master:arch}) pro dotazy nad uloženými daty a pro jejich modifikaci. Rovněž je zodpovědná za automatické vytváření a aktualizaci databázového schématu, připojené databáze. Návrh schématu bude popsán v \ref{chap:master:backend:db}.
+Vrstva poskytuje repozitáře (viz obr. \ref{fig:master:arch}) pro dotazy nad uloženými daty a pro jejich modifikaci. Rovněž je zodpovědná za automatické vytváření a aktualizaci databázového schématu, připojené databáze. Návrh schématu bude popsán v \ref{chap:master:backend:db}.
 
 V databázi jsou společně se záznamem detektoru uloženy také jeho moduly (resp. implementace komunikačního a datového interface).
 
@@ -187,4 +187,4 @@ Pro navigaci po stránce aplikace používá knihovnu \textit{react-router}\foot
 \subsection{Nasazení}
 Nasazení aplikace je jednoduché -- stačí jenom její build (k dispozici na přiloženém CD) nahrát na webový server. Build obsahuje \texttt{index.html} společně s vlastní aplikací v \texttt{bundle.js} a dalšími soubory (obrázky, CSS styly apod.).
 
-Aplikace byla vyvinuta pomocí systému na správu závislostí \texttt{Yarn}\footnoteUrl{https://yarnpkg.com}. Por vývojářské účely je možné aplikaci spustit příkazem \texttt{yarn start}, nebo příkazem \texttt{yarn build} je možné udělat build aplikace, nasaditelný na webový server.
+Aplikace byla vyvinuta pomocí systému na správu závislostí \texttt{Yarn}\footnoteUrl{https://yarnpkg.com}. Pro vývojové účely je možné aplikaci spustit příkazem \texttt{yarn start}, nebo příkazem \texttt{yarn build} je možné udělat build aplikace, nasaditelný na webový server.

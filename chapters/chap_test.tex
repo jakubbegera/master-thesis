@@ -11,9 +11,12 @@ V této kapitol bude čtenář seznámen s metodami testování pro zajištění
 Pro části jednotlivých softwarových komponent byly použity jednotkové testy \cite{testing_evans} (tzv. \textit{Unit testy}). Jednotkové testy jsou základním typem testu, který ověřuje funkčnost samostatně testovatelných částí systému - tzv. jednotek. Výhodou těchto testů je jejich automatizovatelnost. Byl použit \textit{JUnit} framework - framework pro jednotkové testy pro platformu Java. 
 
 \subsection{Integrační testy}
-Integrační testy byly použity pro ověření správné komunikace jednotlivých komponent systému, zejména pak handlera (viz \ref{chap:handler}) a backendové aplikace mastera (viz \ref{chap:master:backend}).
+Integrační testy byly použity pro ověření správné komunikace jednotlivých komponent systému, zejména pak handlera (viz \ref{chap:handler}) a backendové aplikace mastera (viz \ref{chap:master:backend}), vyčítacího rozhraní \textit{Katherine} a komunikačního modulu apod.
+
+V rámci těchto testů byla ověřována především správnost implementace komunikačního protokolu vyčítacího rozhraní \textit{katherine} (resp. její serverové implementace v emulátoru i implementace klienta v komunikačním modulu) a REST API handlera a mastera.
 
 \subsection{Systémové testy}
+Systémové testy se provádějí pro ověření funkčnosti systému jako celku. Tyto testy se provádějí až v pozdějších fázích vývoje a testují funkčnost systému z pohledu uživatele. Za tímto účelem bylo definováno několik testovacích scénářů (jako např. přidání detektoru do systému, přiřazení detektoru handleru, spuštění akvizice apod.), pomocí kterých byly tyto testy realizovány.
 
 %********************************************************************************
 % Experimenty
@@ -21,7 +24,7 @@ Integrační testy byly použity pro ověření správné komunikace jednotlivý
 \section{Experimenty}
 Pro ověření funkčnosti a dostatečné propustnosti systému bylo provedeno několik experimentů, které budou v této podkapitole popsány. Pro tyto experimenty byla použita dvě různá prostředí:
 \begin{description}
-    \item[lokální] -- jeden počítač, na kterém byl spuštěn emulátor, handler a master současně. Použití počítač má CPU 3 GHz Intel Core i7, 16 GB 1600 MHz DDR3 RAM a SSD disk o kapacitě \unit{500}{GB} (MacBook Pro).
+    \item[lokální] -- jeden počítač, na kterém byl spuštěn emulátor, handler a master současně. Použitý počítač má CPU 3 GHz Intel Core i7, 16 GB 1600 MHz DDR3 RAM a SSD disk o kapacitě \unit{500}{GB} (MacBook Pro).
     \item[CERN openstack] -- cloudová infrastruktura v CERN, kterou CERN poskytuje partnerským univerzitám a dalším institucím. Tato infrastruktura je založená na \textit{OpenStack} \textit{IaaS}\footnote{Z angl. \textit{Infrastructure as a Service}.} platformě, která umožňuje řízení výpočetního výkonu, úložiště a síťových prostředcích v datacentrech skrze webovou aplikaci nebo \textit{OpenStack API}.
 
     Byl vytvořen cluster s těmito virtuálními počítači:
@@ -34,6 +37,9 @@ Pro ověření funkčnosti a dostatečné propustnosti systému bylo provedeno n
 
 \end{description}
 
+%********************************************************************************
+% Experimenty - Experiment první
+%********************************************************************************
 \subsection{Experiment první: zpracovávání fronty naměřených dat}
 Kritickou částí každého datového akvizičního systému je proces zpracování dat, od přijetí až po jejich uložení. Jelikož v rámci systému Pixnet data procházejí pouze přes handler (resp. od komunikačního do datového modulu daného detektoru, zavedených v handleru) do datovým modulem definovaného úložiště, budou v rámci tohoto experimentu zkoumány jen metadata jednotlivých událostí (od jejich vzniku až po uložení).
 
@@ -51,7 +57,7 @@ Experiment byl proveden v obou prostředích, v každém s jedním emulátorem v
           ylabel={Doba zpracování událostí [ns]},
           ylabel near ticks,
           width=0.90\textwidth,
-          height=0.88\textwidth,
+          height=0.89\textwidth,
         ]
           \addplot[color=orange] table {figures/data/test_queue_waiting.dat};
           \label{plot_1_y1}
@@ -64,7 +70,7 @@ Experiment byl proveden v obou prostředích, v každém s jedním emulátorem v
           ylabel={Počet událostí ve frontě},
           ylabel near ticks,
           width=0.90\textwidth,
-          height=0.88\textwidth,
+          height=0.89\textwidth,
         ]
         \addplot[color=gray] table {figures/data/test_queue_size.dat};
         \label{plot_1_y2}
@@ -183,4 +189,125 @@ Měření byla provedena pro různé počty generovaných událostí za vteřinu
     \label{fig:test:exp1:zavyslost_na_poctu_udalosti}
 \end{figure}
 
-Z výsledku experimentu je patrné, že obě sledované hodnoty rostou s počtem událostí. Oproti očekávaným hodnotám (resp. očekávané rostoucí závislosti) lze z obr. \ref{fig:test:exp1:zavyslost_na_poctu_udalosti} pozorovat dva rozdíly. Tím prvním je vývoj průměrné doby zpracování události od jedné do 1000 událostí za sekundu. Tento efekt je pravděpodobně způsoben nastavenou velikostí \textit{bufferu} a režie přenosu dat. Druhým rozdílem je různý trend hodnot pro \textit{CERN openstack} a \textit{lokání} prostředí od 50000 událostí za vteřinu. Nejvíce pravděpodobnou příčinou tohoto jevu je rozdílná konfigurace obou prostředí. Zatímco v rámci \textit{CERN openstack} každá komponenta systémů je spuštěna na jiném počítači, v \textit{lokální} prostředí všechny komponenty sdílí stejný počítač a vzájemně se ovlivňují.
+Z výsledku experimentu je patrné, že obě sledované hodnoty rostou s počtem událostí. Oproti očekávaným hodnotám (resp. očekávané rostoucí závislosti) lze z obr. \ref{fig:test:exp1:zavyslost_na_poctu_udalosti} pozorovat dva rozdíly. 
+
+Tím prvním je vývoj průměrné doby zpracování události od jedné do 1000 událostí za sekundu. Tento efekt je pravděpodobně způsoben nastavenou velikostí \textit{bufferu} a režie přenosu dat.
+
+Druhým rozdílem je různý trend hodnot pro \textit{CERN openstack} a \textit{lokání} prostředí od 50000 událostí za vteřinu. Nejvíce pravděpodobnou příčinou tohoto jevu je rozdílná konfigurace obou prostředí. Zatímco v rámci \textit{CERN openstack} každá komponenta systémů je spuštěna na jiném počítači, v \textit{lokální} prostředí všechny komponenty sdílí stejný počítač a vzájemně se ovlivňují.
+
+%********************************************************************************
+% Experimenty - Experiment druhý
+%********************************************************************************
+\subsection{Experiment druhý: zátěžový test API mastera}
+V rámci tohoto experimentu byl proveden zátěžový test API mastera. Pomocí software \textit{Apache JMeter} bylo provedeno několik měření, ve kterých byl sledován čas zpracovávání requestu (resp )
+
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+          xmin = 0,% xmax = 62000,
+          ymin = 0,
+          axis y line*=left,
+          xlabel={Počet vláken},
+          xlabel near ticks,
+          ylabel={Čas zpracování requestu [ms]},
+          ylabel near ticks,
+          width=0.88\textwidth,
+          height=0.89\textwidth,
+        ]
+            \addplot[color=orange,mark=triangle]
+                coordinates {
+                    (1,3)
+                    (10,2)
+                    (100,2)
+                    (500,4)
+                    (1000,4)
+                    (2000,99)
+                    (3000,176)
+                    (4000,206)
+                    (5000,217)
+                    (6000,245)
+                    (7000,430)
+                    (8000,472)
+                    (9000,324)
+                    (10000,539)
+                };
+            \label{plot_2_y1}
+            \addplot[color=gray,mark=asterisk]
+                coordinates {
+                    (1,3)
+                    (10,2)
+                    (100,2)
+                    (500,3)
+                    (1000,3)
+                    (2000,59)
+                    (3000,143)
+                    (4000,179)
+                    (5000,167)
+                    (6000,235)
+                    (7000,317)
+                    (8000,190)
+                    (9000,168)
+                    (10000,219)
+                };
+            \label{plot_2_y2}
+            \addplot[color=red,mark=otimes]
+                coordinates {
+                    (1,0)
+                    (10,0)
+                    (100,0)
+                    (500,5)
+                    (1000,4)
+                    (2000,97)
+                    (3000,132)
+                    (4000,156)
+                    (5000,194)
+                    (6000,188)
+                    (7000,552)
+                    (8000,900)
+                    (9000,595)
+                    (10000,1146)
+                };
+            \label{plot_2_y3}
+        \end{axis}
+        \begin{axis}[
+          xmin = 0,% xmax = 62000,
+          ymin = 0,% ymax = 11000,
+          hide x axis,
+          axis y line*=right,
+          ylabel={Počet requestů [$s^{-1}$]},
+          ylabel near ticks,
+          width=0.88\textwidth,
+          height=0.89\textwidth,
+          legend pos=north west,
+        ]
+        \addplot[color=blue,mark=square]
+                coordinates {
+                    (1,53)
+                    (10,662)
+                    (100,5870)
+                    (500,20732)
+                    (1000,33127)
+                    (2000,41011)
+                    (3000,58100)
+                    (4000,54066)
+                    (5000,60851)
+                    (6000,56426)
+                    (7000,57731)
+                    (8000,47477)
+                    (9000,49222)
+                    (10000,40222)
+                };
+            \label{plot_2_y4}
+
+        %\label{plot_2_y2}
+        \addlegendimage{/pgfplots/refstyle=plot_2_y1}\addlegendentry{Avg [ms]}
+        \addlegendimage{/pgfplots/refstyle=plot_2_y2}\addlegendentry{Med [ms]}
+        \addlegendimage{/pgfplots/refstyle=plot_2_y3}\addlegendentry{Dev [ms]}
+        \addlegendimage{/pgfplots/refstyle=plot_2_y4}\addlegendentry{Thr [$s^{-1}$]}
+        \end{axis}
+      \end{tikzpicture}
+
+    \caption{TODO}
+    \label{fig:test:exp1:jedna_akvizice_50k_udalosti}
+\end{figure}

@@ -3,19 +3,19 @@
 \chapter{Vyčítací rozhraní Katherine a jeho implementace}\label{chap:katherine}
 V této kapitole bude čtenář blíže seznámen s komunikačním protokolem vyčítacího rozhraní \textit{Katherine} (viz \ref{chap:detectors:readouts:katherine}) a bude zde také představena implementace komunikačního (viz \ref{src:handler:comm_intf} ) a datového (viz \ref{src:handler:data_intf}) interface, vyvinutých za účelem podpory \textit{Katherine} handlerem (viz \ref{chap:handler}). 
 
-Pro účely vývoje a testování byl vyvinut emulator \textit{Katherine}, který emuluje zařízení na síťové vrstvě, včetně podpory všech příkazů komunikačního protokolu, relevantních k akvizici dat. Popis jeho návrhu a implementace bude také zahrnut v této kapitole.
+Pro účely vývoje a testování byl vyvinut emulátor \textit{Katherine}, který emuluje zařízení na síťové vrstvě, včetně podpory všech příkazů komunikačního protokolu relevantních k akvizici dat. Popis jeho návrhu a implementace bude také zahrnut v této kapitole.
 
-Pro úplnost je třeba dodat, že komunikační a datový modul sdílejí stejnou podmnožinu datového modelu a část business-logiky, vázající se k manipulaci s měřenými daty. Tato společná \textit{code-base} je implementována v rámci separátního modulu, na kterém jsou závislé oba výše zmíněné moduly. Toto řešení umožňuje použití stejné vnitřní reprezentace dat, bez nutnosti jejich serializace a deserializace, což má pozitivní vliv na výkonost systému. Nutnou podmínkou ale je, aby oba moduly byly do systému zavedeny pomocí stejného \texttt{ClassLoader} objektu (z důvodu kompatibility přenášených model objektů), tento mechanizmus je ale už implementován v handleru.
+Pro úplnost je třeba dodat, že komunikační a datový modul sdílejí stejnou podmnožinu datového modelu a část business-logiky, vázající se k manipulaci s měřenými daty. Tato společná \textit{code-base} je implementována v rámci separátního modulu, na kterém jsou závislé oba výše zmíněné moduly. Toto řešení umožňuje použití stejné vnitřní reprezentace dat, bez nutnosti jejich serializace a deserializace, což má pozitivní vliv na výkonost systému. Nutnou podmínkou ale je, aby oba moduly byly do systému zavedeny pomocí stejného \texttt{ClassLoader} objektu (z důvodu kompatibility přenášených model objektů). Tento mechanizmus je ale už implementován v handleru.
 
 %********************************************************************************
 % Komunikační protokol
 %********************************************************************************
 \section{Komunikační protokol}\label{chap:katherine:protocol}
-Jak již bylo vysvětleno v kapitole \ref{chap:detectors:readouts:katherine:comm}, \textit{Katherine} podporuje dva provozní módy -- autonomní a manuální. Tato práce se zabývá pouze použitím manuálního módu, který umožňuje plnohodnotné řízení detektorů a umožňuje (ve srovnání s autonomním módem) efektivněji přenášet naměřená data, díky čemuž je možné maximalizovat tok výstupních dat detektoru.
+Jak již bylo vysvětleno v kapitole \ref{chap:detectors:readouts:katherine:comm}, \textit{Katherine} podporuje dva provozní módy -- autonomní a manuální. Tato práce se zabývá pouze použitím manuálního módu, který umožňuje plnohodnotné řízení detektoru a umožňuje (ve srovnání s autonomním módem) efektivněji přenášet naměřená data, díky čemuž je možné maximalizovat tok výstupních dat detektoru.
 
 Komunikace v rámci manuálního módu je založena na proprietárním komunikačním protokolu, který bude popsán v této podkapitole. Klientská část tohoto protokolu je implementována v komunikačním modulu handleru (viz \ref{chap:katherine:comm}) a jeho serverová část v \textit{Katherine} emulátoru (viz \ref{chap:katherine:emulator}).
 
-Protokol je založen na posílání \texttt{UDP} datagramů pomocí dvou socketů -- jednoho pro řídící příkazy a druhého pro měřená data. Využití \texttt{UDP} se nabízí především z důvodu, že se jedná o nepotvrzované spojení (na rozdíl od \texttt{TCP}), takže v případě špatného spojení nedochází k zahlcení spojení a je možné dosáhnout většího datového toku. V dalších fázích vývoje je ale plánován přechod na \texttt{TCP} protokol pro řídící socket, protože objem jeho prostřednictvím přenášených dat je zanedbatelný a potvrzované doručení řídících příkazů by nemuselo být ošetřováno aplikační vrstvou.
+Protokol je založen na posílání \texttt{UDP} datagramů pomocí dvou socketů -- jednoho pro řídící příkazy a druhého pro měřená data. Využití \texttt{UDP} se nabízí především z důvodu implementovaného nepotvrzovaného spojení (na rozdíl od \texttt{TCP}), takže v případě špatného spojení nedochází k zahlcení a je možné dosáhnout většího datového toku. V dalších fázích vývoje je plánován přechod na \texttt{TCP} protokol pro řídící socket, protože objem jeho prostřednictvím přenášených dat je zanedbatelný a potvrzované doručení řídících příkazů by nemuselo být ošetřováno aplikační vrstvou.
 
 %********************************************************************************
 % Komunikační protokol -- Řídící příkazy
@@ -246,7 +246,7 @@ Tato vrstva slouží jako tzv. fasáda\footnote{Návrhový vzor fasáda (\textit
 
 Po zavedení modulu je vytvořena fronta měřených dat, která je přejatá handlerem.
 
-Připojením detektoru vzniká instance Katherine kontroléru, dle předané konfigurace. Při odpojení detektoru je kontrolér notifikován, aby mohl uvolnit svoje prostředky (např. uzavřít síťové spojení) a poté je odstraněn.
+Připojením detektoru vzniká instance Katherine kontroléru dle předané konfigurace. Při odpojení detektoru je kontrolér notifikován, aby mohl uvolnit svoje prostředky (např. uzavřít síťové spojení) a poté je odstraněn.
 
 \subsection{Katherine kontrolér}
 Tato vrstva udržuje spojení s detektorem a implementuje všechny potřebné řídící příkazy detektoru.
@@ -322,14 +322,14 @@ Na obrázku \ref{fig:katherine:emulator:arch} jsou znázorněny jednotlivé komp
 
 Z pohledu zpracování je možné příkazy rozdělit do tří kategorií:
 \begin{description}
-    \item[Nastavující akviziční parametry] -- do této skupiny spadají všechny příkazy, které nastavují, nebo vracejí konfigurační parametry detektoru, jako je akviziční čas, bias, akviziční a vyčítací mód apod.
-    \item[Řídící akvizici] -- do této kategorie patří příkazy \textit{Acquisition Start} (0x03) a \textit{Acquisition Stop} (0x06). Po spuštění akvizice je vytvořena instance \texttt{Acquisition Controller}, který dle konfigurace začne generovat události a posílat je datovým socketem klientovi.
+    \item[Nastavení akvizičních parametrů] -- do této skupiny spadají všechny příkazy, které nastavují, nebo vracejí konfigurační parametry detektoru, jako je akviziční čas, bias, akviziční a vyčítací mód apod.
+    \item[Řízení akvizice] -- do této kategorie patří příkazy \textit{Acquisition Start} (0x03) a \textit{Acquisition Stop} (0x06). Po spuštění akvizice je vytvořena instance \texttt{Acquisition Controller}, který dle konfigurace začne generovat události a posílat je datovým socketem klientovi.
     
     Příkaz \textit{Acquisition Stop} pak přeruší probíhající akvizici.
     \item[Ostatní] -- do této kategorie spadají ostatní příkazy, které nebyly zahrnuty v předchozích kategoriích (např. pro měření teploty, čtení \textit{chip id}, verze FW apod.).
 \end{description}
 
-Některé příkazy nebyly implementovány, protože simulace jejich funkce není triviální a je nad rámec požadované funkcionality (jsou to např. příkazy pro nastavování hodnot DAC, registrů apod.). Odpovědí na tyto příkazy bude vždy ACQ (viz \ref{chap:katherine:protocol:control_commands}).
+Některé příkazy nebyly implementovány, protože emulace jejich funkce není triviální a je nad rámec požadované funkcionality (jsou to např. příkazy pro nastavování hodnot DAC, registrů apod.). Odpovědí na tyto příkazy bude vždy ACQ (viz \ref{chap:katherine:protocol:control_commands}).
 
 \subsection{Konfigurace a nasazení}
 Pro spuštění emulátoru vyčítacího rozhraní \textit{Katherine} je třeba mít nainstalované \texttt{JRE 8}\footnote{\textit{Java SE Runtime Environment, dostupné z\\\url{https://www.oracle.com/technetwork/java/javase/downloads}}.}, nebo vyšší.
