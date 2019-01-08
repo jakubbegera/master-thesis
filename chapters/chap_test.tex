@@ -199,9 +199,13 @@ Druhým rozdílem je různý trend hodnot pro \textit{CERN openstack} a \textit{
 % Experimenty - Experiment druhý
 %********************************************************************************
 \subsection{Experiment druhý: zátěžový test API mastera}
-V rámci tohoto experimentu byl proveden zátěžový test API mastera. Pomocí software \textit{Apache JMeter} bylo provedeno několik měření, ve kterých byl sledován průměrný čas zpracovávání requestu (resp. jeho průměr, medián a směrodatná odchylka) a průměrný počet zpracovaných událostí za minutu v závislosti na počtu simultánně přistupujících uživatelů. Experiment byl proveden pro 1, 10, 100, 500, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000 a 10000 uživatelů, resp. použitých vláken. Každý experiment byl několikrát zopakován a výsledky byly zprůměrovány. 
+V rámci tohoto experimentu byl proveden zátěžový test API mastera, který byl proveden v rámci \textit{lokálního} prostředí. Pomocí software \textit{Apache JMeter} bylo provedeno několik měření, ve kterých byl sledován čas zpracovávání requestu (resp. jeho průměr a medián) a průměrný počet zpracovaných událostí za minutu v závislosti na počtu simultánně přistupujících uživatelů. Experiment byl proveden pro 1, 10, 100, 500, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000 a 10000 uživatelů, resp. použitých vláken. Každý experiment byl několikrát zopakován a výsledky byly zprůměrovány. 
 
-Výsledek experimentu je zobrazen v obrázku \ref{fig:test:exp2}. Z grafu je patrné, že do zhruba 3000 simultánně přistupujících uživatelů počet zpracovaných uživatelů za minutu stoupá
+Výsledek experimentu je zobrazen v obrázku \ref{fig:test:exp2}. Z grafu je patrné, že do zhruba 3000 simultánně přistupujících uživatelů počet zpracovaných uživatelů za minutu stoupá a při větším počtu uživatelů začíná klesat. 
+
+Dále je patrné, že od zhruba 6000 simultánně přistupujících uživatelů průměrná doba zpracovávání requestu roste oproti jejího mediánu rychleji. To je dáno tím, že některé requesty nestihnou být serverem obslouženy v rámci daného \textit{timeout} a tím je negativně ovlivněna doba jejich zpracování.
+
+Je třeba poznamenat, že měření bylo zatíženou chybou, protože měřící software byl spuštěn na stejném počítači, jako systém Pixnet. Měřící software vytváří velké množství vláken, simulující přistupující uživatele a Tomcat webový server mastera vytváří nová vlákna také, aby velké množství klientů mohl obsloužit.
 
 \begin{figure}[h]
     \centering
@@ -253,24 +257,6 @@ Výsledek experimentu je zobrazen v obrázku \ref{fig:test:exp2}. Z grafu je pat
                     (10000,219)
                 };
             \label{plot_2_y2}
-            \addplot[color=red,mark=otimes]
-                coordinates {
-                    (1,0)
-                    (10,0)
-                    (100,0)
-                    (500,5)
-                    (1000,4)
-                    (2000,97)
-                    (3000,132)
-                    (4000,156)
-                    (5000,194)
-                    (6000,188)
-                    (7000,552)
-                    (8000,900)
-                    (9000,595)
-                    (10000,1146)
-                };
-            \label{plot_2_y3}
         \end{axis}
         \begin{axis}[
           xmin = 0,% xmax = 62000,
@@ -283,6 +269,8 @@ Výsledek experimentu je zobrazen v obrázku \ref{fig:test:exp2}. Z grafu je pat
           height=0.89\textwidth,
           legend pos=north east,
         ]
+        \addlegendimage{/pgfplots/refstyle=plot_2_y1}\addlegendentry{Avg [ms]}
+        \addlegendimage{/pgfplots/refstyle=plot_2_y2}\addlegendentry{Med [ms]}
         \addplot[color=blue,mark=square]
                 coordinates {
                     (1,53)
@@ -300,16 +288,10 @@ Výsledek experimentu je zobrazen v obrázku \ref{fig:test:exp2}. Z grafu je pat
                     (9000,49222)
                     (10000,40222)
                 };
-            \label{plot_2_y4}
-
-        %\label{plot_2_y2}
-        \addlegendimage{/pgfplots/refstyle=plot_2_y1}\addlegendentry{Avg [ms]}
-        \addlegendimage{/pgfplots/refstyle=plot_2_y2}\addlegendentry{Med [ms]}
-        \addlegendimage{/pgfplots/refstyle=plot_2_y3}\addlegendentry{Dev [ms]}
-        \addlegendimage{/pgfplots/refstyle=plot_2_y4}\addlegendentry{Thr [$min^{-1}$]}
+            \addlegendentry{Thr [$min^{-1}$]}
         \end{axis}
       \end{tikzpicture}
 
-    \caption{Závislost počtu zpracovávaných requestů za minutu (v legendě jako \textit{Thr}, pravá osa) na počtu vláken a závislost času zpracovávání requestu (znázorněno jako \textit{Avg} (průměr), \textit{Med} (medián) a \textit{Dev} (směrodatná odchylka), levá osa) na počtu vláken.}
+    \caption{Závislost počtu zpracovávaných requestů za minutu (v legendě jako \textit{Thr}, pravá osa) na počtu vláken a závislost času zpracovávání requestu (znázorněno jako \textit{Avg} (průměr) a \textit{Med} (medián), levá osa) na počtu vláken.}
     \label{fig:test:exp2}
 \end{figure}
