@@ -15,7 +15,7 @@ Jak již bylo vysvětleno v kapitole \ref{chap:detectors:readouts:katherine:comm
 
 Komunikace v rámci manuálního módu je založena na proprietárním komunikačním protokolu, který bude popsán v této podkapitole. Klientská část tohoto protokolu je implementována v komunikačním modulu handleru (viz \ref{chap:katherine:comm}) a jeho serverová část v \textit{Katherine} emulátoru (viz \ref{chap:katherine:emulator}).
 
-Protokol je založen na posílání \texttt{UDP} datagramů pomocí dvou socketů -- jednoho pro řídící příkazy a druhého pro měřená data. Využití \texttt{UDP} se nabízí především z důvodu implementovaného nepotvrzovaného spojení (na rozdíl od \texttt{TCP}), takže v případě špatného spojení nedochází k zahlcení a je možné dosáhnout většího datového toku. V dalších fázích vývoje je plánován přechod na \texttt{TCP} protokol pro řídící socket, protože objem jeho prostřednictvím přenášených dat je zanedbatelný a potvrzované doručení řídících příkazů by nemuselo být ošetřováno aplikační vrstvou.
+Protokol je založen na posílání \texttt{UDP} datagramů pomocí dvou socketů\footnote{Označení pro koncový bod obousměrné komunikace mezi počítačovými programy v rámci počítačové sítě.} -- jednoho pro řídící příkazy a druhého pro měřená data. Využití \texttt{UDP} se nabízí především z důvodu implementovaného nepotvrzovaného spojení (na rozdíl od \texttt{TCP}), takže v případě špatného spojení nedochází k zahlcení a je možné dosáhnout většího datového toku. V dalších fázích vývoje je plánován přechod na \texttt{TCP} protokol pro řídící socket, protože objem jeho prostřednictvím přenášených dat je zanedbatelný a potvrzované doručení řídících příkazů by nemuselo být ošetřováno aplikační vrstvou.
 
 %********************************************************************************
 % Komunikační protokol -- Řídící příkazy
@@ -253,7 +253,7 @@ Tato vrstva udržuje spojení s detektorem a implementuje všechny potřebné ř
 
 Odesílání řídících příkazů je realizováno pomocí komponenty \texttt{Control Datagram Sender} (viz obr. \ref{fig:katherine:comm:arch}), který implementuje asynchronní frontu datagramů. Fronta je asynchronně zpracovávána nezávislým vláknem, které datagramy z fronty odesílá na řídící port \textit{Katherine}.
 
-O příjem dat z řídícího socketu se stará komponenta \texttt{Control Datagram Receiver}, která v separátním vlákně přijímá příchozí data. Každý příchozí datagram (8-bytový vektor) je zpracován a přidán do fronty příchozích řídících dat. Komponenta také implementuje blokující metodu pro přijetí dat, která dle zadaného ID příkazu a maximálního času čekání (tzv. \textit{timeout}) hledá požadovanou odpověď ve frontě dat.
+O příjem dat z řídícího socketu se stará komponenta \texttt{Control Datagram Receiver}, která v separátním vlákně přijímá příchozí data. Každý příchozí datagram (8-bytový vektor) je zpracován a přidán do fronty příchozích řídících dat. Komponenta také implementuje blokující metodu pro přijetí dat, která dle zadaného ID příkazu a maximální doby čekání (tzv. \textit{timeout}) hledá požadovanou odpověď ve frontě dat.
 
 Příklad použití obou komponent zmíněných výše je ve zdrojovém kódu \ref{src:katherine:comm:example_get_bias}. Příklad demonstruje vyčtení biasu z detektoru. Nejprve je pomocí \texttt{Control Datagram Sender} odeslán řídící příkaz s ID 0x0C (řádek 3 až 7) a následně pomocí \texttt{Control Datagram Receiver}, resp. pomocí jeho blokující metody popsané výše, je zachycena odpověď, ze které je vyčtena požadovaná hodnota napětí. Jestli se odpověď nepodaří přijmout ve zvoleném timeoutu, je vygenerována výjimka, která musí být vyššími vrstvami programu ošetřena.
 
@@ -333,7 +333,7 @@ Některé příkazy nebyly implementovány, protože emulace jejich funkce není
 
 \subsection{Konfigurace a nasazení}
 Pro spuštění emulátoru vyčítacího rozhraní \textit{Katherine} je třeba mít nainstalované \texttt{JRE 8}\footnote{\textit{Java SE Runtime Environment, dostupné z\\\url{https://www.oracle.com/technetwork/java/javase/downloads}}.}, nebo vyšší.
-Zkompilovanou java aplikaci je třeba spustit s argumentem cesty ke konfiguračnímu souboru (pro příklad viz zdrojový kód \ref{src:emulator:config}). Konfigurační soubor obsahuje číslo portu, na které bude emulátor naslouchat pro řídící příkazy (\texttt{portCommands}), číslo portu a adresu pro odesílání měřených dat (\textit{portCommands} a \texttt{hots}) a parametr udávající průměrný počet události, které budou v rámci jedné akvizice vygenerovány.
+Zkompilovanou Java aplikaci je třeba spustit s argumentem cesty ke konfiguračnímu souboru (pro příklad viz zdrojový kód \ref{src:emulator:config}). Konfigurační soubor obsahuje číslo portu, na které bude emulátor naslouchat pro řídící příkazy (\texttt{portCommands}), číslo portu a adresu pro odesílání měřených dat (\textit{portCommands} a \texttt{hots}) a parametr udávající průměrný počet události, které budou v rámci jedné akvizice vygenerovány.
 
 Aplikaci je tedy možné spustit například takto: \mint{bash}{java -jar emulator.jar config.yaml}
 

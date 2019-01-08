@@ -199,14 +199,16 @@ Druhým rozdílem je různý trend hodnot pro \textit{CERN openstack} a \textit{
 % Experimenty - Experiment druhý
 %********************************************************************************
 \subsection{Experiment druhý: zátěžový test API mastera}
-V rámci tohoto experimentu byl proveden zátěžový test API mastera. Pomocí software \textit{Apache JMeter} bylo provedeno několik měření, ve kterých byl sledován čas zpracovávání requestu (resp )
+V rámci tohoto experimentu byl proveden zátěžový test API mastera. Pomocí software \textit{Apache JMeter} bylo provedeno několik měření, ve kterých byl sledován průměrný čas zpracovávání requestu (resp. jeho průměr, medián a směrodatná odchylka) a průměrný počet zpracovaných událostí za minutu v závislosti na počtu simultánně přistupujících uživatelů. Experiment byl proveden pro 1, 10, 100, 500, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000 a 10000 uživatelů, resp. použitých vláken. Každý experiment byl několikrát zopakován a výsledky byly zprůměrovány. 
+
+Výsledek experimentu je zobrazen v obrázku \ref{fig:test:exp2}. Z grafu je patrné, že do zhruba 3000 simultánně přistupujících uživatelů počet zpracovaných uživatelů za minutu stoupá
 
 \begin{figure}[h]
     \centering
     \begin{tikzpicture}
         \begin{axis}[
           xmin = 0,% xmax = 62000,
-          ymin = 0,
+          ymin = 0, ymax = 2000,
           axis y line*=left,
           xlabel={Počet vláken},
           xlabel near ticks,
@@ -279,7 +281,7 @@ V rámci tohoto experimentu byl proveden zátěžový test API mastera. Pomocí 
           ylabel near ticks,
           width=0.88\textwidth,
           height=0.89\textwidth,
-          legend pos=north west,
+          legend pos=north east,
         ]
         \addplot[color=blue,mark=square]
                 coordinates {
@@ -304,10 +306,10 @@ V rámci tohoto experimentu byl proveden zátěžový test API mastera. Pomocí 
         \addlegendimage{/pgfplots/refstyle=plot_2_y1}\addlegendentry{Avg [ms]}
         \addlegendimage{/pgfplots/refstyle=plot_2_y2}\addlegendentry{Med [ms]}
         \addlegendimage{/pgfplots/refstyle=plot_2_y3}\addlegendentry{Dev [ms]}
-        \addlegendimage{/pgfplots/refstyle=plot_2_y4}\addlegendentry{Thr [$s^{-1}$]}
+        \addlegendimage{/pgfplots/refstyle=plot_2_y4}\addlegendentry{Thr [$min^{-1}$]}
         \end{axis}
       \end{tikzpicture}
 
-    \caption{TODO}
-    \label{fig:test:exp1:jedna_akvizice_50k_udalosti}
+    \caption{Závislost počtu zpracovávaných requestů za minutu (v legendě jako \textit{Thr}, pravá osa) na počtu vláken a závislost času zpracovávání requestu (znázorněno jako \textit{Avg} (průměr), \textit{Med} (medián) a \textit{Dev} (směrodatná odchylka), levá osa) na počtu vláken.}
+    \label{fig:test:exp2}
 \end{figure}

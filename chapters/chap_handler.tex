@@ -23,7 +23,7 @@ Na obrázku \ref{fig:handler:overview} je znázorněn příklad instance handler
 % Vrstvy softwarové architektury
 %********************************************************************************
 \section{Vrstvy softwarové architektury}\label{chap:handler:architecture}
-Tato podkapitola je věnována softwarové architektuře handleru. Jsou zde představeny jednotlivé její vrstvy, tj. od vrstvy pro komunikaci s detektorem, management detektorů, Spring implementaci, až po výstupní vrstvu poskytující \texttt{REST API} a webové rozhraní -- viz obr. \ref{fig:handler:arch}. Vybrané vrstvy budou popsány detailněji v dalších podkapitolách.
+Tato podkapitola je věnována softwarové architektuře handleru. Jsou zde představeny její jednotlivé vrstvy, tj. od vrstvy pro komunikaci s detektorem, management detektorů, Spring implementaci, až po výstupní vrstvu poskytující \texttt{REST API} a webové rozhraní -- viz obr. \ref{fig:handler:arch}. Vybrané vrstvy budou popsány detailněji v dalších podkapitolách.
 
 \begin{figure}[th]
 	\begin{center}
@@ -68,9 +68,9 @@ Každý modul, obsahující implementaci komunikačního nebo datového interfac
 \subsubsection{Komunikační rozhraní}\label{chap:handler:detector_layer:commIntf}
 Zdrojový kód \ref{src:handler:comm_intf} obsahuje interface, který komunikační modul detektoru musí implementovat.
 
-Prvních pět metod (tj. řádek 3 až 7) má čistě informativní charakter a jejich implementace má čistě informativní charakter pro operátora systému.
+Prvních pět metod (tj. řádek 3 až 7) má čistě informativní charakter a jejich implementace slouží pro operátora systému.
 
-Na řádcích 8 a 9 je setter a getter pro konfiguraci detektoru. Konfigurace je detektoru předána jako \texttt{String}\footnote{Datový typ obsahující textový řetězec} (setter) a musí být do něj serializovatelná (getter). Systém ale s konfigurací detektoru neumí pracovat (kromě komunikačního modulu detektoru, resp. implementace komunikačního interface), tudíž její syntax není vynucována a její podoba je čistě v kompetenci poskytovatele komunikačního modulu. Avšak je doporučeno, aby zvolený formát byl strojově i lidsky čitelný, z důvodu jeho snazší editace\footnote{V dalších fázích implementace systému je plánováno přidání podpory editace konfigurace v rámci webového uživatelského rozhraní mastera.}. Takový formát může být například \texttt{JSON}\footnote{Z angl. \textit{JavaScript Object Notation} (JavaScriptový objektový zápis).}, nebo \texttt{YAML}\footnoteUrl{http://yaml.org/}, který je použit pro serializace konfigurace komunikačního modulu Katherine (viz \ref{chap:katherine:comm}).
+Na řádcích 8 a 9 je setter a getter pro konfiguraci detektoru. Konfigurace je detektoru předána jako \texttt{String}\footnote{Datový typ obsahující textový řetězec} (setter) a musí do něj být serializovatelná (getter). Systém ale s konfigurací detektoru neumí pracovat (kromě komunikačního modulu detektoru, resp. implementace komunikačního interface), tudíž její syntax není vynucována a její podoba je čistě v kompetenci poskytovatele komunikačního modulu. Je avšak doporučeno, aby zvolený formát byl strojově i lidsky čitelný, z důvodu jeho snazší editace\footnote{V dalších fázích implementace systému je plánováno přidání podpory editace konfigurace v rámci webového uživatelského rozhraní mastera.}. Takový formát může být například \texttt{JSON}\footnote{Z angl. \textit{JavaScript Object Notation} (JavaScriptový objektový zápis).}, nebo \texttt{YAML}\footnoteUrl{http://yaml.org/}, který je použit pro serializace konfigurace komunikačního modulu Katherine (viz \ref{chap:katherine:comm}).
 
 \begin{code}[h!]
 \begin{minted}[
@@ -114,7 +114,7 @@ interface DetectorComm {
 
 Pro získání seznamu podporovaných \textit{value commands} (tj. příkazů pro operace s jednotlivými hodnotami detektoru) slouží metoda \texttt{getSupportedValueCommands()}, viz řádek 10. \texttt{AbstractValueCommand} má v modelu poskytované knihovny dvě implementace:
 \begin{enumerate}[label=(\roman*)]
-	\item \texttt{ValueCommand} obsahuje atributy pro daného příkazu, tj.:
+	\item \texttt{ValueCommand} obsahuje atributy daného příkazu, tj.:
 	\begin{itemize}
 		\item \textbf{id} -- celočíselný unikátní identifikátor daného příkazu,
 		\item \textbf{name} -- název příkazu, resp. manipulované hodnoty detektoru,
@@ -152,9 +152,9 @@ valueCommands.add(ValueCommand(
 
 Pro vykonání \texttt{ValueCommand} je třeba implementovat metody \texttt{executeSetValueCommand()} a \texttt{executeGetValueCommand()}, viz řádky 19 a 20 komunikačního interface (zdrojový kód \ref{src:handler:comm_intf}). První metoda slouží pro nastavení hodnot a akceptuje ID příkazu a \texttt{valuePayload}, který obsahuje hodnotu jednoho ze šesti podporovaných datových typů, a je možné jej vykonat pouze pro příkazy, které mají \texttt{accessType}, umožňující zápis hodnot. Druhá metoda slouží pro čtení hodnot, jako vstupní parametr má ID příkazu a její návratový typ je \texttt{ValuePayload}, obsahující hodnotu čteného parametru.
 
-Dalším typem příkazů je získání seznamu podporovaných \texttt{ExecutionCommands} (viz 11. řádek komunikačního interface \ref{src:handler:comm_intf}). Od \texttt{ValueCommands} se liší tím, že vstup a výstup není omezen stejnou veličinou (resp. jejím modelem hodnot) a ani jejich množstvím. Tento přístup tedy umožňuje definovat příkazy, které mají libovolný počet vstupních hodnot a libovolný počet výstupních hodnot. Obdobně jako \texttt{AbstractValueCommand}, i \texttt{AbstractExecutionCommands} má v poskytované knihovně dvě implementace:
+Dalším typem příkazu je získání seznamu podporovaných \texttt{ExecutionCommands} (viz 11. řádek komunikačního interface \ref{src:handler:comm_intf}). Od \texttt{ValueCommands} se liší tím, že vstup a výstup není omezen stejnou veličinou (resp. jejím modelem hodnot) ani jejich množstvím. Tento přístup tedy umožňuje definovat příkazy, které mají libovolný počet vstupních hodnot a libovolný počet výstupních hodnot. Obdobně jako \texttt{AbstractValueCommand}, i \texttt{AbstractExecutionCommands} má v poskytované knihovně dvě implementace:
 \begin{enumerate}[label=(\roman*)]
-	\item \texttt{ExecutionCommand} je definován obdobně jako \texttt{ValueCommand} -- má své ID, jméno, ale také obsahuje seznamy rozšířených modelů hodnot -- jeden vstupní a jeden výstupní. Rozšířený model hodnot obsahuje již zmíněný \texttt{valueModel}, dále pak jméno hodnoty, její ID (textový řetězec) a \texttt{valueUnit}.
+	\item \texttt{ExecutionCommand} je definován obdobně jako \texttt{ValueCommand} -- má své ID, jméno a také obsahuje seznamy rozšířených modelů hodnot -- jeden vstupní a jeden výstupní. Rozšířený model hodnot obsahuje již zmíněný \texttt{valueModel}, dále pak jméno hodnoty, její ID (textový řetězec) a \texttt{valueUnit}.
 	
 	Zdrojový kód \ref{src:handler:execution_command} obsahuje příklad s \texttt{ExecutionCommand} pro nastavení akvizičního módu detektoru. Z příkladu je patrné, že příkaz akceptuje právě dvě vstupní hodnoty (akviziční mód a \textit{FastVCO} přepínač) a že žádné hodnoty nevrací.
 	
@@ -429,7 +429,7 @@ Webové rozhraní je dostupné z endpointu \texttt{/detectors}. Pro jednoduchost
 %********************************************************************************
 \section{Konfigurace a nasazení}\label{chap:handler:config}
 Pro spuštění handleru je třeba mít nainstalované \texttt{JRE 8}\footnote{\textit{Java SE Runtime Environment, dostupné z\\\url{https://www.oracle.com/technetwork/java/javase/downloads}}.} nebo vyšší.
-Zkompilovanou java aplikaci je třeba spustit s argumentem \texttt{handlerConfig} obsahující cestu ke konfiguračnímu souboru (pro příklad viz zdrojový kód \ref{src:handler:config}), obsahujícího port na kterém bude aplikace naslouchat a název handleru.
+Zkompilovanou Java aplikaci je třeba spustit s argumentem \texttt{handlerConfig} obsahující cestu ke konfiguračnímu souboru (pro příklad viz zdrojový kód \ref{src:handler:config}), obsahujícího port na kterém bude aplikace naslouchat a název handleru.
 
 Aplikaci je tedy možné spustit například takto: \mint{bash}{java -jar handler.jar handlerConfig=config.yaml}
 

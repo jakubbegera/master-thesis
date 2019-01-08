@@ -113,7 +113,7 @@ Tato služba slouží k periodickému zjišťování stavu jednotlivých handler
 \subsection{Návrh databáze}\label{chap:master:backend:db}
 Na obrázku \ref{fig:master:db_schema} je znázorněno schéma relačního modelu \textit{PostgreSQL} databáze, kde jsou znázorněny jednotlivé entity, vč. jejich atributů, a relace mezi nimi pomocí cizích klíčů.
 
-Ve schématu jsou dále definována různá integritní omezení, která vynucují strukturu dat a pravidla mezi relacemi entit -- např. že handler musí mít přiřazení právě jednu podsíť, že detektor může být přiřazen handleru ze stejné podsítě apod.
+Ve schématu jsou dále definována různá integritní omezení, která vynucují strukturu dat a pravidla mezi relacemi entit -- např. že handler musí mít přiřazenu právě jednu podsíť, že detektor může být přiřazen handleru ze stejné podsítě apod.
 
 \begin{figure}[h]
 	\begin{center}
@@ -126,7 +126,7 @@ Ve schématu jsou dále definována různá integritní omezení, která vynucuj
 
 \subsection{Konfigurace a nasazení}
 Pro spuštění mastera je třeba mít nainstalované \texttt{JRE 8}\footnote{\textit{Java SE Runtime Environment, dostupné z\\\url{https://www.oracle.com/technetwork/java/javase/downloads}}.} nebo vyšší.
-Zkompilovanou java aplikaci je třeba spustit s argumentem \texttt{masterConfig} obsahující cestu ke konfiguračnímu souboru (pro příklad viz zdrojový kód \ref{src:master:config}), obsahujícího port na kterém bude aplikace naslouchat příchozí spojení.
+Zkompilovanou Java aplikaci je třeba spustit s argumentem \texttt{masterConfig} obsahující cestu ke konfiguračnímu souboru (pro příklad viz zdrojový kód \ref{src:master:config}), obsahujícího port na kterém bude aplikace naslouchat příchozí spojení.
 
 Aplikaci je tedy možné spustit například takto: \mint{bash}{java -jar master.jar masterConfig=config.yaml}
 
