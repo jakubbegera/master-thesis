@@ -1,14 +1,14 @@
 \addbibresource{reference.bib}
 
 \chapter{Úvod do problematiky hybridních částicových pixelových detektorů}\label{chap:detectors}
-Ionizující záření je lidskými smysly nedetekovatelné, avšak jeho studium nám pomáhá pochopit podstatu hmoty, její vlastnosti a vzájemné interakce. To lidstvu umožnilo rozvinout mnohé aplikace, jako je například protonová terapie \cite{tpx_app_radiotherapy}, defektoskopie nebo zkoumání pravosti uměleckých děl. První pokusy o detekci ionizujícího záření sahají do 19. století. Například na počátku 20. století se pomocí mlžné komory prvně podařilo zachytit trajektorii nabitých částic. Rozvoj polovodičové technologie dal vzniknout novým detekčním technologiím až po v současné době nejpokrokovějším -- pixelovým detektorům.%todo
+Ionizující záření je lidskými smysly nedetekovatelné, avšak jeho studium nám pomáhá pochopit podstatu hmoty, její vlastnosti a vzájemné interakce. To lidstvu umožnilo rozvinout mnohé aplikace, jako je například protonová terapie \cite{tpx_app_radiotherapy}, defektoskopie nebo zkoumání pravosti uměleckých děl \cite{medipix_art}. První pokusy o detekci ionizujícího záření sahají do 19. století. Například na počátku 20. století se pomocí mlžné komory prvně podařilo zachytit trajektorii nabitých částic. Rozvoj polovodičové technologie dal vzniknout novým detekčním technologiím, jako například částicovým pixelovým detektorům.
 
 Existuje celá řada částicových pixelových detektorů, ale v této kapitole budou popsány pouze hybridní pixelové detektory, pro které je typické, že se skládají ze dvou nezávisle vyrobených částí -- senzoru a vyčítacího čipu. To oproti monolitickým detektorům, kde vyčítací elektronika je součástí senzoru, přináší řadu výhod, jako například snížení výrobních nákladů nebo možnost kombinace vyčítacího čipu se senzory různých materiálů (\textit{Si}, \textit{GaAs}, \textit{CdTe} apod.) a tlouštěk (vetšinou $300\mu m$, nebo $500\mu m$).
 
 Na tomto místě je třeba zmínit, že existuje více druhů těchto detektorů (\textit{AGH Fermilab, Pilatus, Philips Chromaix} apod.)\cite{detectors_review}, v této práci budou použity pouze detektory z rodiny detektorů Medipix.
 
 %********************************************************************************
-% Hardwarová architektura
+% Hardwarová architektura 
 %********************************************************************************
 \section{Hardwarová architektura detektorů rodiny Medipix}
 \begin{figure}[th]
@@ -116,15 +116,15 @@ Vlastní proces equalizace probíhá tak, že se pro všechny pixely detektoru p
 Během tohoto procesu vznikne rovněž maskovací matice detektoru, která obsahuje šumějící, nebo jinak poškozené pixely. To jsou například takové pixely, které bez přítomnosti interagujících částic hlásí překročení thresholdu.
 
 \subsection{Energetická kalibrace}\label{chap:detectors:calibration:energy}
-\begin{figure}[th]
+V kapitole \ref{chap:detectors:operation_modes} byl již popsán \textit{Time-Over-Threshold} mód, ve kterém je detektor schopný měřit deponovanou energii interagovaných částic, která je udávána v \texttt{TOT}. Jak již bylo ukázáno, vztah mezi energií v \textit{keV} a \texttt{TOT} je nelineární a závisí na fyzikálních vlastnostech daného pixelu, což je předmětem energetické kalibrace, která bude v této podkapitole popsána.
+
+\begin{figure}[h]
 	\begin{center}
 		\includegraphics[width=13cm]{figures/calib_function.png}
 		\caption{Kalibrační funkce, udávající závislost mezi energií v \texttt{keV} a \texttt{TOT} \cite{Jakubek2011S262}, vzniklá proložením získaných kalibračních bodů funkcí \ref{eq:det:energyCalib} a sestávající se ze dvou částí -- (i) nelineární části pro oblast nižších energií (hyperbola) a (ii) lineární části pro vyšší energie (přímka).}
 		\label{fig:det:calib:calib_function}
 	\end{center}
 \end{figure}
-
-V kapitole \ref{chap:detectors:operation_modes} byl již popsán \textit{Time-Over-Threshold} mód, ve kterém je detektor schopný měřit deponovanou energii interagovaných částic, která je udávána v \texttt{TOT}. Jak již bylo ukázáno, vztah mezi energií v \textit{keV} a \texttt{TOT} je nelineární a závisí na fyzikálních vlastnostech daného pixelu, což je předmětem energetické kalibrace, která bude v této podkapitole popsána.
 
 Tato metoda \cite{Jakubek2011S262} spočívá v provedení několika sad měření se zdroji ionizujících záření, jejichž energie jsou předem známy, a v jejich analytickém zpracování a vytvoření kalibrační funkce \ref{eq:det:energyCalib} pro každý pixel detektoru. V předchozí práci \cite{BegeraBcThesis2016} byly tyto metody podrobně popsány a byl vytvořen software, který uživateli umožňuje vytvoření energetické kalibrace detektoru z naměřených dat.
 
@@ -176,10 +176,10 @@ kde:
 
 S použitím detektoru \textit{Timepix3} je možné tuto energeticky závislou chybu eliminovat za použití kalibrační metody \cite{Turecek2016TimeWakl}, protože tento detektor umožňuje měřit v ToA a TOT módu současně. Tato kalibrační metoda spočívá v analytickém zpracování dat získaných z měření se zdrojem $\alpha$ částic (v \cite{Turecek2016TimeWakl} použito $^{241}$\texttt{Am}), které generuje clustery o více pixelech. Nejprve je však třeba jej energeticky zkalibrovat \ref{chap:detectors:calibration:energy}. 
 
-O vybraných clusterech o velikosti 3 a 4 pixely pro $^{241}$\texttt{Am} víme, že součet jejich energií je $59.5keV$. Z clusteru je vybrán pixel s energií $30keV$, který je použit jako referenční (na \ref{chap:detectors:calibration:timeWalk} jako $t_1$), zbylá energie je náhodně rozdělena mezi ostatní pixely (na \ref{chap:detectors:calibration:timeWalk} jako $t_{2-4}$). Jednotlivé rozdíly $t_i+t_1$ jsou analytickými metodami, popsanými v \cite{Turecek2016TimeWakl}, zpracovány a výsledkem tohoto procesu jsou konstanty $c,d$ pro každý pixel detektoru, kterými lze vypočítat jeho \textit{Time-Walk offset} $\Delta T$:
+O vybraných clusterech o velikosti 3 a 4 pixely pro $^{241}$\texttt{Am} víme, že součet jejich energií je $59.5keV$. Z clusteru je vybrán pixel s energií $30keV$, který je použit jako referenční (na \ref{chap:detectors:calibration:timeWalk} jako $t_1$), zbylá energie je náhodně rozdělena mezi ostatní pixely (na \ref{chap:detectors:calibration:timeWalk} jako $t_{2-4}$). Jednotlivé rozdíly $t_i+t_1$ jsou analytickými metodami, popsanými v \cite{Turecek2016TimeWakl}, zpracovány a výsledkem tohoto procesu jsou konstanty $c,d$ pro každý pixel detektoru, kterými lze vypočítat jeho \textit{Time-Walk offset}
 
 \begin{equation}\label{eq:det:timeWalk}
-	\Delta T = \frac{c}{(E - E_0)^d}
+	\Delta T = \frac{c}{(E - E_0)^d}~,
 \end{equation}
 kde:
 \begin{changemargin}{1.5cm}{1cm} 

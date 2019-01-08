@@ -5,7 +5,7 @@ Tato diplomová práce se zabývá návrhem a implementací softwarového systé
 
 Systém se skládá z několika částí - backendové aplikace \textbf{handleru} (software pro řízení a vyčítání dat z jemu přiřazených detektorů - viz kapitola \ref{chap:handler}), backendové aplikace \textbf{mastera} (software pro řízení sítě handlerů - viz \ref{chap:master:backend}) a frontendové webové \textit{single-page} aplikace \textbf{mastera} (software poskytující webové uživatelské rozhraní pro řízení mastera pomocí jeho API - viz \ref{chap:master:frontend}).
 
-V rámci této práce byly implementovány moduly, které systému Pixnet umožňují řízení a vyčítání dat z detektorů \textit{Timepix3}, připojeným pomocí vyčítacího rozhraní \textit{Katherine}, viz kapitola \ref{chap:katherine}.
+V rámci této práce byly implementovány moduly, které systému Pixnet umožňují řízení a vyčítání dat z detektoru \textit{Timepix3}, připojeným pomocí vyčítacího rozhraní \textit{Katherine}, viz kapitola \ref{chap:katherine}.
 
 \section{Motivace}
 Podobný systém pro řízení sítě částicových pixelových detektorů již existuje \cite{atlastpx_sw,BegeraBcThesis2016} a byl vyvinut pro účely řízení a vyčítání dat z experimentu \textit{ATLAS-TPX} - sítě \textit{Timepix} detektorů, která byla instalována v rámci experimentu \textit{ATLAS} na \textit{LHC} v \textit{CERN} a měřila data během \textit{LHC} \texttt{run 2}\footnote{Označení druhého období provozu částicového urychlovače \textit{LHC}, který probíhal v letech 2014 až 2018.}. 
@@ -50,7 +50,7 @@ Práce je rozdělená do následujících kapitol:
     
     \item \textbf{Kapitola} \ref{chap:master} -- \nameref{chap:master}: V této kapitole bude představen master -- centrální element systému Pixnet, který řídí handlery, přiřazuje jim detektory a umožňuje centralizované řízení detektorů.
     
-    \item \todo testování...
+    \item \textbf{Kapitola} \ref{chap:test} -- \nameref{chap:test}: V této kapitole bude čtenář seznámen s metodami testování pro zajištění kvality jednotlivých softwarových komponent a s provedenými experimenty.
     
     \item \textbf{Kapitola} \ref{chap:zaver} -- \nameref{chap:zaver}: V závěru práce bude čtenář seznámen z dosaženými výsledky a plány na budoucí vývoj systému.
 

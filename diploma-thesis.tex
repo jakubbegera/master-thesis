@@ -122,42 +122,40 @@ unicode=true,
 	% Poděkovani / Acknowledgements 
 	\acknowledgements
 	\noindent
-	Na tomto místě bych rád poděkoval svým kolegům z ÚTEF ČVUT v Praze za poskytnutí know-how a za podporu při realizaci této práce, zejména Ing. Petrovi Burianovi, Ph.D. za rady a trpělivost při implementaci komunikačního protokolu vyčítacího rozhraní \textit{Katherine}. Také bych rád poděkoval vedoucímu této práce Ing. Štěpánu Polanskému za předané zkušenosti, ochotu a čas, který mi věnoval. Dále bych rád poděkoval M. Sc. Saúl Calderón Ramírez za vedení této práce během mého studijního pobytu \textit{Instituto Tecnológico de Costa Rica} a za jeho cenné podněty. Mé poděkování také patří mé rodině a přátelům, kteří mě během studia podporovali. Bez nich by tato práce nikdy nemohla vzniknout.
+	Na tomto místě bych rád poděkoval svým kolegům z ÚTEF ČVUT v Praze za poskytnutí know-how a za podporu při realizaci této práce, zejména Ing. Petrovi Burianovi, Ph.D. za rady a trpělivost při implementaci komunikačního protokolu vyčítacího rozhraní \textit{Katherine}. Také bych rád poděkoval vedoucímu této práce Ing. Štěpánu Polanskému za předané zkušenosti, ochotu a čas, který mi věnoval. Dále bych rád poděkoval M. Sc. Saúl Calderón Ramírez za vedení této práce během mého studijního pobytu na \textit{Instituto Tecnológico de Costa Rica} a za jeho cenné podněty. Mé poděkování také patří mé rodině a přátelům, kteří mě během studia podporovali. Bez nich by tato práce nikdy nemohla vzniknout.
 
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%   
-	% Prohlášení / Declaration 
+	% Prohlášení / Declaration
 
-	\declaration{V~Praze dne 5.\,1.\,2019}
+	\declaration{V~Praze dne 8.\,1.\,2019}
 
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
 	% Abstrakt / Abstract 
  
 	\abstractpage
-	The aim of this master thesis is to design and implement Pixnet software - modular distributed system for control and data readout from network of particle pixel detectors. System consists of two main components - handler and master. Whereas handler is used for operation of subset of detectors and master is used for controlling of handlers and for providing API for controlling of whole system as well. Primary consumer of this API is a \textit{single-page} web application but it can be consumed by 3\textsuperscript{rd} party systems as well. Scalability of system is realized by adding handlers instances and distributing detectors across them.
+	The aim of this master thesis is to design and implement Pixnet software -- modular distributed system for control and data readout from network of particle pixel detectors. System consists of two main components -- handler and master. Whereas handler is used for operation of subset of detectors and master is used for controlling of handlers and for providing API for controlling of whole system as well. Primary consumer of this API is a \textit{single-page} web application but it can be consumed by 3\textsuperscript{rd} party systems as well. Scalability of system is realized by adding handlers instances and distributing detectors across them.
 
-	The presented system has a modular architecture -- instance of detector is given by his communication and data module, which has to implement defined interfaces. Thus, the system allows to operate heterogenous networks of detectors in homogenous way. 
-	Furthermore, the presented system includes a module implementation supporting \textit{Timepix3} detector, operated by \textit{Katherine} readout interface.
-	% Within this thesis has been implemented communication and data module which adds support of \textit{Timepix3} detector, operated by \textit{Katherine} readout interface.
-
+	The presented system has a modular architecture -- instance of detector is given by his communication and data module, which has to implement defined interfaces. Thus, the system allows to operate heterogenous networks of detectors in homogenous way. Furthermore, the presented system includes a module implementation supporting \textit{Timepix3} detector, operated by \textit{Katherine} readout interface.
+	
 	For development and testing purposes, an emulator of the \textit{Katherine} interface has beed developed. Emulator implements subsets of commands which are needed to basic configuration of detector and data acquisition setup.
 
 	\vspace*{2cm}
 	\begin{description}
-		\item[Key words:] Timepix, Timepix3, ATLAS, ATLAS-TPX, Katherine, distributed control, ionizing radiation, pixel detector, Java, Kotlin, ReactJS, Spring Framework, Spring Boot, detectors network, modular architecture
+		\item[Key words:] Timepix3, ATLAS-TPX, Katherine, distributed control, ionizing radiation, pixel detector, Kotlin, detectors network, modular architecture, data acquisition software
 	\end{description}
 
 	\abstractpagecz
-	Tato diplomová práce ze zabývá návrhem a implementací software Pixnet - modulárním distribuovaným systémem pro řízení a vyčítání dat ze sítě částicových pixelových detektorů. Systém se skládá ze dvou hlavních komponent - handler a master. Handler slouží pro operování podmnožiny jemu přiřazených detektorů a master k řízení handlerů a poskytování API pro řízení celého systému. Primárním konzumentem tohoto API je webová \textit{single-page} aplikace, ale mohou jím být i systémy třetích stran. Škálování systému je realizováno přidáváním instancí handlerů a distribucí detektorů mezi jejich instancemi.
+	Tato diplomová práce ze zabývá návrhem a implementací software Pixnet -- modulárním distribuovaným systémem pro řízení a vyčítání dat ze sítě částicových pixelových detektorů. Systém se skládá ze dvou hlavních komponent, kterými jsou handler a master. Handler slouží pro operování podmnožiny jemu přiřazených detektorů a master k řízení handlerů a poskytování API pro řízení celého systému. Primárním konzumentem tohoto API je webová \textit{single-page} aplikace, ale mohou jím být i systémy třetích stran. Škálování systému je realizováno přidáváním instancí handlerů a distribucí detektorů mezi jejich instancemi.
 	
-	Navržený systém je modulární - instance detektoru je reprezentována jeho komunikačním a datovým modulem, které musí implementovat definované rozhraní. Systém tedy umožňuje operování heterogenní sítě detektorů homogenním způsobem. V rámci této práce byly implementován komunikační a datový modul, které umožňují podporu detektoru \textit{Timepix3}, komunikujícího prostřednictvím vyčítacího rozhraní \textit{Katherine}.
+	Navržený systém je modulární -- instance detektoru je reprezentována jeho komunikačním a datovým modulem, které musí implementovat definované rozhraní. Systém tedy umožňuje operování heterogenní sítě detektorů homogenním způsobem. V rámci této práce byl implementován komunikační a datový modul, které umožňují podporu detektoru \textit{Timepix3}, komunikujícího prostřednictvím vyčítacího rozhraní \textit{Katherine}.
 
-	Pro účely vývoje a testování byl v rámci této práce rovněž vyvinut emulátor vyčítacího rozhraní \textit{Katherine}, který implementuje všechny příkazy, které jsou důležité pro konfiguraci a spuštění akvizice.
+	Pro účely vývoje a testování byl v rámci této práce rovněž vyvinut emulátor vyčítacího rozhraní \textit{Katherine}, který implementuje všechny příkazy, které jsou důležité pro konfiguraci a spuštění akvizice dat.
 
 	\vspace*{2cm}
 	\begin{description}
-		\item[Klíčová slova:] Timepix, Timepix3, ATLAS, ATLAS-TPX, Katherine, distribuované řízení, ionizující záření, pixelový detektor, Java, Kotlin, ReactJS, Spring Framework, Spring Boot, detektorová síť, modulární architektura
+		\item[Klíčová slova:] Timepix3, ATLAS-TPX, Katherine, distribuované řízení, ionizující záření, pixelový detektor, Kotlin, detektorová síť, modulární architektura, software pro akvizici dat
 	\end{description}
 
 
